@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CONFIG>
+  <TerminalParameter label="FFA002">
+    <Cfg label="9F01" Name="Acquirer ID" Format="n 6 11"></Cfg>
+    <Cfg label="9F1E" Name="IFD SN" Format="an 8">IFD00001</Cfg>
+    <Cfg label="9F15" Name="Merchant Category Code" Format="n 4">7032</Cfg>
+    <Cfg label="9F16" Name="Merchant ID" Format="ans 15"></Cfg>
+    <Cfg label="9F4E" Name="MerchantNameLocation" Format="ans 128"></Cfg>
+    <Cfg label="9F1A" Name="Terminal Country Code" Format="n 3">0056</Cfg>
+    <Cfg label="9F1C" Name="Terminal ID" Format="an 8"></Cfg>
+    <Cfg label="9F7C" Name="Merchant Custom Data" Format="b 20">1122334455667788990011223344556677889900</Cfg>
+    <Cfg label="5F2A" Name="Trans Currency Code" Format="n 3">0978</Cfg>
+    <Cfg label="5F36" Name="Trans Currency Exponent" Format="n 1">02</Cfg>
+    <Cfg label="9F66" Name="TTQ" Format="b 4">3600C000</Cfg>
+    <Cfg label="9F53" Name="Transaction Category Code" Format="b 1">46</Cfg>
+    <Cfg label="DF811A" Name="Default UDOL" Format="b 3">9F6A04</Cfg>
+    <Cfg label="DF8108" Name="DS AC Type" Format="b 3"></Cfg>
+    <Cfg label="DF60" Name="DS Input (Card)" Format="b 8"></Cfg>
+    <Cfg label="DF8109" Name="DS Input (Term)" Format="b 8"></Cfg>
+    <Cfg label="DF62" Name="DS ODS Info" Format="b 1"></Cfg>
+    <Cfg label="DF810A" Name="DS ODS Info For Reader" Format="b 1"></Cfg>
+    <Cfg label="DF63" Name="DS ODS Term" Format="b 1"></Cfg>
+    <Cfg label="DF810D" Name="DSVN Term" Format="b 1"></Cfg>
+    <Cfg label="DF810C" Name="Kernel ID" Format="b 1">02</Cfg>
+    <Cfg label="9F6D" Name="Mag-Stripe Application Version Number" Format="b 2">0001</Cfg>
+    <Cfg label="DF811C" Name="Max Lifetime of Torn Transaction Log Record" Format="b 2">0000</Cfg>
+    <Cfg label="DF811D" Name="Max Number of Torn Transaction Log Records" Format="b 1">00</Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8110" Name="Proceed To First Write Flag" Format="b 1">00</Cfg>
+    <Cfg label="DF8112" Name="Tags To Read" Format="b var">5F53</Cfg>
+    <Cfg label="DF830A" Name="proprietary tag" Format="b 256">5F5300</Cfg>
+
+
+
+
+
+  </TerminalParameter>  
+</CONFIG>
+
+
+

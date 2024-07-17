@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CONFIG>
+  <!-- Mastercard AID -->
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000041010</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">00</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F1D" Name="Terminal Risk Management Data" Format="b 8">6CFF000000000000</Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">22</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000001000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">F8</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">28</Cfg>  
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000041010</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">01</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">14</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000200000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">F8</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">28</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000041010</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">09</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F1D" Name="Terminal Risk Management Data" Format="b 8"></Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">22</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000002000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">F8</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">28</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000041010</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">17</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">11</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000002000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">20</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">F0</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">F8</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">28</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000041010</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">20</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>	
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">22</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000002000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">F8</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">28</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <!-- Maestro AID -->
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000043060</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">00</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">22</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">A0</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000043060</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">01</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">14</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">A0</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000043060</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">09</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>	
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">22</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">A0</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000043060</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">17</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">11</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">A0</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">F0</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">A0000000043060</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">20</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>	
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">22</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">A0</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <!-- Test AID -->
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">B012345678</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">00</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">22</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000001000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">B012345678</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">01</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">14</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">B012345678</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">09</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>	
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">22</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">B012345678</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">17</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">14</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+  <KernelAidCombination label="FFA004">
+    <Cfg label="9F06" Name="AID" Format="b 16">B012345678</Cfg>
+    <Cfg label="9C" Name="Transaction Type" Format="n 2">20</Cfg>
+    <Cfg label="9F09" Name="Application Version" Format="b 2">0002</Cfg>
+    <Cfg label="9F1B" Name="Terminal Floor Limit" Format="n 12">000000015000</Cfg>	
+    <Cfg label="9F35" Name="Terminal Type" Format="n 2">22</Cfg>
+    <Cfg label="DF20" Name="Contactless Transaction Limit" Format="n 12">000000030000</Cfg>
+    <Cfg label="DF19" Name="Contactless Floor Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF21" Name="CVM Required Limit" Format="n 12">000000010000</Cfg>
+    <Cfg label="DF11" Name="Terminal Action Code Default" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF13" Name="Terminal Action Code Denial" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF12" Name="Terminal Action Code Online" Format="b 5">0000000000</Cfg>
+    <Cfg label="DF32" Name="Support Status Check" Format="b 1">01</Cfg>
+    <Cfg label="DF33" Name="Support Contactless Trans Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+    <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">20</Cfg>
+    <Cfg label="DF811E" Name="Mag-stripe CVM Capability – CVM Required" Format="b 1">10</Cfg>
+    <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000030000</Cfg>
+    <Cfg label="DF8125" Name="Reader Contactless Transaction Limit (On-device CVM)" Format="b 6">000000050000</Cfg>
+    <Cfg label="DF812C" Name="Mag-stripe CVM Capability – No CVM Required" Format="b 1">00</Cfg>
+    <Cfg label="9F7E" Name="Mobile Support Indicator" Format="b 1"></Cfg>
+    <Cfg label="DF811F" Name="Security Capability" Format="b 1">08</Cfg>
+    <Cfg label="DF8118" Name="CVM Capability – CVM Required" Format="b 1">60</Cfg>
+    <Cfg label="DF8119" Name="CVM Capability – No CVM Required" Format="b 1">08</Cfg>    
+    <Cfg label="9F40" Name="Additional Terminal Capability" Format="b 3">0000000000</Cfg>
+    <Cfg label="9F33" Name="Terminal Capability" Format="b 3">E0F8C8</Cfg>
+  </KernelAidCombination>
+
+</CONFIG>

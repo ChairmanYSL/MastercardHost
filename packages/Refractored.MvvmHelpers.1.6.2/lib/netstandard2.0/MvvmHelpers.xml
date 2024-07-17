@@ -1,0 +1,456 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MvvmHelpers</name>
+    </assembly>
+    <members>
+        <member name="T:MvvmHelpers.BaseViewModel">
+            <summary>
+            Base view model.
+            </summary>
+        </member>
+        <member name="P:MvvmHelpers.BaseViewModel.Title">
+            <summary>
+            Gets or sets the title.
+            </summary>
+            <value>The title.</value>
+        </member>
+        <member name="P:MvvmHelpers.BaseViewModel.Subtitle">
+            <summary>
+            Gets or sets the subtitle.
+            </summary>
+            <value>The subtitle.</value>
+        </member>
+        <member name="P:MvvmHelpers.BaseViewModel.Icon">
+            <summary>
+            Gets or sets the icon.
+            </summary>
+            <value>The icon.</value>
+        </member>
+        <member name="P:MvvmHelpers.BaseViewModel.IsBusy">
+            <summary>
+            Gets or sets a value indicating whether this instance is busy.
+            </summary>
+            <value><c>true</c> if this instance is busy; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:MvvmHelpers.BaseViewModel.IsNotBusy">
+            <summary>
+            Gets or sets a value indicating whether this instance is not busy.
+            </summary>
+            <value><c>true</c> if this instance is not busy; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:MvvmHelpers.BaseViewModel.CanLoadMore">
+            <summary>
+            Gets or sets a value indicating whether this instance can load more.
+            </summary>
+            <value><c>true</c> if this instance can load more; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:MvvmHelpers.BaseViewModel.Header">
+            <summary>
+            Gets or sets the header.
+            </summary>
+            <value>The header.</value>
+        </member>
+        <member name="P:MvvmHelpers.BaseViewModel.Footer">
+            <summary>
+            Gets or sets the footer.
+            </summary>
+            <value>The footer.</value>
+        </member>
+        <member name="T:MvvmHelpers.Commands.AsyncCommand">
+            <summary>
+            Implementation of an Async Command
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Commands.AsyncCommand.#ctor(System.Func{System.Threading.Tasks.Task},System.Func{System.Object,System.Boolean},System.Action{System.Exception},System.Boolean)">
+            <summary>
+            Create a new AsyncCommand
+            </summary>
+            <param name="execute">Function to execute</param>
+            <param name="canExecute">Function to call to determine if it can be executed</param>
+            <param name="onException">Action callback when an exception occurs</param>
+            <param name="continueOnCapturedContext">If the context should be captured on exception</param>
+        </member>
+        <member name="E:MvvmHelpers.Commands.AsyncCommand.CanExecuteChanged">
+            <summary>
+            Event triggered when Can Excecute changes.
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Commands.AsyncCommand.CanExecute(System.Object)">
+            <summary>
+            Invoke the CanExecute method and return if it can be executed.
+            </summary>
+            <param name="parameter">Parameter to pass to CanExecute.</param>
+            <returns>If it can be executed.</returns>
+        </member>
+        <member name="M:MvvmHelpers.Commands.AsyncCommand.ExecuteAsync">
+            <summary>
+            Execute the command async.
+            </summary>
+            <returns>Task of action being executed that can be awaited.</returns>
+        </member>
+        <member name="M:MvvmHelpers.Commands.AsyncCommand.RaiseCanExecuteChanged">
+            <summary>
+            Raise a CanExecute change event.
+            </summary>
+        </member>
+        <member name="T:MvvmHelpers.Commands.AsyncCommand`1">
+            <summary>
+            Implementation of a generic Async Command
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Commands.AsyncCommand`1.#ctor(System.Func{`0,System.Threading.Tasks.Task},System.Func{System.Object,System.Boolean},System.Action{System.Exception},System.Boolean)">
+            <summary>
+            Create a new AsyncCommand
+            </summary>
+            <param name="execute">Function to execute</param>
+            <param name="canExecute">Function to call to determine if it can be executed</param>
+            <param name="onException">Action callback when an exception occurs</param>
+            <param name="continueOnCapturedContext">If the context should be captured on exception</param>
+        </member>
+        <member name="E:MvvmHelpers.Commands.AsyncCommand`1.CanExecuteChanged">
+            <summary>
+            Event triggered when Can Excecute changes.
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Commands.AsyncCommand`1.CanExecute(System.Object)">
+            <summary>
+            Invoke the CanExecute method and return if it can be executed.
+            </summary>
+            <param name="parameter">Parameter to pass to CanExecute.</param>
+            <returns>If it can be executed</returns>
+        </member>
+        <member name="M:MvvmHelpers.Commands.AsyncCommand`1.ExecuteAsync(`0)">
+            <summary>
+            Execute the command async.
+            </summary>
+            <returns>Task that is executing and can be awaited.</returns>
+        </member>
+        <member name="M:MvvmHelpers.Commands.AsyncCommand`1.RaiseCanExecuteChanged">
+            <summary>
+            Raise a CanExecute change event.
+            </summary>
+        </member>
+        <member name="T:MvvmHelpers.Commands.Command`1">
+            <summary>
+            Generic Implementation of ICommand
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:MvvmHelpers.Commands.Command`1.#ctor(System.Action{`0})">
+            <summary>
+            Command that takes an action to execute
+            </summary>
+            <param name="execute">The action to execute of type T</param>
+        </member>
+        <member name="M:MvvmHelpers.Commands.Command`1.#ctor(System.Action{`0},System.Func{`0,System.Boolean})">
+            <summary>
+            Command that takes an action to execute
+            </summary>
+            <param name="execute">The action to execute of type T</param>
+            <param name="canExecute">Function to call to determine if it can be executed.</param>
+        </member>
+        <member name="T:MvvmHelpers.Commands.Command">
+            <summary>
+            Implementation of ICommand
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Commands.Command.#ctor(System.Action{System.Object})">
+            <summary>
+            Command that takes an action to execute.
+            </summary>
+            <param name="execute">Action to execute.</param>
+        </member>
+        <member name="M:MvvmHelpers.Commands.Command.#ctor(System.Action)">
+            <summary>
+            Command that takes an action to execute.
+            </summary>
+            <param name="execute">Action to execute.</param>
+        </member>
+        <member name="M:MvvmHelpers.Commands.Command.#ctor(System.Action{System.Object},System.Func{System.Object,System.Boolean})">
+            <summary>
+            Command that takes an action to execute.
+            </summary>
+            <param name="execute">Action to execute.</param>
+            <param name="canExecute">Function to determine if can execute.</param>
+        </member>
+        <member name="M:MvvmHelpers.Commands.Command.#ctor(System.Action,System.Func{System.Boolean})">
+            <summary>
+            Command that takes an action to execute.
+            </summary>
+            <param name="execute">Action to execute.</param>
+            <param name="canExecute">Function to determine if can execute.</param>
+        </member>
+        <member name="M:MvvmHelpers.Commands.Command.CanExecute(System.Object)">
+            <summary>
+            Invoke the CanExecute method to determine if it can be executed.
+            </summary>
+            <param name="parameter">Parameter to test and pass to CanExecute.</param>
+            <returns>If it can be executed.</returns>
+        </member>
+        <member name="E:MvvmHelpers.Commands.Command.CanExecuteChanged">
+            <summary>
+            Event handler raised when CanExecute changes.
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Commands.Command.Execute(System.Object)">
+            <summary>
+            Execute the command with or without a parameter.
+            </summary>
+            <param name="parameter">Parameter to pass to execute method.</param>
+        </member>
+        <member name="M:MvvmHelpers.Commands.Command.RaiseCanExecuteChanged">
+            <summary>
+            Manually raise a CanExecuteChanged event.
+            </summary>
+        </member>
+        <member name="T:MvvmHelpers.Exceptions.InvalidCommandParameterException">
+            <summary>
+            Represents errors that occur during IAsyncCommand execution.
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Exceptions.InvalidCommandParameterException.#ctor(System.Type,System.Type,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MvvmHelpersInvalidCommandParameterException"/> class.
+            </summary>
+            <param name="expectedType">Expected parameter type for AsyncCommand.Execute.</param>
+            <param name="actualType">Actual parameter type for AsyncCommand.Execute.</param>
+            <param name="innerException">Inner Exception</param>
+        </member>
+        <member name="M:MvvmHelpers.Exceptions.InvalidCommandParameterException.#ctor(System.Type,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:TaskExtensions.MVVM.InvalidCommandParameterException"/> class.
+            </summary>
+            <param name="expectedType">Expected parameter type for AsyncCommand.Execute.</param>
+            <param name="innerException">Inner Exception</param>
+        </member>
+        <member name="M:MvvmHelpers.Exceptions.InvalidCommandParameterException.#ctor(System.Type,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MvvmHelpers.InvalidCommandParameterException"/> class.
+            </summary>
+            <param name="expectedType">Expected parameter type for AsyncCommand.Execute.</param>
+            <param name="actualType">Actual parameter type for AsyncCommand.Execute.</param>
+        </member>
+        <member name="M:MvvmHelpers.Exceptions.InvalidCommandParameterException.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:TaskExtensions.MVVM.InvalidCommandParameterException"/> class.
+            </summary>
+            <param name="expectedType">Expected parameter type for AsyncCommand.Execute.</param>
+        </member>
+        <member name="T:MvvmHelpers.Grouping`2">
+            <summary>
+            Grouping of items by key into ObservableRange
+            </summary>
+        </member>
+        <member name="P:MvvmHelpers.Grouping`2.Key">
+            <summary>
+            Gets the key.
+            </summary>
+            <value>The key.</value>
+        </member>
+        <member name="P:MvvmHelpers.Grouping`2.Items">
+            <summary>
+            Returns list of items in the grouping.
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Grouping`2.#ctor(`0,System.Collections.Generic.IEnumerable{`1})">
+            <summary>
+            Initializes a new instance of the Grouping class.
+            </summary>
+            <param name="key">Key.</param>
+            <param name="items">Items.</param>
+        </member>
+        <member name="T:MvvmHelpers.Grouping`3">
+            <summary>
+            Grouping of items by key into ObservableRange
+            </summary>
+        </member>
+        <member name="P:MvvmHelpers.Grouping`3.Key">
+            <summary>
+            Gets the key.
+            </summary>
+            <value>The key.</value>
+        </member>
+        <member name="P:MvvmHelpers.Grouping`3.SubKey">
+            <summary>
+            Gets the subkey of the grouping
+            </summary>
+        </member>
+        <member name="P:MvvmHelpers.Grouping`3.Items">
+            <summary>
+            Returns list of items in the grouping.
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Grouping`3.#ctor(`0,`1,System.Collections.Generic.IEnumerable{`2})">
+            <summary>
+            Initializes a new instance of the Grouping class.
+            </summary>
+            <param name="key">Key.</param>
+            <param name="subkey">Subkey</param>
+            <param name="items">Items.</param>
+        </member>
+        <member name="T:MvvmHelpers.Interfaces.IAsyncCommand">
+            <summary>
+            Interface for Async Command
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Interfaces.IAsyncCommand.ExecuteAsync">
+            <summary>
+            Execute the command async.
+            </summary>
+            <returns>Task to be awaited on.</returns>
+        </member>
+        <member name="T:MvvmHelpers.Interfaces.IAsyncCommand`1">
+            <summary>
+            Interface for Async Command with parameter
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Interfaces.IAsyncCommand`1.ExecuteAsync(`0)">
+            <summary>
+            Execute the command async.
+            </summary>
+            <param name="parameter">Parameter to pass to command</param>
+            <returns>Task to be awaited on.</returns>
+        </member>
+        <member name="T:MvvmHelpers.ObservableObject">
+            <summary>
+            Observable object with INotifyPropertyChanged implemented
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.ObservableObject.SetProperty``1(``0@,``0,System.String,System.Action,System.Func{``0,``0,System.Boolean})">
+            <summary>
+            Sets the property.
+            </summary>
+            <returns><c>true</c>, if property was set, <c>false</c> otherwise.</returns>
+            <param name="backingStore">Backing store.</param>
+            <param name="value">Value.</param>
+            <param name="validateValue">Validates value.</param>
+            <param name="propertyName">Property name.</param>
+            <param name="onChanged">On changed.</param>
+            <typeparam name="T">The 1st type parameter.</typeparam>
+        </member>
+        <member name="E:MvvmHelpers.ObservableObject.PropertyChanged">
+            <summary>
+            Occurs when property changed.
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.ObservableObject.OnPropertyChanged(System.String)">
+            <summary>
+            Raises the property changed event.
+            </summary>
+            <param name="propertyName">Property name.</param>
+        </member>
+        <member name="T:MvvmHelpers.ObservableRangeCollection`1">
+            <summary> 
+            Represents a dynamic data collection that provides notifications when items get added, removed, or when the whole list is refreshed. 
+            </summary> 
+            <typeparam name="T"></typeparam> 
+        </member>
+        <member name="M:MvvmHelpers.ObservableRangeCollection`1.#ctor">
+            <summary> 
+            Initializes a new instance of the System.Collections.ObjectModel.ObservableCollection(Of T) class. 
+            </summary> 
+        </member>
+        <member name="M:MvvmHelpers.ObservableRangeCollection`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary> 
+            Initializes a new instance of the System.Collections.ObjectModel.ObservableCollection(Of T) class that contains elements copied from the specified collection. 
+            </summary> 
+            <param name="collection">collection: The collection from which the elements are copied.</param> 
+            <exception cref="T:System.ArgumentNullException">The collection parameter cannot be null.</exception> 
+        </member>
+        <member name="M:MvvmHelpers.ObservableRangeCollection`1.AddRange(System.Collections.Generic.IEnumerable{`0},System.Collections.Specialized.NotifyCollectionChangedAction)">
+            <summary> 
+            Adds the elements of the specified collection to the end of the ObservableCollection(Of T). 
+            </summary> 
+        </member>
+        <member name="M:MvvmHelpers.ObservableRangeCollection`1.RemoveRange(System.Collections.Generic.IEnumerable{`0},System.Collections.Specialized.NotifyCollectionChangedAction)">
+            <summary> 
+            Removes the first occurence of each item in the specified collection from ObservableCollection(Of T). NOTE: with notificationMode = Remove, removed items starting index is not set because items are not guaranteed to be consecutive.
+            </summary> 
+        </member>
+        <member name="M:MvvmHelpers.ObservableRangeCollection`1.Replace(`0)">
+            <summary> 
+            Clears the current collection and replaces it with the specified item. 
+            </summary> 
+        </member>
+        <member name="M:MvvmHelpers.ObservableRangeCollection`1.ReplaceRange(System.Collections.Generic.IEnumerable{`0})">
+            <summary> 
+            Clears the current collection and replaces it with the specified collection. 
+            </summary> 
+        </member>
+        <member name="T:MvvmHelpers.Utils">
+            <summary>
+            Extension Utils
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.Utils.WithTimeout``1(System.Threading.Tasks.Task{``0},System.Int32)">
+            <summary>
+            Task extension to add a timeout.
+            </summary>
+            <returns>The task with timeout.</returns>
+            <param name="task">Task.</param>
+            <param name="timeoutInMilliseconds">Timeout duration in Milliseconds.</param>
+            <typeparam name="T">The 1st type parameter.</typeparam>
+        </member>
+        <member name="M:MvvmHelpers.Utils.WithTimeout``1(System.Threading.Tasks.Task{``0},System.TimeSpan)">
+            <summary>
+            Task extension to add a timeout.
+            </summary>
+            <returns>The task with timeout.</returns>
+            <param name="task">Task.</param>
+            <param name="timeout">Timeout Duration.</param>
+            <typeparam name="T">The 1st type parameter.</typeparam>
+        </member>
+        <member name="M:MvvmHelpers.Utils.SafeFireAndForget(System.Threading.Tasks.Task,System.Action{System.Exception},System.Boolean)">
+            <summary>
+            Attempts to await on the task and catches exception
+            </summary>
+            <param name="task">Task to execute</param>
+            <param name="onException">What to do when method has an exception</param>
+            <param name="continueOnCapturedContext">If the context should be captured.</param>
+        </member>
+        <member name="T:MvvmHelpers.WeakEventManager">
+            <summary>
+            Weak event manager to subscribe and unsubscribe from events.
+            </summary>
+        </member>
+        <member name="M:MvvmHelpers.WeakEventManager.AddEventHandler``1(System.EventHandler{``0},System.String)">
+            <summary>
+            Add an event handler to the manager.
+            </summary>
+            <typeparam name="TEventArgs">Event handler of T</typeparam>
+            <param name="handler">Handler of the event</param>
+            <param name="eventName">Name to use in the dictionary. Should be unique.</param>
+        </member>
+        <member name="M:MvvmHelpers.WeakEventManager.AddEventHandler(System.EventHandler,System.String)">
+            <summary>
+            Add an event handler to the manager.
+            </summary>
+            <param name="handler">Handler of the event</param>
+            <param name="eventName">Name to use in the dictionary. Should be unique.</param>
+        </member>
+        <member name="M:MvvmHelpers.WeakEventManager.HandleEvent(System.Object,System.Object,System.String)">
+            <summary>
+            Handle an event
+            </summary>
+            <param name="sender">Sender of the event</param>
+            <param name="args">Arguments for the event</param>
+            <param name="eventName">Name of the event.</param>
+        </member>
+        <member name="M:MvvmHelpers.WeakEventManager.RemoveEventHandler``1(System.EventHandler{``0},System.String)">
+            <summary>
+            Remove an event handler.
+            </summary>
+            <typeparam name="TEventArgs">Type of the EventArgs</typeparam>
+            <param name="handler">Handler to remove</param>
+            <param name="eventName">Event name to remove</param>
+        </member>
+        <member name="M:MvvmHelpers.WeakEventManager.RemoveEventHandler(System.EventHandler,System.String)">
+            <summary>
+            Remove an event handler.
+            </summary>
+            <param name="handler">Handler to remove</param>
+            <param name="eventName">Event name to remove</param>
+        </member>
+    </members>
+</doc>
