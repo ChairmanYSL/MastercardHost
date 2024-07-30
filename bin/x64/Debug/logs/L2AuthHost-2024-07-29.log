@@ -1,0 +1,4 @@
+2024-07-29 16:24:02.9175 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:21) - Application started 
+2024-07-29 16:24:02.9974 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:21) - 当前区域性:zh-CN 
+2024-07-29 16:24:03.0115 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:21) - 区域性名称:中文(简体，中国) 
+2024-07-29 16:24:03.0115 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:21) - 当前线程的文化信息:zh-CN 

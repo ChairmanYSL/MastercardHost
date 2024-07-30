@@ -110,6 +110,7 @@
     <Cfg label="DF34" Name="Support Contactless Floor Limit Check" Format="b 1">01</Cfg>
     <Cfg label="DF35" Name="Support Terminal Floor Limit Check" Format="b 1">01</Cfg>
     <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
+  </KernelAidCombination>
 
   <KernelAidCombination label="FFA004">
     <Cfg label="9F06" Name="AID" Format="b 16">A0000000043060</Cfg>

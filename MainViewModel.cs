@@ -19,56 +19,144 @@ namespace MastercardHost
 {
     public class MainViewModel : BaseViewModel
     {
-        private MainModel _mainModel;
         public Command startListenCommand { get; }
         public Command stopListenCommand { get; }
         public Command startBindCommand { get; }
         public Command stopBindCommand { get; }
         public Command clearScreenCommand { get; }
 
-        private TcpSharpSocketClient _tcpClient;
-        private TcpSharpSocketServer _tcpServer;
+        //private TcpSharpSocketClient _tcpClient;
+        //private TcpSharpSocketServer _tcpServer;
+
+        private readonly DataProcessor _dataProcessor;
+        private readonly TcpCommunication tcpCommunication;
 
         private bool _isListenEnabled;
         private bool _isStopListenEnabled;
         private bool _isBindEnabled;
         private bool _isStopBindEnabled;
 
+        private int _server_port;
+        private string _server_ipAddr;
+        private int _client_port;
+        private string _client_ipAddr;
+
+        private string _respCode;
+        private string _iad;
+        private string _script;
+        private ObservableRangeCollection<string> _outcomeText;
 
         public MainViewModel()
         {
-            _mainModel = new MainModel();
-            _tcpServer = new TcpSharpSocketServer();
-            _tcpClient = new TcpSharpSocketClient();
+            tcpCommunication = new TcpCommunication();
+            _dataProcessor = new DataProcessor();
+
+            tcpCommunication.OnClientDataReceived += _dataProcessor.Client_OnDataReceived;
+            tcpCommunication.OnServerDataReceived += _dataProcessor.Server_OnDataReceived;
+
+            _dataProcessor.outcomeNeeded += UpdateLogText;
+
             startListenCommand = new Command(StartListen);
             stopListenCommand = new Command(StopListen);
-            startBindCommand = new Command(StartBind, CanStartBind);
-            stopBindCommand = new Command (StopBind, CanStopBind);
+            startBindCommand = new Command(StartBind);
+            stopBindCommand = new Command (StopBind);
             clearScreenCommand = new Command(CleanScreen);
+
             _isListenEnabled = true;
             _isBindEnabled = true;
+            _isStopListenEnabled = false;
+            _isStopBindEnabled = false;
+
+            _server_port = 8765;
+            _server_ipAddr = "127.0.0.1";
+            _client_port = 8766;
+            _client_ipAddr = "127.0.0.1";
+
+            _respCode = "00";
+            _iad = "";
+            _script = "";
+            _outcomeText = new ObservableRangeCollection<string>();
         }
 
-        public MainModel MainModel
+        public bool IsListenEnabled
         {
-            get => _mainModel;
-            set
-            {
-                if (_mainModel != value)
-                {
-                    _mainModel = value;
-                    OnPropertyChanged(nameof(MainModel));
-                }
-            }
+            get => _isListenEnabled;
+            set =>  SetProperty(ref _isListenEnabled, value);
+        }
+
+        public bool IsStopListenEnabled
+        {
+            get => _isStopListenEnabled;
+            set => SetProperty(ref _isStopListenEnabled, value);
+        }
+
+        public bool IsBindEnabled
+        {
+            get => _isBindEnabled;
+            set => SetProperty(ref _isBindEnabled, value);
+        }
+
+        public bool IsStopBindEnabled
+        {
+            get => _isStopBindEnabled;
+            set => SetProperty(ref _isStopBindEnabled, value);
+        }
+
+        public int ServerPort
+        {
+            get => _server_port;
+            set => SetProperty(ref _server_port, value);
+        }
+
+        public string ServerIPAddr
+        {
+            get => _server_ipAddr;
+            set => SetProperty(ref _server_ipAddr, value);
+        }
+
+        public int ClientPort
+        {
+            get => _client_port;
+            set => SetProperty(ref _client_port, value);
+        }
+
+        public string ClientIPAddr
+        {
+            get => _client_ipAddr;
+            set => SetProperty (ref _client_ipAddr, value);
+        }
+
+        public string RespCode
+        {
+            get => _respCode;
+            set => SetProperty(ref _respCode, value);
+        }
+
+        public string IAD
+        {
+            get => _iad;
+            set => SetProperty(ref _iad, value);
+        }
+
+        public string Script
+        {
+            get => _script;
+            set => SetProperty(ref _script, value);
+        }
+
+        public ObservableRangeCollection<string> OutcomeText
+        {
+            get => _outcomeText;
+            set => SetProperty(ref _outcomeText, value);
         }
 
         public void UpdateLogText(string text)
         {
-            MainModel.OutcomeText.Add(text+Environment.NewLine);
+            _outcomeText.Add(text+Environment.NewLine);
             //TODO: 添加通过菜单控制自动清log的行数限制
-            if (MainModel.OutcomeText.Count > 100)
+            if (_outcomeText.Count > 100)
             {
-                MainModel.OutcomeText.RemoveAt(0);
+                _outcomeText.RemoveAt(0);
             }
         }
 
@@ -76,53 +164,14 @@ namespace MastercardHost
         {
             try
             {
-                if(_tcpServer == null)
-                {
-                    _tcpServer = new TcpSharpSocketServer();
-                }
-
-                if (_tcpServer.Listening)
-                {
-                    _tcpServer.StopListening();
-                }
-
-                _tcpServer.Port = _mainModel.ServerSettings.Port;
-                _tcpServer.OnStarted += (sender, e) =>
-                {
-                    UpdateLogText($"Server Started Listen on {_tcpServer.Port}");
-                };
-                _tcpServer.OnError += (sender, e) =>
-                {
-                    UpdateLogText($"Server Error: {e.Exception.Message}");
-                };
-                _tcpServer.OnStopped += (sender, e) =>
-                {
-                    UpdateLogText("Server Stop Listen");
-                };
-                _tcpServer.OnConnected += (sender, e) =>
-                {
-                    UpdateLogText($"Server Connect on {e.IPAddress}:{e.Port}, Connect ID is: {e.ConnectionId}");
-                };
-
-                _tcpServer.StartListening();
-                UpdateButtonStates();
+                tcpCommunication.StartServer(_server_port, UpdateLogText);
+                IsStopListenEnabled = true;
+                IsListenEnabled = false;
             }
             catch (Exception ex)
             {
                 // 显示弹窗提示用户
                 System.Windows.MessageBox.Show(ex.Message, "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
-            }
-        }
-
-        private bool CanStartListen(object parameter)
-        {
-            if (_tcpServer != null)
-            {
-                return !_tcpServer.Listening;
-            }
-            else
-            {
-                return false;
             }
         }
 
@@ -130,25 +179,14 @@ namespace MastercardHost
         {
             try
             {
-                _tcpServer.StopListening();
-                UpdateButtonStates();
+                tcpCommunication.StopServer();
+                IsStopListenEnabled= false;
+                IsListenEnabled = true;
             }
             catch (Exception ex)
             {
                 // 显示弹窗提示用户
                 System.Windows.MessageBox.Show(ex.Message, "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
-            }
-        }
-
-        private bool CanStopListen(object parameter)
-        {
-            if(_tcpServer != null)
-            {
-                return _tcpServer.Listening;
-            }
-            else
-            {
-                return false;
             }
         }
 
@@ -156,62 +194,14 @@ namespace MastercardHost
         {
             try
             {
-                if (_tcpClient == null)
-                {
-                    _tcpClient = new TcpSharpSocketClient();
-                }
-
-                if (_tcpClient.Connected)
-                {
-                    _tcpClient.Disconnect();
-                }
-
-                _tcpClient.Host = _mainModel.ClientSettings.IpAddress;
-                _tcpClient.Port = _mainModel.ClientSettings.Port;
-
-                _tcpClient.OnConnected += (sender, e) =>
-                {
-                    UpdateLogText($"Client Connected to {e.ServerHost}:{e.ServerPort}");
-                };
-                _tcpClient.OnError += (sender, e) =>
-                {
-                    UpdateLogText($"Client Error: {e.Exception.Message}");
-                };
-                _tcpClient.OnDisconnected += (sender, e) =>
-                {
-                    UpdateLogText($"Client Disconnect: {e.Reason}");
-                };
-                _tcpClient.OnReconnected += (sender, e) =>
-                {
-                    UpdateLogText($"Client Reconnect to: {e.ServerIPAddress}:{e.ServerPort}");
-                };
-
-                _tcpClient.Connect();
-                UpdateButtonStates();
+                tcpCommunication.ConnectClient(_client_ipAddr, _client_port, UpdateLogText);
+                IsBindEnabled = false;
+                IsStopBindEnabled = true;
             }
             catch (Exception ex)
             {
                 // 显示弹窗提示用户
                 System.Windows.MessageBox.Show(ex.Message, "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
-            }
-        }
-
-        private bool CanStartBind(object parameter)
-        {
-            if (_tcpClient != null)
-            {
-                if(_tcpClient.Connected)
-                {
-                    return false;
-                }
-                else
-                { 
-                    return true; 
-                }
-            }
-            else
-            {
-                return false;
             }
         }
 
@@ -219,8 +209,9 @@ namespace MastercardHost
         {
             try
             {
-                _tcpClient.Disconnect();
-                UpdateButtonStates();
+                tcpCommunication.DisconnectClient();
+                IsStopBindEnabled = false;
+                IsBindEnabled= true;
             }
             catch (Exception ex)
             {
@@ -229,34 +220,10 @@ namespace MastercardHost
             }
         }
 
-        private bool CanStopBind(object parameter)
-        {
-            if (_tcpClient != null)
-            {
-                return _tcpClient.Connected;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         private void CleanScreen(object parameter)
         {
-            MainModel.OutcomeText.RemoveAt(0);
+            _outcomeText.RemoveAt(0);
         }
 
-        private void UpdateButtonStates()
-        {
-            OnPropertyChanged(nameof(IsListenEnabled));
-            OnPropertyChanged(nameof(IsStopListenEnabled));
-            OnPropertyChanged(nameof(IsBindEnabled));
-            OnPropertyChanged(nameof(IsStopBindEnabled));
-        }
-
-        public bool IsListenEnabled => _isListenEnabled;
-        public bool IsStopListenEnabled => _isStopListenEnabled;
-        public bool IsBindEnabled => _isBindEnabled;
-        public bool IsStopBindEnabled => IsStopBindEnabled;
     }
 }

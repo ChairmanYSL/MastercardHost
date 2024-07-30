@@ -12,24 +12,12 @@ namespace MastercardHost
     public class MainModel:INotifyPropertyChanged
     {
         private Config _config;
-        private ServerSettings _serverSettings;
-        private ClientSettings _clientSettings;
-        private string _respCode;
-        private string _iad;
-        private string _script;
-        private ObservableRangeCollection<string> _outcomeText;
+
 
         public Config Config
         {
             get => _config;
-            set
-            {
-                if (_config != value)
-                {
-                    _config = value;
-                    OnPropertyChanged(nameof(Config));
-                }
-            }
+            set => SetProperty(ref)
         }
 
         public ServerSettings ServerSettings

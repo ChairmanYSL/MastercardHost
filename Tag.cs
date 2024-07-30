@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media.Media3D;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MastercardHost
 {
@@ -33,6 +34,8 @@ namespace MastercardHost
 
         public const string UserInterfaceRequestData = "DF8116";
         public const string OutcomeParameterSet = "DF8129";
+        public const string MeasuredRelayResistanceProcessingTime = "DF8306";
+
         public const string DiscretionaryData = "FF8106";
         public const string DataRecord = "FF8105";
 

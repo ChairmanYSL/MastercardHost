@@ -133,7 +133,7 @@
     <Cfg label="DF36" Name="Support CVM Limit Check" Format="b 1">01</Cfg>
     <Cfg label="DF8124" Name="Reader Contactless Transaction Limit (No On-device CVM)" Format="b 6">000000010000</Cfg>
     <Cfg label="DF811B" Name="Kernel Configuration" Format="b 1">40</Cfg>
-  <KernelAidCombination label="FFA004">
+  </KernelAidCombination>
 
   <KernelAidCombination label="FFA004">
     <Cfg label="9F06" Name="AID" Format="b 16">A0000000043060</Cfg>

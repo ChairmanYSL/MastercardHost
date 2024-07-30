@@ -22,39 +22,19 @@ namespace MastercardHost
         public MainForm()
         {
             InitializeComponent();
-
-
             _viewModel = new MainViewModel();
-            _viewModel.MainModel = new MainModel()
-            {
-                ServerSettings = new ServerSettings()
-                {
-                    IpAddress = string.Empty,
-                    Port = 6908,
-                },
-                ClientSettings = new ClientSettings()
-                {
-                    IpAddress = string.Empty,
-                    Port = 6909,
-                },
-                Config = new Config()
-                {
-                    _aidConfig = string.Empty,
-                    _capkConfig = string.Empty, 
-                    _revopkConfig = string.Empty,
-                },
-                RespCode = "00",
-                Iad = "",
-                Script = "",
-                OutcomeText = new MvvmHelpers.ObservableRangeCollection<string>()
-            };
             BindViewModel();
+            MyLogManager.Log($"_isListenEnabled = {_viewModel.IsListenEnabled}");
+            MyLogManager.Log($"_isStopListenEnabled = {_viewModel.IsStopListenEnabled}");
+            MyLogManager.Log($"_isBindEnabled = {_viewModel.IsBindEnabled}");
+            MyLogManager.Log($"_isStopBindEnabled = {_viewModel.IsStopBindEnabled}");
         }
 
         private void BindViewModel()
         {
-            textBox_IP_Addr_Server.DataBindings.Add("Text", _viewModel.MainModel.ServerSettings, "IpAddress", false, DataSourceUpdateMode.OnPropertyChanged);
-            var portServerBinding = new Binding("Text", _viewModel.MainModel.ServerSettings, "Port", true, DataSourceUpdateMode.OnPropertyChanged);
+            //绑定IP地址、端口输入框属性
+            textBox_IP_Addr_Server.DataBindings.Add("Text", _viewModel, nameof(_viewModel.ServerIPAddr), false, DataSourceUpdateMode.OnPropertyChanged);
+            var portServerBinding = new Binding("Text", _viewModel, nameof(_viewModel.ServerPort), true, DataSourceUpdateMode.OnPropertyChanged);
             portServerBinding.Format += (sender , e) =>
             {
                 if (e.DesiredType != typeof(string))
@@ -79,9 +59,10 @@ namespace MastercardHost
                     e.Value = 0;
                 }
             };
+            textBox_Port_Server.DataBindings.Add(portServerBinding);
 
-            textBox_IP_Addr_Client.DataBindings.Add("Text", _viewModel.MainModel.ClientSettings, "IpAddress", false, DataSourceUpdateMode.OnPropertyChanged);
-            var portClientBinding = new Binding("Text", _viewModel.MainModel.ClientSettings, "Port", true, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_IP_Addr_Client.DataBindings.Add("Text", _viewModel, nameof(_viewModel.ClientIPAddr), false, DataSourceUpdateMode.OnPropertyChanged);
+            var portClientBinding = new Binding("Text", _viewModel, nameof(_viewModel.ClientPort), true, DataSourceUpdateMode.OnPropertyChanged);
             portClientBinding.Format += (sender, e) =>
             {
                 if (e.DesiredType != typeof(string))
@@ -105,37 +86,69 @@ namespace MastercardHost
                     e.Value = 0;
                 }
             };
+            textBox_Port_Client.DataBindings.Add(portClientBinding);
 
-            textBox_RespCode.DataBindings.Add("Text", _viewModel.MainModel, "RespCode", false, DataSourceUpdateMode.OnPropertyChanged);
-            textBox_IAD.DataBindings.Add("Text", _viewModel.MainModel, "Iad", false, DataSourceUpdateMode.OnPropertyChanged);
-            textBox_Script.DataBindings.Add("Text", _viewModel.MainModel, "Script", false, DataSourceUpdateMode.OnPropertyChanged);
-            richTextBox1.DataBindings.Add("Text", _viewModel.MainModel, "OutcomeText", false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_RespCode.DataBindings.Add("Text", _viewModel, nameof(_viewModel.RespCode), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_IAD.DataBindings.Add("Text", _viewModel, nameof(_viewModel.IAD), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_Script.DataBindings.Add("Text", _viewModel, nameof(_viewModel.Script), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            button_Listen_Server.Click += (sender, e) => _viewModel.startListenCommand.Execute(null);
-            _viewModel.startListenCommand.CanExecuteChanged += (sender, e) => { 
-                button_Listen_Server.Enabled = _viewModel.startListenCommand.CanExecute(null); 
+            //禁用输入功能
+            richTextBox1.ReadOnly = true;
+            //richTextBox1.DataBindings.Add("Text", _viewModel, nameof(_viewModel.MainModel), false, DataSourceUpdateMode.OnPropertyChanged);
+            _viewModel.OutcomeText.CollectionChanged += (sender, e) =>
+            {
+                richTextBox1.Invoke((MethodInvoker)(() =>
+                {
+                    richTextBox1.Text = string.Join(Environment.NewLine, _viewModel.OutcomeText);
+                }));
             };
+            
+            //绑定按钮Enabled属性
+            button_Listen_Server.Click += (sender, e) => _viewModel.startListenCommand.Execute(null);
+            Binding bindButtonServerStart = new Binding("Enabled", _viewModel, nameof(_viewModel.IsListenEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+            button_Listen_Server.DataBindings.Add(bindButtonServerStart);
 
             button_Close_Server.Click += (sender, e) => _viewModel.stopListenCommand.Execute(null);
-            _viewModel.stopListenCommand.CanExecuteChanged += (sender, e) =>
-            {
-                button_Close_Server.Enabled = _viewModel.stopListenCommand.CanExecute(null);
-            };
+            Binding bindButtonServerStop = new Binding("Enabled", _viewModel, nameof(_viewModel.IsStopListenEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+            button_Close_Server.DataBindings.Add(bindButtonServerStop);
 
             button_Bind.Click += (sender, e) => _viewModel.startBindCommand.Execute(null);
-            _viewModel.startBindCommand.CanExecuteChanged += (sender, e) =>
-            {
-                button_Bind.Enabled = _viewModel.startBindCommand.CanExecute(null);
-            };
+            Binding bindButtonClientStart = new Binding("Enabled", _viewModel, nameof(_viewModel.IsBindEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+            button_Bind.DataBindings.Add(bindButtonClientStart);
 
             button_Close_Client.Click += (sender, e) => _viewModel.stopBindCommand.Execute(null);
-            _viewModel.startBindCommand.CanExecuteChanged += (sender, e) =>
-            {
-                button_Close_Client.Enabled = _viewModel.stopBindCommand.CanExecute(null);
-            };
-
+            Binding bindBuutonClientStop = new Binding("Enabled", _viewModel, nameof(_viewModel.IsStopBindEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+            button_Close_Client.DataBindings.Add(bindBuutonClientStop);
 
             button_ClearScreen.Click += (sender, e) => _viewModel.clearScreenCommand.Execute(null);
+
+            _viewModel.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == nameof(_viewModel.IsListenEnabled))
+                {
+                    MyLogManager.Log($"PropertyChanged: IsListenEnabled = {_viewModel.IsListenEnabled}");
+                    button_Listen_Server.Enabled = _viewModel.IsListenEnabled;
+                }
+                if (e.PropertyName == nameof(_viewModel.IsStopListenEnabled))
+                {
+                    MyLogManager.Log($"PropertyChanged: IsStopListenEnabled = {_viewModel.IsStopListenEnabled}");
+                    button_Close_Server.Enabled = _viewModel.IsStopListenEnabled;
+                }
+            };
+        }
+
+        private void SetLanguage(string cultureCode)
+        {
+            CultureInfo culture = new CultureInfo(cultureCode);
+            Thread.CurrentThread.CurrentUICulture = culture;
+            Thread.CurrentThread.CurrentCulture = culture;
+        }
+
+        private void UpdateLanguage()
+        {
+            // 更新控件的文本
+            this.Text = Properties.Resources.Title;
+            this.button_ClearScreen.Text = Properties.Resources.ClearScreen;
         }
 
         private void TranslateLanguage()

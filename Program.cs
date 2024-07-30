@@ -26,9 +26,9 @@ namespace MastercardHost
             var currentCulture = CultureInfo.CurrentUICulture;
 
             // 配置NLog
-            MyLogManager.Log("Application started", "console");
-            MyLogManager.Log($"当前区域性:{currentCulture.Name}", "console");
-            MyLogManager.Log($"区域性名称:{currentCulture.DisplayName}", "console");
+            MyLogManager.Log("Application started");
+            MyLogManager.Log($"当前区域性:{currentCulture.Name}");
+            MyLogManager.Log($"区域性名称:{currentCulture.DisplayName}");
 
             // 检查是否为中文（包括所有中文区域性，例如简体中文、繁体中文等）
             if (currentCulture.TwoLetterISOLanguageName.Equals("zh", StringComparison.OrdinalIgnoreCase))
@@ -42,7 +42,8 @@ namespace MastercardHost
                 Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
             }
 
-            MyLogManager.Log($"当前线程的文化信息:{Thread.CurrentThread.CurrentUICulture}", "console");
+            MyLogManager.Log($"当前线程的文化信息:{Thread.CurrentThread.CurrentUICulture}");
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

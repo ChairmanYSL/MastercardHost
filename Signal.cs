@@ -9,7 +9,7 @@ namespace MastercardHost
     public class Signal
     {
         public string signalType {  get; set; }
-        public List<SignalData> signalData { get; set; }
+        public List<SignalData> signalData { get; set; } = new List<SignalData>();
 
     }
 }

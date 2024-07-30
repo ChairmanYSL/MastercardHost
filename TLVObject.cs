@@ -15,6 +15,12 @@ namespace MastercardHost
             
         }
 
+        public Dictionary<string, string> TlvDic 
+        {
+            get => tlvDic; 
+            private set => tlvDic = value;
+        }
+
         public bool Parse(string tlv)
         {
             // check whether tlv string length is even
@@ -252,5 +258,11 @@ namespace MastercardHost
         {
             tlvDic.Clear();
         }
+
+        public bool IsTLVDicEmpty()
+        {
+            return tlvDic.Count == 0;
+        }
+
     }
 }
