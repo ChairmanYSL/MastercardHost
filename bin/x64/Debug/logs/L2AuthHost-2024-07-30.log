@@ -554,3 +554,70 @@
 2024-07-30 18:45:35.6479 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopListenEnabled = False 
 2024-07-30 18:45:35.6479 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isBindEnabled = True 
 2024-07-30 18:45:35.6479 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopBindEnabled = False 
+2024-07-30 18:50:33.9382 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Application started 
+2024-07-30 18:50:34.0015 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前区域性:zh-CN 
+2024-07-30 18:50:34.0015 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 区域性名称:中文(简体，中国) 
+2024-07-30 18:50:34.0015 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前线程的文化信息:zh-CN 
+2024-07-30 18:50:34.0861 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isListenEnabled = True 
+2024-07-30 18:50:34.0861 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopListenEnabled = False 
+2024-07-30 18:50:34.0861 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isBindEnabled = True 
+2024-07-30 18:50:34.0861 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopBindEnabled = False 
+2024-07-30 18:50:37.1295 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Server Listen Status: False 
+2024-07-30 18:50:37.1295 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - PropertyChanged: IsStopListenEnabled = True 
+2024-07-30 18:50:37.1295 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - PropertyChanged: IsListenEnabled = False 
+2024-07-30 18:50:37.1762 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Server Started Listen on 8765 
+2024-07-30 18:50:38.3183 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Server Stop Listen: True 
+2024-07-30 18:50:38.3183 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - PropertyChanged: IsStopListenEnabled = False 
+2024-07-30 18:50:38.3183 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - PropertyChanged: IsListenEnabled = True 
+2024-07-30 18:51:33.3312 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Application started 
+2024-07-30 18:51:33.3799 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前区域性:zh-CN 
+2024-07-30 18:51:33.3912 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 区域性名称:中文(简体，中国) 
+2024-07-30 18:51:33.3912 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前线程的文化信息:zh-CN 
+2024-07-30 18:51:33.4589 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isListenEnabled = True 
+2024-07-30 18:51:33.4589 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopListenEnabled = False 
+2024-07-30 18:51:33.4589 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isBindEnabled = True 
+2024-07-30 18:51:33.4589 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopBindEnabled = False 
+2024-07-30 18:52:06.8919 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Application started 
+2024-07-30 18:52:06.9385 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前区域性:zh-CN 
+2024-07-30 18:52:06.9385 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 区域性名称:中文(简体，中国) 
+2024-07-30 18:52:06.9385 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前线程的文化信息:zh-CN 
+2024-07-30 18:52:07.0357 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isListenEnabled = True 
+2024-07-30 18:52:07.0357 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopListenEnabled = False 
+2024-07-30 18:52:07.0357 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isBindEnabled = True 
+2024-07-30 18:52:07.0357 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopBindEnabled = False 
+2024-07-30 18:52:26.1609 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Application started 
+2024-07-30 18:52:26.2248 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前区域性:zh-CN 
+2024-07-30 18:52:26.2380 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 区域性名称:中文(简体，中国) 
+2024-07-30 18:52:26.2380 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前线程的文化信息:zh-CN 
+2024-07-30 18:52:26.3243 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isListenEnabled = True 
+2024-07-30 18:52:26.3243 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopListenEnabled = False 
+2024-07-30 18:52:26.3243 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isBindEnabled = True 
+2024-07-30 18:52:26.3243 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopBindEnabled = False 
+2024-07-30 18:55:41.1889 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Application started 
+2024-07-30 18:55:41.2362 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前区域性:zh-CN 
+2024-07-30 18:55:41.2362 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 区域性名称:中文(简体，中国) 
+2024-07-30 18:55:41.2362 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前线程的文化信息:zh-CN 
+2024-07-30 18:55:41.3259 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isListenEnabled = True 
+2024-07-30 18:55:41.3259 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopListenEnabled = False 
+2024-07-30 18:55:41.3259 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isBindEnabled = True 
+2024-07-30 18:55:41.3259 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopBindEnabled = False 
+2024-07-30 18:56:50.2861 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Application started 
+2024-07-30 18:56:50.3407 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前区域性:zh-CN 
+2024-07-30 18:56:50.3516 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 区域性名称:中文(简体，中国) 
+2024-07-30 18:56:50.3516 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前线程的文化信息:zh-CN 
+2024-07-30 18:56:50.4269 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isListenEnabled = True 
+2024-07-30 18:56:50.4269 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopListenEnabled = False 
+2024-07-30 18:56:50.4269 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isBindEnabled = True 
+2024-07-30 18:56:50.4269 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopBindEnabled = False 
+2024-07-30 18:58:04.7198 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Application started 
+2024-07-30 18:58:04.7610 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前区域性:zh-CN 
+2024-07-30 18:58:04.7706 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 区域性名称:中文(简体，中国) 
+2024-07-30 18:58:04.7706 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - 当前线程的文化信息:zh-CN 
+2024-07-30 18:58:04.8413 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isListenEnabled = True 
+2024-07-30 18:58:04.8413 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopListenEnabled = False 
+2024-07-30 18:58:04.8413 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isBindEnabled = True 
+2024-07-30 18:58:04.8413 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - _isStopBindEnabled = False 
+2024-07-30 18:58:32.2358 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Server Listen Status: False 
+2024-07-30 18:58:32.2358 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - PropertyChanged: IsStopListenEnabled = True 
+2024-07-30 18:58:32.2358 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - PropertyChanged: IsListenEnabled = False 
+2024-07-30 18:58:32.2521 [INFO] MastercardHost.MyLogManager.Log(MyLogManager.cs:40) - Server Started Listen on 8765 

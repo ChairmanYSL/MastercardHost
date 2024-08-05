@@ -70,6 +70,15 @@ namespace MastercardHost.Properties {
         }
         
         /// <summary>
+        ///   查找类似 CAPK 的本地化字符串。
+        /// </summary>
+        internal static string CAPK {
+            get {
+                return ResourceManager.GetString("CAPK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Clear 的本地化字符串。
         /// </summary>
         internal static string ClearScreen {
@@ -291,6 +300,15 @@ namespace MastercardHost.Properties {
         internal static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Please Input Only Number 的本地化字符串。
+        /// </summary>
+        internal static string TitleDialog {
+            get {
+                return ResourceManager.GetString("TitleDialog", resourceCulture);
             }
         }
     }

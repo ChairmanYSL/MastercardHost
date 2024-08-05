@@ -16,18 +16,32 @@ using NLog;
 
 namespace MastercardHost
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form,INotifyPropertyChanged
     {
         private MainViewModel _viewModel;
+        private int _logLimit;
+        private TestForm _testForm;
+
         public MainForm()
         {
             InitializeComponent();
             _viewModel = new MainViewModel();
             BindViewModel();
-            MyLogManager.Log($"_isListenEnabled = {_viewModel.IsListenEnabled}");
-            MyLogManager.Log($"_isStopListenEnabled = {_viewModel.IsStopListenEnabled}");
-            MyLogManager.Log($"_isBindEnabled = {_viewModel.IsBindEnabled}");
-            MyLogManager.Log($"_isStopBindEnabled = {_viewModel.IsStopBindEnabled}");
+            TranslateLanguage();
+            InitLogLimitStatus();
+        }
+
+        public int LogLimit
+        {
+            get => _logLimit;
+            set
+            {
+                if (_logLimit != value) 
+                {
+                    _logLimit = value;
+                    OnPropertyChanged(nameof(LogLimit));
+                }
+            }
         }
 
         private void BindViewModel()
@@ -122,39 +136,134 @@ namespace MastercardHost
 
             button_ClearScreen.Click += (sender, e) => _viewModel.clearScreenCommand.Execute(null);
 
-            _viewModel.PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName == nameof(_viewModel.IsListenEnabled))
-                {
-                    MyLogManager.Log($"PropertyChanged: IsListenEnabled = {_viewModel.IsListenEnabled}");
-                    button_Listen_Server.Enabled = _viewModel.IsListenEnabled;
-                }
-                if (e.PropertyName == nameof(_viewModel.IsStopListenEnabled))
-                {
-                    MyLogManager.Log($"PropertyChanged: IsStopListenEnabled = {_viewModel.IsStopListenEnabled}");
-                    button_Close_Server.Enabled = _viewModel.IsStopListenEnabled;
-                }
-            };
-        }
-
-        private void SetLanguage(string cultureCode)
-        {
-            CultureInfo culture = new CultureInfo(cultureCode);
-            Thread.CurrentThread.CurrentUICulture = culture;
-            Thread.CurrentThread.CurrentCulture = culture;
-        }
-
-        private void UpdateLanguage()
-        {
-            // 更新控件的文本
-            this.Text = Properties.Resources.Title;
-            this.button_ClearScreen.Text = Properties.Resources.ClearScreen;
+            Binding bindLogLimit = new Binding(nameof(LogLimit), _viewModel, nameof(_viewModel.OutcomeLimit), true, DataSourceUpdateMode.OnPropertyChanged);
+            this.DataBindings.Add(bindLogLimit);
         }
 
         private void TranslateLanguage()
         {
-
+            this.Text = Properties.Resources.Title;
+            this.label_Config_Info.Text = Properties.Resources.Config;
+            this.label_CAPK_Info.Text = Properties.Resources.CAPK;
+            this.label_Revokey.Text = Properties.Resources.Revokey;
+            this.label_RespCode.Text = Properties.Resources.RespCode;
+            this.label_IssuerAuthData.Text = Properties.Resources.IssuerAuthData;
+            this.label_Script.Text = Properties.Resources.Script;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void InitLogLimitStatus()
+        {
+            this.toolStripMenuItem3.Checked = false;
+            this.toolStripMenuItem4.Checked = false;
+            this.toolStripMenuItem5.Checked = true;
+            this.toolStripMenuItem6.Checked = false;
+            this.ToolStripMenuItem_SelfDefine.Checked = false;
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            this.toolStripMenuItem3.Checked = !this.toolStripMenuItem3.Checked;
+
+            this.toolStripMenuItem4.Checked = false;
+            this.toolStripMenuItem5.Checked = false;
+            this.toolStripMenuItem6.Checked = false;
+            this.ToolStripMenuItem_SelfDefine.Checked = false;
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            this.toolStripMenuItem4.Checked = !this.toolStripMenuItem4.Checked;
+
+            this.toolStripMenuItem3.Checked = false;
+            this.toolStripMenuItem5.Checked = false;
+            this.toolStripMenuItem6.Checked = false;
+            this.ToolStripMenuItem_SelfDefine.Checked = false;
+        }
+
+        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        {
+            this.toolStripMenuItem5.Checked= !this.toolStripMenuItem5.Checked;
+
+            this.toolStripMenuItem3.Checked = false;
+            this.toolStripMenuItem4.Checked = false;
+            this.toolStripMenuItem6.Checked = false;
+            this.ToolStripMenuItem_SelfDefine.Checked = false;
+        }
+
+        private void toolStripMenuItem6_Click(object sender, EventArgs e)
+        {
+            this.toolStripMenuItem6.Checked= !this.toolStripMenuItem6.Checked;
+
+            this.toolStripMenuItem3.Checked = false;
+            this.toolStripMenuItem4.Checked = false;
+            this.toolStripMenuItem5.Checked = false;
+            this.ToolStripMenuItem_SelfDefine.Checked = false;
+        }
+
+        private void ToolStripMenuItem_SelfDefine_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.ToolStripMenuItem_SelfDefine.Checked = !this.ToolStripMenuItem_SelfDefine.Checked;
+
+                //如果点击之后是选中状态再弹出输入框
+                if (this.ToolStripMenuItem_SelfDefine.Checked)
+                {
+                    //弹出输入框
+                    using (FormDialogBox dialogBox = new FormDialogBox())
+                    {
+                        if (dialogBox.ShowDialog() == DialogResult.OK)
+                        {
+                            string input = dialogBox.InputResult;
+                            if (input == null || input.Length == 0)
+                            {
+                                this.ToolStripMenuItem_SelfDefine.Checked = false;
+                            }
+                            else
+                            {
+                                if(int.TryParse(input, out _logLimit))
+                                {
+
+                                }
+                                else
+                                {
+                                    // 显示弹窗提示用户
+                                    System.Windows.MessageBox.Show("Input not valid number", "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            this.ToolStripMenuItem_SelfDefine.Checked = false;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) 
+            {
+                MyLogManager.Log($"Exception: {ex.Message}");
+            }
+        }
+
+        private void button_Test_Click(object sender, EventArgs e)
+        {
+            if (_testForm == null || _testForm.IsDisposed)
+            {
+                _testForm = new TestForm(this);
+                _testForm.Closed += (s, args) => _testForm = null; // 确保引用被清除
+                _testForm.Show();
+            }
+            else
+            {
+                _testForm.Focus(); // 如果窗口已打开，将焦点移至该窗口
+            }
+        }
     }
 }

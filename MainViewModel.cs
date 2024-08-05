@@ -46,6 +46,8 @@ namespace MastercardHost
         private string _script;
         private ObservableRangeCollection<string> _outcomeText;
 
+        private int _outcomeLimit;
+
         public MainViewModel()
         {
             tcpCommunication = new TcpCommunication();
@@ -148,6 +150,12 @@ namespace MastercardHost
         {
             get => _outcomeText;
             set => SetProperty(ref _outcomeText, value);
+        }
+
+        public int OutcomeLimit
+        {
+            get => _outcomeLimit;
+            set => SetProperty(ref _outcomeLimit, value);
         }
 
         public void UpdateLogText(string text)

@@ -23,6 +23,8 @@ namespace MastercardHost
         [STAThread]
         static void Main()
         {
+            AllocConsole();
+            Console.WriteLine("Hello, World!");
             var currentCulture = CultureInfo.CurrentUICulture;
 
             // 配置NLog
@@ -43,6 +45,13 @@ namespace MastercardHost
             }
 
             MyLogManager.Log($"当前线程的文化信息:{Thread.CurrentThread.CurrentUICulture}");
+
+            //// 设置当前线程的文化信息为系统的UI文化
+            //CultureInfo culture = CultureInfo.CurrentUICulture;
+            //Thread.CurrentThread.CurrentUICulture = culture;
+            //Thread.CurrentThread.CurrentCulture = culture;
+
+            //MyLogManager.Log($"当前线程的文化信息:{Thread.CurrentThread.CurrentUICulture}");
 
 
             Application.EnableVisualStyles();

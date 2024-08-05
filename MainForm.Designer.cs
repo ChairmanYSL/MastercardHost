@@ -78,6 +78,7 @@ namespace MastercardHost
             this.label_Config_Info = new System.Windows.Forms.Label();
             this.comboBox_Config = new System.Windows.Forms.ComboBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.button_Test = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -125,27 +126,32 @@ namespace MastercardHost
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
             resources.ApplyResources(this.toolStripMenuItem4, "toolStripMenuItem4");
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
             resources.ApplyResources(this.toolStripMenuItem5, "toolStripMenuItem5");
+            this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
             resources.ApplyResources(this.toolStripMenuItem6, "toolStripMenuItem6");
+            this.toolStripMenuItem6.Click += new System.EventHandler(this.toolStripMenuItem6_Click);
             // 
             // ToolStripMenuItem_SelfDefine
             // 
             this.ToolStripMenuItem_SelfDefine.Name = "ToolStripMenuItem_SelfDefine";
             resources.ApplyResources(this.ToolStripMenuItem_SelfDefine, "ToolStripMenuItem_SelfDefine");
             this.ToolStripMenuItem_SelfDefine.Text = global::MastercardHost.Properties.Resources.SelfDefine;
+            this.ToolStripMenuItem_SelfDefine.Click += new System.EventHandler(this.ToolStripMenuItem_SelfDefine_Click);
             // 
             // logSwitchToolStripMenuItem
             // 
@@ -175,7 +181,6 @@ namespace MastercardHost
             this.appToolStripMenuItem});
             this.logLocationToolStripMenuItem.Name = "logLocationToolStripMenuItem";
             resources.ApplyResources(this.logLocationToolStripMenuItem, "logLocationToolStripMenuItem");
-            this.logLocationToolStripMenuItem.Text = global::MastercardHost.Properties.Resources.LogSwitch;
             // 
             // fileToolStripMenuItem
             // 
@@ -213,6 +218,7 @@ namespace MastercardHost
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.button_Test);
             this.splitContainer2.Panel2.Controls.Add(this.button_ClearScreen);
             this.splitContainer2.Panel2.Controls.Add(this.textBox_Script);
             this.splitContainer2.Panel2.Controls.Add(this.label_Script);
@@ -405,6 +411,13 @@ namespace MastercardHost
             resources.ApplyResources(this.richTextBox1, "richTextBox1");
             this.richTextBox1.Name = "richTextBox1";
             // 
+            // button_Test
+            // 
+            resources.ApplyResources(this.button_Test, "button_Test");
+            this.button_Test.Name = "button_Test";
+            this.button_Test.UseVisualStyleBackColor = true;
+            this.button_Test.Click += new System.EventHandler(this.button_Test_Click);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -481,5 +494,6 @@ namespace MastercardHost
         private System.Windows.Forms.Label label_Config_Info;
         private System.Windows.Forms.ComboBox comboBox_Config;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button button_Test;
     }
 }

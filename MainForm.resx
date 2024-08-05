@@ -191,6 +191,9 @@
   <data name="logLocationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>158, 22</value>
   </data>
+  <data name="logLocationToolStripMenuItem.Text" xml:space="preserve">
+    <value>Log Type</value>
+  </data>
   <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 22</value>
   </data>
@@ -212,6 +215,609 @@
   </data>
   <data name="splitContainer2.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
     <value>Horizontal</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Server_Setting.Name" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Server_Setting.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Server_Setting.Parent" xml:space="preserve">
+    <value>tabControl_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Server_Setting.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Client_Setting.Name" xml:space="preserve">
+    <value>tabPage_Client_Setting</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Client_Setting.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Client_Setting.Parent" xml:space="preserve">
+    <value>tabControl_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Client_Setting.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tabControl_Server_Setting.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tabControl_Server_Setting.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tabControl_Server_Setting.Size" type="System.Drawing.Size, System.Drawing">
+    <value>272, 134</value>
+  </data>
+  <data name="tabControl_Server_Setting.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;tabControl_Server_Setting.Name" xml:space="preserve">
+    <value>tabControl_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;tabControl_Server_Setting.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabControl_Server_Setting.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel1</value>
+  </data>
+  <data name="&gt;&gt;tabControl_Server_Setting.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel1.Name" xml:space="preserve">
+    <value>splitContainer2.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer2</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="button_Test.Font" type="System.Drawing.Font, System.Drawing">
+    <value>宋体, 10.5pt</value>
+  </data>
+  <data name="button_Test.Location" type="System.Drawing.Point, System.Drawing">
+    <value>121, 244</value>
+  </data>
+  <data name="button_Test.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 31</value>
+  </data>
+  <data name="button_Test.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="button_Test.Text" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="&gt;&gt;button_Test.Name" xml:space="preserve">
+    <value>button_Test</value>
+  </data>
+  <data name="&gt;&gt;button_Test.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_Test.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;button_Test.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="button_ClearScreen.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>System</value>
+  </data>
+  <data name="button_ClearScreen.Font" type="System.Drawing.Font, System.Drawing">
+    <value>宋体, 10.5pt</value>
+  </data>
+  <data name="button_ClearScreen.Location" type="System.Drawing.Point, System.Drawing">
+    <value>21, 244</value>
+  </data>
+  <data name="button_ClearScreen.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 31</value>
+  </data>
+  <data name="button_ClearScreen.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="&gt;&gt;button_ClearScreen.Name" xml:space="preserve">
+    <value>button_ClearScreen</value>
+  </data>
+  <data name="&gt;&gt;button_ClearScreen.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_ClearScreen.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;button_ClearScreen.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="textBox_Script.Location" type="System.Drawing.Point, System.Drawing">
+    <value>98, 208</value>
+  </data>
+  <data name="textBox_Script.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 21</value>
+  </data>
+  <data name="textBox_Script.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="&gt;&gt;textBox_Script.Name" xml:space="preserve">
+    <value>textBox_Script</value>
+  </data>
+  <data name="&gt;&gt;textBox_Script.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox_Script.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;textBox_Script.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label_Script.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_Script.Location" type="System.Drawing.Point, System.Drawing">
+    <value>29, 214</value>
+  </data>
+  <data name="label_Script.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="label_Script.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="label_Script.Text" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="&gt;&gt;label_Script.Name" xml:space="preserve">
+    <value>label_Script</value>
+  </data>
+  <data name="&gt;&gt;label_Script.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_Script.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;label_Script.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="label_IssuerAuthData.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_IssuerAuthData.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 172</value>
+  </data>
+  <data name="label_IssuerAuthData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 12</value>
+  </data>
+  <data name="label_IssuerAuthData.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="label_IssuerAuthData.Text" xml:space="preserve">
+    <value>IssuerAuthData</value>
+  </data>
+  <data name="&gt;&gt;label_IssuerAuthData.Name" xml:space="preserve">
+    <value>label_IssuerAuthData</value>
+  </data>
+  <data name="&gt;&gt;label_IssuerAuthData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_IssuerAuthData.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;label_IssuerAuthData.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="textBox_IAD.Location" type="System.Drawing.Point, System.Drawing">
+    <value>98, 168</value>
+  </data>
+  <data name="textBox_IAD.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 21</value>
+  </data>
+  <data name="textBox_IAD.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="&gt;&gt;textBox_IAD.Name" xml:space="preserve">
+    <value>textBox_IAD</value>
+  </data>
+  <data name="&gt;&gt;textBox_IAD.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox_IAD.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;textBox_IAD.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="textBox_RespCode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>98, 128</value>
+  </data>
+  <data name="textBox_RespCode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 21</value>
+  </data>
+  <data name="textBox_RespCode.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="&gt;&gt;textBox_RespCode.Name" xml:space="preserve">
+    <value>textBox_RespCode</value>
+  </data>
+  <data name="&gt;&gt;textBox_RespCode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox_RespCode.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;textBox_RespCode.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="label_RespCode.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_RespCode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>28, 131</value>
+  </data>
+  <data name="label_RespCode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 12</value>
+  </data>
+  <data name="label_RespCode.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="label_RespCode.Text" xml:space="preserve">
+    <value>RespCode</value>
+  </data>
+  <data name="&gt;&gt;label_RespCode.Name" xml:space="preserve">
+    <value>label_RespCode</value>
+  </data>
+  <data name="&gt;&gt;label_RespCode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_RespCode.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;label_RespCode.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="comboBox_Revokey.Location" type="System.Drawing.Point, System.Drawing">
+    <value>98, 89</value>
+  </data>
+  <data name="comboBox_Revokey.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 20</value>
+  </data>
+  <data name="comboBox_Revokey.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;comboBox_Revokey.Name" xml:space="preserve">
+    <value>comboBox_Revokey</value>
+  </data>
+  <data name="&gt;&gt;comboBox_Revokey.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;comboBox_Revokey.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;comboBox_Revokey.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="label_Revokey.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_Revokey.Location" type="System.Drawing.Point, System.Drawing">
+    <value>30, 92</value>
+  </data>
+  <data name="label_Revokey.Size" type="System.Drawing.Size, System.Drawing">
+    <value>47, 12</value>
+  </data>
+  <data name="label_Revokey.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="label_Revokey.Text" xml:space="preserve">
+    <value>Revokey</value>
+  </data>
+  <data name="&gt;&gt;label_Revokey.Name" xml:space="preserve">
+    <value>label_Revokey</value>
+  </data>
+  <data name="&gt;&gt;label_Revokey.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_Revokey.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;label_Revokey.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="comboBox_CAPK.Location" type="System.Drawing.Point, System.Drawing">
+    <value>98, 51</value>
+  </data>
+  <data name="comboBox_CAPK.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 20</value>
+  </data>
+  <data name="comboBox_CAPK.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;comboBox_CAPK.Name" xml:space="preserve">
+    <value>comboBox_CAPK</value>
+  </data>
+  <data name="&gt;&gt;comboBox_CAPK.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;comboBox_CAPK.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;comboBox_CAPK.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="label_CAPK_Info.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_CAPK_Info.Location" type="System.Drawing.Point, System.Drawing">
+    <value>28, 54</value>
+  </data>
+  <data name="label_CAPK_Info.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 12</value>
+  </data>
+  <data name="label_CAPK_Info.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="label_CAPK_Info.Text" xml:space="preserve">
+    <value>CAPK</value>
+  </data>
+  <data name="&gt;&gt;label_CAPK_Info.Name" xml:space="preserve">
+    <value>label_CAPK_Info</value>
+  </data>
+  <data name="&gt;&gt;label_CAPK_Info.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_CAPK_Info.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;label_CAPK_Info.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="label_Config_Info.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_Config_Info.Location" type="System.Drawing.Point, System.Drawing">
+    <value>28, 14</value>
+  </data>
+  <data name="label_Config_Info.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="label_Config_Info.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="label_Config_Info.Text" xml:space="preserve">
+    <value>Config</value>
+  </data>
+  <data name="&gt;&gt;label_Config_Info.Name" xml:space="preserve">
+    <value>label_Config_Info</value>
+  </data>
+  <data name="&gt;&gt;label_Config_Info.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_Config_Info.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;label_Config_Info.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="comboBox_Config.Location" type="System.Drawing.Point, System.Drawing">
+    <value>98, 11</value>
+  </data>
+  <data name="comboBox_Config.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 20</value>
+  </data>
+  <data name="comboBox_Config.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;comboBox_Config.Name" xml:space="preserve">
+    <value>comboBox_Config</value>
+  </data>
+  <data name="&gt;&gt;comboBox_Config.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;comboBox_Config.Parent" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;comboBox_Config.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel2.Name" xml:space="preserve">
+    <value>splitContainer2.Panel2</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer2</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>272, 425</value>
+  </data>
+  <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
+    <value>134</value>
+  </data>
+  <data name="splitContainer2.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Name" xml:space="preserve">
+    <value>splitContainer2</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
+    <value>splitContainer1.Panel1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.Parent" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="richTextBox1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="richTextBox1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="richTextBox1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>524, 425</value>
+  </data>
+  <data name="richTextBox1.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="richTextBox1.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;richTextBox1.Name" xml:space="preserve">
+    <value>richTextBox1</value>
+  </data>
+  <data name="&gt;&gt;richTextBox1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;richTextBox1.Parent" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
+  </data>
+  <data name="&gt;&gt;richTextBox1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.Name" xml:space="preserve">
+    <value>splitContainer1.Panel2</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.Parent" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>800, 425</value>
+  </data>
+  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
+    <value>272</value>
+  </data>
+  <data name="splitContainer1.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Name" xml:space="preserve">
+    <value>splitContainer1</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Server.Name" xml:space="preserve">
+    <value>button_Close_Server</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Server.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;button_Listen_Server.Name" xml:space="preserve">
+    <value>button_Listen_Server</value>
+  </data>
+  <data name="&gt;&gt;button_Listen_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_Listen_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;button_Listen_Server.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Server.Name" xml:space="preserve">
+    <value>textBox_Port_Server</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Server.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;textBox_IP_Addr_Server.Name" xml:space="preserve">
+    <value>textBox_IP_Addr_Server</value>
+  </data>
+  <data name="&gt;&gt;textBox_IP_Addr_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox_IP_Addr_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;textBox_IP_Addr_Server.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Server.Name" xml:space="preserve">
+    <value>label_Port_Server</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Server.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Server.Name" xml:space="preserve">
+    <value>label_IP_Addr_Server</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Server.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tabPage_Server_Setting.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage_Server_Setting.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage_Server_Setting.Size" type="System.Drawing.Size, System.Drawing">
+    <value>264, 108</value>
+  </data>
+  <data name="tabPage_Server_Setting.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Server_Setting.Name" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Server_Setting.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Server_Setting.Parent" xml:space="preserve">
+    <value>tabControl_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;tabPage_Server_Setting.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="button_Close_Server.Location" type="System.Drawing.Point, System.Drawing">
     <value>160, 48</value>
@@ -357,30 +963,6 @@
   <data name="&gt;&gt;label_IP_Addr_Server.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="tabPage_Server_Setting.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabPage_Server_Setting.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabPage_Server_Setting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>264, 108</value>
-  </data>
-  <data name="tabPage_Server_Setting.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Server_Setting.Name" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Server_Setting.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Server_Setting.Parent" xml:space="preserve">
-    <value>tabControl_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Server_Setting.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="&gt;&gt;button_Close_Client.Name" xml:space="preserve">
     <value>button_Close_Client</value>
   </data>
@@ -460,7 +1042,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tabPage_Client_Setting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>241, 108</value>
+    <value>264, 108</value>
   </data>
   <data name="tabPage_Client_Setting.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -476,459 +1058,6 @@
   </data>
   <data name="&gt;&gt;tabPage_Client_Setting.ZOrder" xml:space="preserve">
     <value>1</value>
-  </data>
-  <data name="tabControl_Server_Setting.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="tabControl_Server_Setting.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="tabControl_Server_Setting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>272, 134</value>
-  </data>
-  <data name="tabControl_Server_Setting.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;tabControl_Server_Setting.Name" xml:space="preserve">
-    <value>tabControl_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabControl_Server_Setting.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabControl_Server_Setting.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel1</value>
-  </data>
-  <data name="&gt;&gt;tabControl_Server_Setting.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Panel1.Name" xml:space="preserve">
-    <value>splitContainer2.Panel1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Panel1.Parent" xml:space="preserve">
-    <value>splitContainer2</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="button_ClearScreen.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
-    <value>System</value>
-  </data>
-  <data name="button_ClearScreen.Location" type="System.Drawing.Point, System.Drawing">
-    <value>21, 244</value>
-  </data>
-  <data name="button_ClearScreen.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 31</value>
-  </data>
-  <data name="button_ClearScreen.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="&gt;&gt;button_ClearScreen.Name" xml:space="preserve">
-    <value>button_ClearScreen</value>
-  </data>
-  <data name="&gt;&gt;button_ClearScreen.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_ClearScreen.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;button_ClearScreen.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="textBox_Script.Location" type="System.Drawing.Point, System.Drawing">
-    <value>98, 208</value>
-  </data>
-  <data name="textBox_Script.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 21</value>
-  </data>
-  <data name="textBox_Script.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
-  <data name="&gt;&gt;textBox_Script.Name" xml:space="preserve">
-    <value>textBox_Script</value>
-  </data>
-  <data name="&gt;&gt;textBox_Script.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_Script.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;textBox_Script.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="label_Script.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_Script.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 214</value>
-  </data>
-  <data name="label_Script.Size" type="System.Drawing.Size, System.Drawing">
-    <value>41, 12</value>
-  </data>
-  <data name="label_Script.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
-  <data name="label_Script.Text" xml:space="preserve">
-    <value>Script</value>
-  </data>
-  <data name="&gt;&gt;label_Script.Name" xml:space="preserve">
-    <value>label_Script</value>
-  </data>
-  <data name="&gt;&gt;label_Script.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_Script.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;label_Script.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="label_IssuerAuthData.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_IssuerAuthData.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 172</value>
-  </data>
-  <data name="label_IssuerAuthData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>89, 12</value>
-  </data>
-  <data name="label_IssuerAuthData.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="label_IssuerAuthData.Text" xml:space="preserve">
-    <value>IssuerAuthData</value>
-  </data>
-  <data name="&gt;&gt;label_IssuerAuthData.Name" xml:space="preserve">
-    <value>label_IssuerAuthData</value>
-  </data>
-  <data name="&gt;&gt;label_IssuerAuthData.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_IssuerAuthData.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;label_IssuerAuthData.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="textBox_IAD.Location" type="System.Drawing.Point, System.Drawing">
-    <value>98, 168</value>
-  </data>
-  <data name="textBox_IAD.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 21</value>
-  </data>
-  <data name="textBox_IAD.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="&gt;&gt;textBox_IAD.Name" xml:space="preserve">
-    <value>textBox_IAD</value>
-  </data>
-  <data name="&gt;&gt;textBox_IAD.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_IAD.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;textBox_IAD.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="textBox_RespCode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>98, 128</value>
-  </data>
-  <data name="textBox_RespCode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 21</value>
-  </data>
-  <data name="textBox_RespCode.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="&gt;&gt;textBox_RespCode.Name" xml:space="preserve">
-    <value>textBox_RespCode</value>
-  </data>
-  <data name="&gt;&gt;textBox_RespCode.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_RespCode.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;textBox_RespCode.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="label_RespCode.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_RespCode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>28, 131</value>
-  </data>
-  <data name="label_RespCode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>53, 12</value>
-  </data>
-  <data name="label_RespCode.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="label_RespCode.Text" xml:space="preserve">
-    <value>RespCode</value>
-  </data>
-  <data name="&gt;&gt;label_RespCode.Name" xml:space="preserve">
-    <value>label_RespCode</value>
-  </data>
-  <data name="&gt;&gt;label_RespCode.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_RespCode.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;label_RespCode.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="comboBox_Revokey.Location" type="System.Drawing.Point, System.Drawing">
-    <value>98, 89</value>
-  </data>
-  <data name="comboBox_Revokey.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 20</value>
-  </data>
-  <data name="comboBox_Revokey.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="&gt;&gt;comboBox_Revokey.Name" xml:space="preserve">
-    <value>comboBox_Revokey</value>
-  </data>
-  <data name="&gt;&gt;comboBox_Revokey.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;comboBox_Revokey.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;comboBox_Revokey.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="label_Revokey.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_Revokey.Location" type="System.Drawing.Point, System.Drawing">
-    <value>30, 92</value>
-  </data>
-  <data name="label_Revokey.Size" type="System.Drawing.Size, System.Drawing">
-    <value>47, 12</value>
-  </data>
-  <data name="label_Revokey.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="label_Revokey.Text" xml:space="preserve">
-    <value>Revokey</value>
-  </data>
-  <data name="&gt;&gt;label_Revokey.Name" xml:space="preserve">
-    <value>label_Revokey</value>
-  </data>
-  <data name="&gt;&gt;label_Revokey.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_Revokey.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;label_Revokey.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="comboBox_CAPK.Location" type="System.Drawing.Point, System.Drawing">
-    <value>98, 51</value>
-  </data>
-  <data name="comboBox_CAPK.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 20</value>
-  </data>
-  <data name="comboBox_CAPK.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;comboBox_CAPK.Name" xml:space="preserve">
-    <value>comboBox_CAPK</value>
-  </data>
-  <data name="&gt;&gt;comboBox_CAPK.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;comboBox_CAPK.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;comboBox_CAPK.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="label_CAPK_Info.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_CAPK_Info.Location" type="System.Drawing.Point, System.Drawing">
-    <value>28, 54</value>
-  </data>
-  <data name="label_CAPK_Info.Size" type="System.Drawing.Size, System.Drawing">
-    <value>29, 12</value>
-  </data>
-  <data name="label_CAPK_Info.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="label_CAPK_Info.Text" xml:space="preserve">
-    <value>CAPK</value>
-  </data>
-  <data name="&gt;&gt;label_CAPK_Info.Name" xml:space="preserve">
-    <value>label_CAPK_Info</value>
-  </data>
-  <data name="&gt;&gt;label_CAPK_Info.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_CAPK_Info.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;label_CAPK_Info.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="label_Config_Info.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_Config_Info.Location" type="System.Drawing.Point, System.Drawing">
-    <value>28, 14</value>
-  </data>
-  <data name="label_Config_Info.Size" type="System.Drawing.Size, System.Drawing">
-    <value>41, 12</value>
-  </data>
-  <data name="label_Config_Info.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="label_Config_Info.Text" xml:space="preserve">
-    <value>Config</value>
-  </data>
-  <data name="&gt;&gt;label_Config_Info.Name" xml:space="preserve">
-    <value>label_Config_Info</value>
-  </data>
-  <data name="&gt;&gt;label_Config_Info.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_Config_Info.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;label_Config_Info.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="comboBox_Config.Location" type="System.Drawing.Point, System.Drawing">
-    <value>98, 11</value>
-  </data>
-  <data name="comboBox_Config.Size" type="System.Drawing.Size, System.Drawing">
-    <value>162, 20</value>
-  </data>
-  <data name="comboBox_Config.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;comboBox_Config.Name" xml:space="preserve">
-    <value>comboBox_Config</value>
-  </data>
-  <data name="&gt;&gt;comboBox_Config.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;comboBox_Config.Parent" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;comboBox_Config.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Panel2.Name" xml:space="preserve">
-    <value>splitContainer2.Panel2</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Panel2.Parent" xml:space="preserve">
-    <value>splitContainer2</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Panel2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>272, 425</value>
-  </data>
-  <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
-    <value>134</value>
-  </data>
-  <data name="splitContainer2.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Name" xml:space="preserve">
-    <value>splitContainer2</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.Parent" xml:space="preserve">
-    <value>splitContainer1.Panel1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer2.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.Name" xml:space="preserve">
-    <value>splitContainer1.Panel1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.Parent" xml:space="preserve">
-    <value>splitContainer1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="richTextBox1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="richTextBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="richTextBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>524, 425</value>
-  </data>
-  <data name="richTextBox1.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="richTextBox1.Text" xml:space="preserve">
-    <value />
-  </data>
-  <data name="&gt;&gt;richTextBox1.Name" xml:space="preserve">
-    <value>richTextBox1</value>
-  </data>
-  <data name="&gt;&gt;richTextBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;richTextBox1.Parent" xml:space="preserve">
-    <value>splitContainer1.Panel2</value>
-  </data>
-  <data name="&gt;&gt;richTextBox1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.Name" xml:space="preserve">
-    <value>splitContainer1.Panel2</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.Parent" xml:space="preserve">
-    <value>splitContainer1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Panel2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>800, 425</value>
-  </data>
-  <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
-    <value>272</value>
-  </data>
-  <data name="splitContainer1.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Name" xml:space="preserve">
-    <value>splitContainer1</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="button_Close_Client.Location" type="System.Drawing.Point, System.Drawing">
     <value>166, 47</value>

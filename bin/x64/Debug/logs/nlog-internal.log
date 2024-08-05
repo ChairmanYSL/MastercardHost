@@ -2429,3 +2429,341 @@
 2024-07-30 18:45:38.6269 Debug FileTarget(Name=logfile): Closed.
 2024-07-30 18:45:38.6269 Debug Finished closing logging configuration.
 2024-07-30 18:45:38.6269 Info LogFactory has been closed.
+2024-07-30 18:50:33.8228 Debug Message Template Auto Format enabled
+2024-07-30 18:50:33.9009 Debug Adding target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:50:33.9009 Info Registered target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:50:33.9009 Debug Adding target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:50:33.9009 Info Registered target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:50:33.9109 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.2.2526. Product version: 5.3.2+8d52d4f3fcdbd84beae3442e1fdc8125598ed81f. GlobalAssemblyCache: False
+2024-07-30 18:50:33.9109 Debug Start watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:50:33.9109 Debug --- NLog configuration dump ---
+2024-07-30 18:50:33.9109 Debug Targets:
+2024-07-30 18:50:33.9109 Debug FileTarget(Name=logfile)
+2024-07-30 18:50:33.9109 Debug ConsoleTarget(Name=logconsole)
+2024-07-30 18:50:33.9109 Debug Rules:
+2024-07-30 18:50:33.9109 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logconsole ]
+2024-07-30 18:50:33.9109 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logfile ]
+2024-07-30 18:50:33.9109 Debug --- End of NLog configuration dump ---
+2024-07-30 18:50:33.9109 Info LogManager.ThrowExceptions = true can crash the application! Use only for unit-testing and last resort troubleshooting.
+2024-07-30 18:50:33.9247 Info Validating config: TargetNames=logconsole, logfile, ConfigItems=40, FilePath=D:\Work\VS_Project\MastercardHost\bin\x64\Debug\NLog.config
+2024-07-30 18:50:33.9247 Debug Unused target checking is started... Rule Count: 2, Target Count: 2
+2024-07-30 18:50:33.9247 Debug Unused target checking is completed. Total Rule Count: 2, Total Target Count: 2, Unused Target Count: 0
+2024-07-30 18:50:33.9247 Info Configuration initialized.
+2024-07-30 18:50:33.9247 Debug Targets configured when LogLevel >= Info for Logger: logconsole
+2024-07-30 18:50:33.9382 Debug Logger logconsole [Info] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Logger logconsole [Warn] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Logger logconsole [Error] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Logger logconsole [Fatal] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Targets configured when LogLevel >= Info for Logger: logfile
+2024-07-30 18:50:33.9382 Debug Logger logfile [Info] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Logger logfile [Warn] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Logger logfile [Error] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Logger logfile [Fatal] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Targets configured when LogLevel >= Info for Logger: MastercardHost.MyLogManager
+2024-07-30 18:50:33.9382 Debug Logger MastercardHost.MyLogManager [Info] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Logger MastercardHost.MyLogManager [Warn] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Logger MastercardHost.MyLogManager [Error] => logconsole logfile
+2024-07-30 18:50:33.9382 Debug Logger MastercardHost.MyLogManager [Fatal] => logconsole logfile
+2024-07-30 18:50:33.9776 Debug FileTarget(Name=logfile): Preparing for new file: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:50:33.9967 Debug FileTarget(Name=logfile): Creating file appender: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:50:33.9967 Debug Start watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:50:40.2301 Info AppDomain Shutting down. LogFactory closing...
+2024-07-30 18:50:40.2301 Debug Stop watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:50:40.2429 Debug Flush completed
+2024-07-30 18:50:40.2429 Debug Closing logging configuration...
+2024-07-30 18:50:40.2429 Debug ConsoleTarget(Name=logconsole): Closing...
+2024-07-30 18:50:40.2429 Debug ConsoleTarget(Name=logconsole): Closed.
+2024-07-30 18:50:40.2429 Debug FileTarget(Name=logfile): Closing...
+2024-07-30 18:50:40.2429 Debug FileTarget(Name=logfile): FileAppender Invalidate Closing File: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:50:40.2429 Debug Stop watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:50:40.2429 Debug FileTarget(Name=logfile): Closed.
+2024-07-30 18:50:40.2429 Debug Finished closing logging configuration.
+2024-07-30 18:50:40.2429 Info LogFactory has been closed.
+2024-07-30 18:51:33.2173 Debug Message Template Auto Format enabled
+2024-07-30 18:51:33.2943 Debug Adding target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:51:33.2943 Info Registered target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:51:33.2978 Debug Adding target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:51:33.2978 Info Registered target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:51:33.2978 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.2.2526. Product version: 5.3.2+8d52d4f3fcdbd84beae3442e1fdc8125598ed81f. GlobalAssemblyCache: False
+2024-07-30 18:51:33.2978 Debug Start watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:51:33.2978 Debug --- NLog configuration dump ---
+2024-07-30 18:51:33.2978 Debug Targets:
+2024-07-30 18:51:33.2978 Debug FileTarget(Name=logfile)
+2024-07-30 18:51:33.3134 Debug ConsoleTarget(Name=logconsole)
+2024-07-30 18:51:33.3134 Debug Rules:
+2024-07-30 18:51:33.3134 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logconsole ]
+2024-07-30 18:51:33.3134 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logfile ]
+2024-07-30 18:51:33.3134 Debug --- End of NLog configuration dump ---
+2024-07-30 18:51:33.3134 Info LogManager.ThrowExceptions = true can crash the application! Use only for unit-testing and last resort troubleshooting.
+2024-07-30 18:51:33.3134 Info Validating config: TargetNames=logconsole, logfile, ConfigItems=40, FilePath=D:\Work\VS_Project\MastercardHost\bin\x64\Debug\NLog.config
+2024-07-30 18:51:33.3134 Debug Unused target checking is started... Rule Count: 2, Target Count: 2
+2024-07-30 18:51:33.3134 Debug Unused target checking is completed. Total Rule Count: 2, Total Target Count: 2, Unused Target Count: 0
+2024-07-30 18:51:33.3134 Info Configuration initialized.
+2024-07-30 18:51:33.3312 Debug Targets configured when LogLevel >= Info for Logger: logconsole
+2024-07-30 18:51:33.3312 Debug Logger logconsole [Info] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Logger logconsole [Warn] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Logger logconsole [Error] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Logger logconsole [Fatal] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Targets configured when LogLevel >= Info for Logger: logfile
+2024-07-30 18:51:33.3312 Debug Logger logfile [Info] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Logger logfile [Warn] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Logger logfile [Error] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Logger logfile [Fatal] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Targets configured when LogLevel >= Info for Logger: MastercardHost.MyLogManager
+2024-07-30 18:51:33.3312 Debug Logger MastercardHost.MyLogManager [Info] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Logger MastercardHost.MyLogManager [Warn] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Logger MastercardHost.MyLogManager [Error] => logconsole logfile
+2024-07-30 18:51:33.3312 Debug Logger MastercardHost.MyLogManager [Fatal] => logconsole logfile
+2024-07-30 18:51:33.3647 Debug FileTarget(Name=logfile): Preparing for new file: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:51:33.3799 Debug FileTarget(Name=logfile): Creating file appender: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:51:33.3799 Debug Start watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:51:41.3818 Info AppDomain Shutting down. LogFactory closing...
+2024-07-30 18:51:41.3818 Debug Stop watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:51:41.3926 Debug Flush completed
+2024-07-30 18:51:41.3926 Debug Closing logging configuration...
+2024-07-30 18:51:41.3926 Debug ConsoleTarget(Name=logconsole): Closing...
+2024-07-30 18:51:41.3926 Debug ConsoleTarget(Name=logconsole): Closed.
+2024-07-30 18:51:41.3926 Debug FileTarget(Name=logfile): Closing...
+2024-07-30 18:51:41.3926 Debug FileTarget(Name=logfile): FileAppender Invalidate Closing File: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:51:41.3926 Debug Stop watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:51:41.3926 Debug FileTarget(Name=logfile): Closed.
+2024-07-30 18:51:41.3926 Debug Finished closing logging configuration.
+2024-07-30 18:51:41.3926 Info LogFactory has been closed.
+2024-07-30 18:52:06.7643 Debug Message Template Auto Format enabled
+2024-07-30 18:52:06.8480 Debug Adding target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:52:06.8480 Info Registered target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:52:06.8480 Debug Adding target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:52:06.8480 Info Registered target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:52:06.8601 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.2.2526. Product version: 5.3.2+8d52d4f3fcdbd84beae3442e1fdc8125598ed81f. GlobalAssemblyCache: False
+2024-07-30 18:52:06.8601 Debug Start watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:52:06.8601 Debug --- NLog configuration dump ---
+2024-07-30 18:52:06.8601 Debug Targets:
+2024-07-30 18:52:06.8601 Debug FileTarget(Name=logfile)
+2024-07-30 18:52:06.8601 Debug ConsoleTarget(Name=logconsole)
+2024-07-30 18:52:06.8601 Debug Rules:
+2024-07-30 18:52:06.8601 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logconsole ]
+2024-07-30 18:52:06.8601 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logfile ]
+2024-07-30 18:52:06.8601 Debug --- End of NLog configuration dump ---
+2024-07-30 18:52:06.8601 Info LogManager.ThrowExceptions = true can crash the application! Use only for unit-testing and last resort troubleshooting.
+2024-07-30 18:52:06.8601 Info Validating config: TargetNames=logconsole, logfile, ConfigItems=40, FilePath=D:\Work\VS_Project\MastercardHost\bin\x64\Debug\NLog.config
+2024-07-30 18:52:06.8758 Debug Unused target checking is started... Rule Count: 2, Target Count: 2
+2024-07-30 18:52:06.8758 Debug Unused target checking is completed. Total Rule Count: 2, Total Target Count: 2, Unused Target Count: 0
+2024-07-30 18:52:06.8758 Info Configuration initialized.
+2024-07-30 18:52:06.8758 Debug Targets configured when LogLevel >= Info for Logger: logconsole
+2024-07-30 18:52:06.8758 Debug Logger logconsole [Info] => logconsole logfile
+2024-07-30 18:52:06.8758 Debug Logger logconsole [Warn] => logconsole logfile
+2024-07-30 18:52:06.8758 Debug Logger logconsole [Error] => logconsole logfile
+2024-07-30 18:52:06.8758 Debug Logger logconsole [Fatal] => logconsole logfile
+2024-07-30 18:52:06.8758 Debug Targets configured when LogLevel >= Info for Logger: logfile
+2024-07-30 18:52:06.8758 Debug Logger logfile [Info] => logconsole logfile
+2024-07-30 18:52:06.8758 Debug Logger logfile [Warn] => logconsole logfile
+2024-07-30 18:52:06.8758 Debug Logger logfile [Error] => logconsole logfile
+2024-07-30 18:52:06.8758 Debug Logger logfile [Fatal] => logconsole logfile
+2024-07-30 18:52:06.8758 Debug Targets configured when LogLevel >= Info for Logger: MastercardHost.MyLogManager
+2024-07-30 18:52:06.8758 Debug Logger MastercardHost.MyLogManager [Info] => logconsole logfile
+2024-07-30 18:52:06.8758 Debug Logger MastercardHost.MyLogManager [Warn] => logconsole logfile
+2024-07-30 18:52:06.8919 Debug Logger MastercardHost.MyLogManager [Error] => logconsole logfile
+2024-07-30 18:52:06.8919 Debug Logger MastercardHost.MyLogManager [Fatal] => logconsole logfile
+2024-07-30 18:52:06.9214 Debug FileTarget(Name=logfile): Preparing for new file: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:52:06.9365 Debug FileTarget(Name=logfile): Creating file appender: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:52:06.9385 Debug Start watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:52:08.3737 Info AppDomain Shutting down. LogFactory closing...
+2024-07-30 18:52:08.3762 Debug Stop watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:52:08.3762 Debug Flush completed
+2024-07-30 18:52:08.3762 Debug Closing logging configuration...
+2024-07-30 18:52:08.3762 Debug ConsoleTarget(Name=logconsole): Closing...
+2024-07-30 18:52:08.3762 Debug ConsoleTarget(Name=logconsole): Closed.
+2024-07-30 18:52:08.3762 Debug FileTarget(Name=logfile): Closing...
+2024-07-30 18:52:08.3762 Debug FileTarget(Name=logfile): FileAppender Invalidate Closing File: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:52:08.3762 Debug Stop watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:52:08.3934 Debug FileTarget(Name=logfile): Closed.
+2024-07-30 18:52:08.3934 Debug Finished closing logging configuration.
+2024-07-30 18:52:08.3934 Info LogFactory has been closed.
+2024-07-30 18:52:26.0440 Debug Message Template Auto Format enabled
+2024-07-30 18:52:26.1261 Debug Adding target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:52:26.1261 Info Registered target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:52:26.1261 Debug Adding target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:52:26.1261 Info Registered target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:52:26.1261 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.2.2526. Product version: 5.3.2+8d52d4f3fcdbd84beae3442e1fdc8125598ed81f. GlobalAssemblyCache: False
+2024-07-30 18:52:26.1424 Debug Start watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:52:26.1424 Debug --- NLog configuration dump ---
+2024-07-30 18:52:26.1424 Debug Targets:
+2024-07-30 18:52:26.1424 Debug FileTarget(Name=logfile)
+2024-07-30 18:52:26.1424 Debug ConsoleTarget(Name=logconsole)
+2024-07-30 18:52:26.1424 Debug Rules:
+2024-07-30 18:52:26.1424 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logconsole ]
+2024-07-30 18:52:26.1424 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logfile ]
+2024-07-30 18:52:26.1424 Debug --- End of NLog configuration dump ---
+2024-07-30 18:52:26.1424 Info LogManager.ThrowExceptions = true can crash the application! Use only for unit-testing and last resort troubleshooting.
+2024-07-30 18:52:26.1424 Info Validating config: TargetNames=logconsole, logfile, ConfigItems=40, FilePath=D:\Work\VS_Project\MastercardHost\bin\x64\Debug\NLog.config
+2024-07-30 18:52:26.1424 Debug Unused target checking is started... Rule Count: 2, Target Count: 2
+2024-07-30 18:52:26.1424 Debug Unused target checking is completed. Total Rule Count: 2, Total Target Count: 2, Unused Target Count: 0
+2024-07-30 18:52:26.1609 Info Configuration initialized.
+2024-07-30 18:52:26.1609 Debug Targets configured when LogLevel >= Info for Logger: logconsole
+2024-07-30 18:52:26.1609 Debug Logger logconsole [Info] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Logger logconsole [Warn] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Logger logconsole [Error] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Logger logconsole [Fatal] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Targets configured when LogLevel >= Info for Logger: logfile
+2024-07-30 18:52:26.1609 Debug Logger logfile [Info] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Logger logfile [Warn] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Logger logfile [Error] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Logger logfile [Fatal] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Targets configured when LogLevel >= Info for Logger: MastercardHost.MyLogManager
+2024-07-30 18:52:26.1609 Debug Logger MastercardHost.MyLogManager [Info] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Logger MastercardHost.MyLogManager [Warn] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Logger MastercardHost.MyLogManager [Error] => logconsole logfile
+2024-07-30 18:52:26.1609 Debug Logger MastercardHost.MyLogManager [Fatal] => logconsole logfile
+2024-07-30 18:52:26.2058 Debug FileTarget(Name=logfile): Preparing for new file: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:52:26.2248 Debug FileTarget(Name=logfile): Creating file appender: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:52:26.2248 Debug Start watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:52:29.5597 Info AppDomain Shutting down. LogFactory closing...
+2024-07-30 18:52:29.5597 Debug Stop watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:52:29.5714 Debug Flush completed
+2024-07-30 18:52:29.5714 Debug Closing logging configuration...
+2024-07-30 18:52:29.5714 Debug ConsoleTarget(Name=logconsole): Closing...
+2024-07-30 18:52:29.5714 Debug ConsoleTarget(Name=logconsole): Closed.
+2024-07-30 18:52:29.5714 Debug FileTarget(Name=logfile): Closing...
+2024-07-30 18:52:29.5714 Debug FileTarget(Name=logfile): FileAppender Invalidate Closing File: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:52:29.5714 Debug Stop watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:52:29.5714 Debug FileTarget(Name=logfile): Closed.
+2024-07-30 18:52:29.5714 Debug Finished closing logging configuration.
+2024-07-30 18:52:29.5714 Info LogFactory has been closed.
+2024-07-30 18:55:41.0697 Debug Message Template Auto Format enabled
+2024-07-30 18:55:41.1500 Debug Adding target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:55:41.1500 Info Registered target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:55:41.1500 Debug Adding target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:55:41.1500 Info Registered target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:55:41.1620 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.2.2526. Product version: 5.3.2+8d52d4f3fcdbd84beae3442e1fdc8125598ed81f. GlobalAssemblyCache: False
+2024-07-30 18:55:41.1620 Debug Start watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:55:41.1620 Debug --- NLog configuration dump ---
+2024-07-30 18:55:41.1620 Debug Targets:
+2024-07-30 18:55:41.1620 Debug FileTarget(Name=logfile)
+2024-07-30 18:55:41.1620 Debug ConsoleTarget(Name=logconsole)
+2024-07-30 18:55:41.1620 Debug Rules:
+2024-07-30 18:55:41.1620 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logconsole ]
+2024-07-30 18:55:41.1620 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logfile ]
+2024-07-30 18:55:41.1620 Debug --- End of NLog configuration dump ---
+2024-07-30 18:55:41.1731 Info LogManager.ThrowExceptions = true can crash the application! Use only for unit-testing and last resort troubleshooting.
+2024-07-30 18:55:41.1731 Info Validating config: TargetNames=logconsole, logfile, ConfigItems=40, FilePath=D:\Work\VS_Project\MastercardHost\bin\x64\Debug\NLog.config
+2024-07-30 18:55:41.1731 Debug Unused target checking is started... Rule Count: 2, Target Count: 2
+2024-07-30 18:55:41.1731 Debug Unused target checking is completed. Total Rule Count: 2, Total Target Count: 2, Unused Target Count: 0
+2024-07-30 18:55:41.1731 Info Configuration initialized.
+2024-07-30 18:55:41.1731 Debug Targets configured when LogLevel >= Info for Logger: logconsole
+2024-07-30 18:55:41.1731 Debug Logger logconsole [Info] => logconsole logfile
+2024-07-30 18:55:41.1731 Debug Logger logconsole [Warn] => logconsole logfile
+2024-07-30 18:55:41.1731 Debug Logger logconsole [Error] => logconsole logfile
+2024-07-30 18:55:41.1731 Debug Logger logconsole [Fatal] => logconsole logfile
+2024-07-30 18:55:41.1889 Debug Targets configured when LogLevel >= Info for Logger: logfile
+2024-07-30 18:55:41.1889 Debug Logger logfile [Info] => logconsole logfile
+2024-07-30 18:55:41.1889 Debug Logger logfile [Warn] => logconsole logfile
+2024-07-30 18:55:41.1889 Debug Logger logfile [Error] => logconsole logfile
+2024-07-30 18:55:41.1889 Debug Logger logfile [Fatal] => logconsole logfile
+2024-07-30 18:55:41.1889 Debug Targets configured when LogLevel >= Info for Logger: MastercardHost.MyLogManager
+2024-07-30 18:55:41.1889 Debug Logger MastercardHost.MyLogManager [Info] => logconsole logfile
+2024-07-30 18:55:41.1889 Debug Logger MastercardHost.MyLogManager [Warn] => logconsole logfile
+2024-07-30 18:55:41.1889 Debug Logger MastercardHost.MyLogManager [Error] => logconsole logfile
+2024-07-30 18:55:41.1889 Debug Logger MastercardHost.MyLogManager [Fatal] => logconsole logfile
+2024-07-30 18:55:41.2206 Debug FileTarget(Name=logfile): Preparing for new file: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:55:41.2362 Debug FileTarget(Name=logfile): Creating file appender: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:55:41.2362 Debug Start watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:55:42.6882 Info AppDomain Shutting down. LogFactory closing...
+2024-07-30 18:55:42.6882 Debug Stop watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:55:42.6882 Debug Flush completed
+2024-07-30 18:55:42.6882 Debug Closing logging configuration...
+2024-07-30 18:55:42.6882 Debug ConsoleTarget(Name=logconsole): Closing...
+2024-07-30 18:55:42.6882 Debug ConsoleTarget(Name=logconsole): Closed.
+2024-07-30 18:55:42.7044 Debug FileTarget(Name=logfile): Closing...
+2024-07-30 18:55:42.7044 Debug FileTarget(Name=logfile): FileAppender Invalidate Closing File: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:55:42.7044 Debug Stop watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:55:42.7044 Debug FileTarget(Name=logfile): Closed.
+2024-07-30 18:55:42.7044 Debug Finished closing logging configuration.
+2024-07-30 18:55:42.7044 Info LogFactory has been closed.
+2024-07-30 18:56:50.1706 Debug Message Template Auto Format enabled
+2024-07-30 18:56:50.2506 Debug Adding target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:56:50.2506 Info Registered target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:56:50.2506 Debug Adding target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:56:50.2506 Info Registered target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:56:50.2506 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.2.2526. Product version: 5.3.2+8d52d4f3fcdbd84beae3442e1fdc8125598ed81f. GlobalAssemblyCache: False
+2024-07-30 18:56:50.2686 Debug Start watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:56:50.2686 Debug --- NLog configuration dump ---
+2024-07-30 18:56:50.2686 Debug Targets:
+2024-07-30 18:56:50.2686 Debug FileTarget(Name=logfile)
+2024-07-30 18:56:50.2686 Debug ConsoleTarget(Name=logconsole)
+2024-07-30 18:56:50.2686 Debug Rules:
+2024-07-30 18:56:50.2686 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logconsole ]
+2024-07-30 18:56:50.2686 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logfile ]
+2024-07-30 18:56:50.2686 Debug --- End of NLog configuration dump ---
+2024-07-30 18:56:50.2686 Info LogManager.ThrowExceptions = true can crash the application! Use only for unit-testing and last resort troubleshooting.
+2024-07-30 18:56:50.2686 Info Validating config: TargetNames=logconsole, logfile, ConfigItems=40, FilePath=D:\Work\VS_Project\MastercardHost\bin\x64\Debug\NLog.config
+2024-07-30 18:56:50.2686 Debug Unused target checking is started... Rule Count: 2, Target Count: 2
+2024-07-30 18:56:50.2686 Debug Unused target checking is completed. Total Rule Count: 2, Total Target Count: 2, Unused Target Count: 0
+2024-07-30 18:56:50.2861 Info Configuration initialized.
+2024-07-30 18:56:50.2861 Debug Targets configured when LogLevel >= Info for Logger: logconsole
+2024-07-30 18:56:50.2861 Debug Logger logconsole [Info] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Logger logconsole [Warn] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Logger logconsole [Error] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Logger logconsole [Fatal] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Targets configured when LogLevel >= Info for Logger: logfile
+2024-07-30 18:56:50.2861 Debug Logger logfile [Info] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Logger logfile [Warn] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Logger logfile [Error] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Logger logfile [Fatal] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Targets configured when LogLevel >= Info for Logger: MastercardHost.MyLogManager
+2024-07-30 18:56:50.2861 Debug Logger MastercardHost.MyLogManager [Info] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Logger MastercardHost.MyLogManager [Warn] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Logger MastercardHost.MyLogManager [Error] => logconsole logfile
+2024-07-30 18:56:50.2861 Debug Logger MastercardHost.MyLogManager [Fatal] => logconsole logfile
+2024-07-30 18:56:50.3251 Debug FileTarget(Name=logfile): Preparing for new file: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:56:50.3407 Debug FileTarget(Name=logfile): Creating file appender: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:56:50.3407 Debug Start watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:56:53.7439 Info AppDomain Shutting down. LogFactory closing...
+2024-07-30 18:56:53.7439 Debug Stop watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:56:53.7553 Debug Flush completed
+2024-07-30 18:56:53.7553 Debug Closing logging configuration...
+2024-07-30 18:56:53.7553 Debug ConsoleTarget(Name=logconsole): Closing...
+2024-07-30 18:56:53.7553 Debug ConsoleTarget(Name=logconsole): Closed.
+2024-07-30 18:56:53.7553 Debug FileTarget(Name=logfile): Closing...
+2024-07-30 18:56:53.7553 Debug FileTarget(Name=logfile): FileAppender Invalidate Closing File: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:56:53.7553 Debug Stop watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
+2024-07-30 18:56:53.7553 Debug FileTarget(Name=logfile): Closed.
+2024-07-30 18:56:53.7553 Debug Finished closing logging configuration.
+2024-07-30 18:56:53.7553 Info LogFactory has been closed.
+2024-07-30 18:58:04.5990 Debug Message Template Auto Format enabled
+2024-07-30 18:58:04.6780 Debug Adding target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:58:04.6780 Info Registered target NLog.Targets.FileTarget(Name=logfile)
+2024-07-30 18:58:04.6780 Debug Adding target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:58:04.6780 Info Registered target NLog.Targets.ConsoleTarget(Name=logconsole)
+2024-07-30 18:58:04.6780 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.2.2526. Product version: 5.3.2+8d52d4f3fcdbd84beae3442e1fdc8125598ed81f. GlobalAssemblyCache: False
+2024-07-30 18:58:04.6931 Debug Start watching file-filter 'NLog.config' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug
+2024-07-30 18:58:04.6931 Debug --- NLog configuration dump ---
+2024-07-30 18:58:04.6931 Debug Targets:
+2024-07-30 18:58:04.6931 Debug FileTarget(Name=logfile)
+2024-07-30 18:58:04.6931 Debug ConsoleTarget(Name=logconsole)
+2024-07-30 18:58:04.6931 Debug Rules:
+2024-07-30 18:58:04.6931 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logconsole ]
+2024-07-30 18:58:04.6931 Debug logNamePattern: (:All) levels: [ Info Warn Error Fatal ] writeTo: [ logfile ]
+2024-07-30 18:58:04.6931 Debug --- End of NLog configuration dump ---
+2024-07-30 18:58:04.6931 Info LogManager.ThrowExceptions = true can crash the application! Use only for unit-testing and last resort troubleshooting.
+2024-07-30 18:58:04.6931 Info Validating config: TargetNames=logconsole, logfile, ConfigItems=40, FilePath=D:\Work\VS_Project\MastercardHost\bin\x64\Debug\NLog.config
+2024-07-30 18:58:04.6931 Debug Unused target checking is started... Rule Count: 2, Target Count: 2
+2024-07-30 18:58:04.7037 Debug Unused target checking is completed. Total Rule Count: 2, Total Target Count: 2, Unused Target Count: 0
+2024-07-30 18:58:04.7037 Info Configuration initialized.
+2024-07-30 18:58:04.7037 Debug Targets configured when LogLevel >= Info for Logger: logconsole
+2024-07-30 18:58:04.7037 Debug Logger logconsole [Info] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Logger logconsole [Warn] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Logger logconsole [Error] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Logger logconsole [Fatal] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Targets configured when LogLevel >= Info for Logger: logfile
+2024-07-30 18:58:04.7037 Debug Logger logfile [Info] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Logger logfile [Warn] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Logger logfile [Error] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Logger logfile [Fatal] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Targets configured when LogLevel >= Info for Logger: MastercardHost.MyLogManager
+2024-07-30 18:58:04.7037 Debug Logger MastercardHost.MyLogManager [Info] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Logger MastercardHost.MyLogManager [Warn] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Logger MastercardHost.MyLogManager [Error] => logconsole logfile
+2024-07-30 18:58:04.7037 Debug Logger MastercardHost.MyLogManager [Fatal] => logconsole logfile
+2024-07-30 18:58:04.7461 Debug FileTarget(Name=logfile): Preparing for new file: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:58:04.7610 Debug FileTarget(Name=logfile): Creating file appender: 'D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs\L2AuthHost-2024-07-30.log'
+2024-07-30 18:58:04.7610 Debug Start watching file-filter 'L2AuthHost-2024-07-30.log' in directory: D:\Work\VS_Project\MastercardHost\bin\x64\Debug\logs
