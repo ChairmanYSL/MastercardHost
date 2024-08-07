@@ -36,7 +36,7 @@
             this.button_STOP = new System.Windows.Forms.Button();
             this.button_TEST_INFO = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox_Port = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -127,13 +127,13 @@
             this.textBox1.Size = new System.Drawing.Size(211, 29);
             this.textBox1.TabIndex = 7;
             // 
-            // textBox2
+            // textBox_Port
             // 
-            this.textBox2.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox2.Location = new System.Drawing.Point(443, 356);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(211, 29);
-            this.textBox2.TabIndex = 8;
+            this.textBox_Port.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox_Port.Location = new System.Drawing.Point(443, 356);
+            this.textBox_Port.Name = "textBox_Port";
+            this.textBox_Port.Size = new System.Drawing.Size(211, 29);
+            this.textBox_Port.TabIndex = 8;
             // 
             // label1
             // 
@@ -174,7 +174,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox_Port);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button_TEST_INFO);
             this.Controls.Add(this.button_STOP);
@@ -201,7 +201,7 @@
         private System.Windows.Forms.Button button_STOP;
         private System.Windows.Forms.Button button_TEST_INFO;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox_Port;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;

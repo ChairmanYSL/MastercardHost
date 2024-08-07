@@ -174,7 +174,7 @@ namespace MastercardHost
                     _tcpServer.StopListening();
                 }
 
-                if (int.TryParse(textBox1.Text, out _port))
+                if (int.TryParse(this.textBox_Port.Text, out _port))
                 {
 
                 }
@@ -214,6 +214,12 @@ namespace MastercardHost
             {
                 MyLogManager.Log($"Exception: {ex.Message}");
             }
+        }
+
+        public int Port 
+        { 
+            get => _port;
+            private set => _port = value;
         }
     }
 }
