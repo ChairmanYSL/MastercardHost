@@ -202,6 +202,7 @@ namespace MastercardHost
         {
             try
             {
+                MyLogManager.Log("StartBind Start");
                 tcpCommunication.ConnectClient(_client_ipAddr, _client_port, UpdateLogText);
                 IsBindEnabled = false;
                 IsStopBindEnabled = true;
@@ -210,6 +211,8 @@ namespace MastercardHost
             {
                 // 显示弹窗提示用户
                 System.Windows.MessageBox.Show(ex.Message, "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
+                MyLogManager.Log($"Exception({ex.ToString()}): {ex.Message}");
+
             }
         }
 

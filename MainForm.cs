@@ -126,7 +126,11 @@ namespace MastercardHost
             Binding bindButtonServerStop = new Binding("Enabled", _viewModel, nameof(_viewModel.IsStopListenEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
             button_Close_Server.DataBindings.Add(bindButtonServerStop);
 
-            button_Bind.Click += (sender, e) => _viewModel.startBindCommand.Execute(null);
+            button_Bind.Click += (sender, e) =>
+            {
+                MyLogManager.Log("Bind Button Click Event Happen");
+                _viewModel.startBindCommand.Execute(null);
+            }; 
             Binding bindButtonClientStart = new Binding("Enabled", _viewModel, nameof(_viewModel.IsBindEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
             button_Bind.DataBindings.Add(bindButtonClientStart);
 
