@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using TcpSharp;
 
@@ -13,37 +14,14 @@ namespace MastercardHost
 {
     public partial class TestForm : Form
     {
-        private readonly TcpSharpSocketServer _tcpServer;
+        private TcpSharpSocketServer _tcpServer;
         private string _connectID;
+        private int _port;
 
         public TestForm(MainForm mainForm)
         {
             InitializeComponent();
-            _tcpServer = new TcpSharpSocketServer(8766);
-
-            _tcpServer.OnStarted += (sender, e) =>
-            {
-                MyLogManager.Log($"IN TestForm Server Started Listen on {_tcpServer.Port}");
-            };
-            _tcpServer.OnError += (sender, e) =>
-            {
-                MyLogManager.Log($"IN TestForm Server Error: {e.Exception.Message}");
-            };
-            _tcpServer.OnStopped += (sender, e) =>
-            {
-                MyLogManager.Log($"IN TestForm Server Stop Listen: {e.IsStopped}");
-            };
-            _tcpServer.OnConnected += (sender, e) =>
-            {
-                _connectID = e.ConnectionId;
-                MyLogManager.Log($"IN TestForm Server Connect on {e.IPAddress}:{e.Port}, Connect ID is: {e.ConnectionId}");
-            };
-            _tcpServer.OnDataReceived += (sender, e) =>
-            {
-                MyLogManager.Log($"Server Receive Data: {e.Data.ToString()}");
-            };
-
-            _tcpServer.StartListening();
+            _tcpServer = new TcpSharpSocketServer();
         }
 
         private void TestForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -155,6 +133,7 @@ namespace MastercardHost
                                 }";
 
                 _tcpServer.SendString (_connectID, data);
+
             }
             catch(Exception ex)
             {
@@ -181,6 +160,57 @@ namespace MastercardHost
                 _tcpServer.SendString ( _connectID, data);
             }
             catch (Exception ex) 
+            {
+                MyLogManager.Log($"Exception: {ex.Message}");
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if(_tcpServer.Listening)
+                {
+                    _tcpServer.StopListening();
+                }
+
+                if (int.TryParse(textBox1.Text, out _port))
+                {
+
+                }
+                else
+                {
+                    MyLogManager.Log($"Parse Port to INT error");
+                    System.Windows.MessageBox.Show("Parse Port to INT error", "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
+                }
+
+                _tcpServer.Port = _port;
+                _tcpServer.OnStarted += (s, ev) =>
+                {
+                    MyLogManager.Log($"IN TestForm Server Started Listen on {_tcpServer.Port}");
+                };
+                _tcpServer.OnError += (s, ev) =>
+                {
+                    MyLogManager.Log($"IN TestForm Server Error: {ev.Exception.Message}");
+                };
+                _tcpServer.OnStopped += (s, ev) =>
+                {
+                    MyLogManager.Log($"IN TestForm Server Stop Listen: {ev.IsStopped}");
+                };
+                _tcpServer.OnConnected += (s, ev) =>
+                {
+                    _connectID = ev.ConnectionId;
+                    MyLogManager.Log($"IN TestForm Server Connect on {ev.IPAddress}:{ev.Port}, Connect ID is: {ev.ConnectionId}");
+                };
+                _tcpServer.OnDataReceived += (s, ev) =>
+                {
+                    MyLogManager.Log($"Server Receive Data: {ev.Data.ToString()}");
+                };
+
+
+                _tcpServer.StartListening();
+            }
+            catch(Exception ex)
             {
                 MyLogManager.Log($"Exception: {ex.Message}");
             }
