@@ -21,15 +21,18 @@ namespace MastercardHost
         }
 
         public delegate void OutcomeDelegate(string message);
+        public delegate void SendDataToTestTollDelegate(string data);
+        public delegate void SendDataToPOSDelegate(string data);
+
         public event OutcomeDelegate outcomeNeeded;
-        public event EventHandler<string> SendDataToPOS;
-        public event EventHandler<string> SendDataToTestToll;
+        public event SendDataToPOSDelegate SendDataToPOS;
+        public event SendDataToTestTollDelegate SendDataToTestToll;
 
         public void ProcessFromPOS(string receiveData)
         {
             try
             {
-                SendDataToTestToll?.Invoke(this, receiveData);
+                SendDataToTestToll?.Invoke(receiveData);
                 Signal signal = JsonConvert.DeserializeObject<Signal>(receiveData);
 
                 switch (signal.signalType)
@@ -175,28 +178,29 @@ namespace MastercardHost
             {
                 Signal signal = JsonConvert.DeserializeObject<Signal>(receiveData);
 
+                MyLogManager.Log($"Received {signal.signalType} signal");
                 switch (signal.signalType)
                 {
                     case "ACT":
-                        MyLogManager.Log("Received ACT signal");
                         foreach (var tag in signal.signalData)
                         {
                             MyLogManager.Log($"ID:{tag.id}, Value:{tag.value}");
                         }
-                        SendDataToPOS?.Invoke(this, receiveData);
+                        SendDataToPOS?.Invoke(receiveData);
                         break;
 
                     case "CONFIG":
-                        MyLogManager.Log("Received ACT signal");
                         var configName = signal.signalData.FirstOrDefault(sd => sd.id == "CONF_NAME");
                         if (configName != null && configName.value != null)
                         {
                             string fileName = configName.value + ".json";
                             string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
                             string configDir = runDir + "Config\\Config\\";
+                            MyLogManager.Log($"Config Dir:{configDir}");
                             if (Directory.Exists(configDir))
                             {
-                                if (File.Exists(configDir + fileName))
+                                MyLogManager.Log($"Target Config:{configDir + fileName}");
+                                if (!File.Exists(configDir + fileName))
                                 {
                                     MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                 }
@@ -212,7 +216,7 @@ namespace MastercardHost
                                     };
 
                                     string str = dest.ToString();
-                                    SendDataToPOS?.Invoke(this, str);
+                                    SendDataToPOS?.Invoke(str);
                                 }
                             }
                             else
@@ -225,7 +229,6 @@ namespace MastercardHost
                         break;
 
                     case "CLEAN":
-                        MyLogManager.Log("Received CLEAN signal");
                         var date = signal.signalData.FirstOrDefault(s => s.id == "9A");
                         if (date != null && date.value != null)
                         {
@@ -237,38 +240,35 @@ namespace MastercardHost
                         {
                             MyLogManager.Log($"9F21:   {time.value}");
                         }
-                        SendDataToPOS?.Invoke(this, receiveData);
+                        SendDataToPOS?.Invoke(receiveData);
                         break;
 
                     case "DET":
-                        MyLogManager.Log("Received DET signal");
                         var det = signal.signalData.FirstOrDefault(s => s.id == "DET");
                         if (det != null && det.value != null)
                         {
                             MyLogManager.Log($"DET:  {det.value}");
                         }
 
-                        SendDataToPOS?.Invoke(this, receiveData);
+                        SendDataToPOS?.Invoke(receiveData);
                         break;
 
                     case "RUNTEST_ RESULT":
-                        MyLogManager.Log("Received RUNTEST_RESULT signal");
                         var testResult = signal.signalData.FirstOrDefault(s => s.id == "TestResult");
                         if (testResult != null && testResult.value != null)
                         {
                             MyLogManager.Log($"TestResult:  {testResult.value}");
                         }
-                        SendDataToPOS?.Invoke(this, receiveData);
+                        SendDataToPOS?.Invoke(receiveData);
                         break;
 
                     case "TEST_INFO":
-                        MyLogManager.Log("Received TEST_INFO signal");
                         foreach (var id in signal.signalData)
                         {
                             MyLogManager.Log($"{id.id}:  {id.value}");
                         }
 
-                        SendDataToPOS?.Invoke(this, receiveData);
+                        SendDataToPOS?.Invoke(receiveData);
                         break;
                     default:
                         break;

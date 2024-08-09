@@ -25,32 +25,23 @@ def parse_xml_file(file_path):
     tree = ET.parse(file_path)
     root = tree.getroot()
     
-    kernel_aid_combinations = []
-    terminal_parameters = {}
+    capks = []
     
-    for kernel in root.findall('KernelAidCombination'):
+    for capk in root.findall('CAPK'):
         json_dict = {}
-        for cfg in kernel.findall('Cfg'):
+        for cfg in capk.findall('Cfg'):
             label = cfg.get('label')
             value = cfg.text
             if label:
                 json_dict[label] = value
-        kernel_aid_combinations.append(json_dict)
+        capks.append(json_dict)
     
-    for terminal in root.findall('TerminalParameter'):
-        for cfg in terminal.findall('Cfg'):
-            label = cfg.get('label')
-            value = cfg.text
-            if label:
-                terminal_parameters[label] = value
-    
-    return kernel_aid_combinations, terminal_parameters
+    return capks
 
 # 定义重新格式化JSON数据的函数
-def reformat_json_data(aid_data, term_data):
+def reformat_json_data(capk_data):
     formatted_data = {
-        "AIDParam": aid_data,
-        "TermParam": term_data
+        "CAPKParam": capk_data
     }
     return formatted_data
 
@@ -60,43 +51,35 @@ def write_json_to_file(data, file_path):
         json.dump(data, json_file, indent=4, ensure_ascii=False)
 
 # 遍历并处理子目录中的文件
-def process_subdirectory(aid_subdirectory, simdata_subdirectory):
+def process_subdirectory(capk_subdirectory):
     # 获取当前目录
     current_directory = os.getcwd()
-    aid_path = os.path.join(current_directory, aid_subdirectory)
-    simdata_path = os.path.join(current_directory, simdata_subdirectory)
+    capk_path = os.path.join(current_directory, capk_subdirectory)
     
     # 获取AID目录和SimData目录中的文件名
-    aid_files = set(os.listdir(aid_path))
-    simdata_files = set(os.listdir(simdata_path))
-    
-    # 找到两个目录中同名的文件
-    common_files = aid_files.intersection(simdata_files)
-    
-    for file in common_files:
-        aid_file_path = os.path.join(aid_path, file)
-        simdata_file_path = os.path.join(simdata_path, file)
-        print(f"Processing files: {aid_file_path} and {simdata_file_path}")
+    capk_files = set(os.listdir(capk_path))
+        
+    for file in capk_files:
+        capk_file_path = os.path.join(capk_path, file)
+        print(f"Processing files: {capk_file_path}")
         
         try:
             # 检查XML文件合法性
-            validate_xml(aid_file_path)
-            validate_xml(simdata_file_path)
+            validate_xml(capk_file_path)
             
             # 解析XML文件并转换为JSON数据
-            aid_data, _ = parse_xml_file(aid_file_path)
-            _, term_data = parse_xml_file(simdata_file_path)
+            capk_data = parse_xml_file(capk_file_path)
             
             # 重新格式化JSON数据
-            formatted_json_data = reformat_json_data(aid_data, term_data)
+            formatted_json_data = reformat_json_data(capk_data)
             
             # 获取XML文件名（不包含目录和扩展名）
-            xml_filename = os.path.basename(aid_file_path)
+            xml_filename = os.path.basename(capk_file_path)
             json_filename = os.path.splitext(xml_filename)[0] + '.json'
             
             # 目标JSON文件目录和路径
-            parent_directory = os.path.dirname(os.path.dirname(aid_file_path))
-            json_directory = os.path.join(parent_directory, 'Config')
+            parent_directory = os.path.dirname(os.path.dirname(capk_file_path))
+            json_directory = os.path.join(parent_directory, 'CAPK')
             json_file_path = os.path.join(json_directory, json_filename)
             print(f"Target json file: {json_file_path}")
             
@@ -107,10 +90,10 @@ def process_subdirectory(aid_subdirectory, simdata_subdirectory):
             write_json_to_file(formatted_json_data, json_file_path)
         
         except ET.ParseError as e:
-            print(f"Failed to parse XML file: {aid_file_path} or {simdata_file_path}")
+            print(f"Failed to parse XML file: {capk_file_path}")
             print(f"Error: {e}")
 
 # 处理AID和SimData目录
-process_subdirectory('AID', 'SimData')
+process_subdirectory('CAPK')
 
 print("All data has been processed and written to JSON files.")

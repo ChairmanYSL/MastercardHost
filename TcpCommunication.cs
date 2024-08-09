@@ -69,39 +69,49 @@ namespace MastercardHost
 
         public void ConnectClient(string ipAddress, int port, Action<string> logAction)
         {
-            _tcpClient = new TcpSharpSocketClient
-            {
-                Host = ipAddress,
-                Port = port
-            };
+            MyLogManager.Log($"Input ipAddress: {ipAddress}");
+            MyLogManager.Log($"Input port: {port}");
 
-            _tcpClient.OnConnected += (sender, e) =>
+            try
             {
-                logAction($"Client Connected to {e.ServerHost}:{e.ServerPort}");
-                MyLogManager.Log($"Client Connected to {e.ServerHost}:{e.ServerPort}");
-            };
-            _tcpClient.OnError += (sender, e) =>
-            {
-                logAction($"Client Error: {e.Exception.Message}");
-                MyLogManager.Log($"Client Error: {e.Exception.Message}");
-            };
-            _tcpClient.OnDisconnected += (sender, e) =>
-            {
-                logAction($"Client Disconnect: {e.Reason}");
-                MyLogManager.Log($"Client Disconnect: {e.Reason}");
-            };
-            _tcpClient.OnReconnected += (sender, e) => 
-            { 
-                logAction($"Client Reconnect to: {e.ServerIPAddress}:{e.ServerPort}"); 
-                MyLogManager.Log($"Client Reconnect to: {e.ServerIPAddress}:{e.ServerPort}"); 
-            };
-            _tcpClient.OnDataReceived += (sender, e) =>
-            {
-                OnClientDataReceived?.Invoke(sender, e);
-                MyLogManager.Log($"Client Receive Data: {e.Data.ToString()}");
-            };
+                _tcpClient = new TcpSharpSocketClient
+                {
+                    Host = ipAddress,
+                    Port = port
+                };
 
-            _tcpClient.Connect();
+                _tcpClient.OnConnected += (sender, e) =>
+                {
+                    logAction($"Client Connected to {e.ServerHost}:{e.ServerPort}");
+                    MyLogManager.Log($"Client Connected to {e.ServerHost}:{e.ServerPort}");
+                };
+                _tcpClient.OnError += (sender, e) =>
+                {
+                    logAction($"Client Error: {e.Exception.Message}");
+                    MyLogManager.Log($"Client Error: {e.Exception.Message}");
+                };
+                _tcpClient.OnDisconnected += (sender, e) =>
+                {
+                    logAction($"Client Disconnect: {e.Reason}");
+                    MyLogManager.Log($"Client Disconnect: {e.Reason}");
+                };
+                _tcpClient.OnReconnected += (sender, e) =>
+                {
+                    logAction($"Client Reconnect to: {e.ServerIPAddress}:{e.ServerPort}");
+                    MyLogManager.Log($"Client Reconnect to: {e.ServerIPAddress}:{e.ServerPort}");
+                };
+                _tcpClient.OnDataReceived += (sender, e) =>
+                {
+                    OnClientDataReceived?.Invoke(sender, e);
+                    MyLogManager.Log($"Client Receive Data: {e.Data.ToString()}");
+                };
+                
+                _tcpClient.Connect();
+            }
+            catch (Exception ex) 
+            {
+                MyLogManager.Log($"Failed to connect: {ex.Message}");
+            }
         }
 
         public void DisconnectClient()
@@ -109,7 +119,7 @@ namespace MastercardHost
             _tcpClient?.Disconnect();
         }
 
-        public void ClientSendData(byte[] data)
+        public void ClientSendByteArray(byte[] data)
         {
             try
             {
@@ -124,7 +134,7 @@ namespace MastercardHost
             }
         }
 
-        public void ClientSendData(string data)
+        public void ClientSendString(string data)
         {
             try
             {
@@ -138,7 +148,7 @@ namespace MastercardHost
             }
         }
 
-        public void ServerSendData(byte[] data)
+        public void ServerSendByteArray(byte[] data)
         {
             try
             {
@@ -152,7 +162,7 @@ namespace MastercardHost
             }
         }
 
-        public void ServerSendData(string data)
+        public void ServerSendString(string data)
         {
             try
             {

@@ -57,6 +57,8 @@ namespace MastercardHost
             tcpCommunication.OnServerDataReceived += _dataProcessor.Server_OnDataReceived;
 
             _dataProcessor.outcomeNeeded += UpdateLogText;
+            _dataProcessor.SendDataToPOS += tcpCommunication.ServerSendString;
+            _dataProcessor.SendDataToTestToll += tcpCommunication.ClientSendString;
 
             startListenCommand = new Command(StartListen);
             stopListenCommand = new Command(StopListen);
