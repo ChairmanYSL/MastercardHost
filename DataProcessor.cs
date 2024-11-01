@@ -161,6 +161,128 @@ namespace MastercardHost
                             MyLogManager.Log($"TestId:  {testId.value}");
                         }
                         break;
+
+                    case "CONFIG_TEST":
+                        MyLogManager.Log("Received CONFIG_TEST signal");
+                        var configName = signal.signalData.FirstOrDefault(sd => sd.id == "CONF_NAME");
+                        if (configName != null && configName.value != null)
+                        {
+                            if (configName.value.Equals("Default"))
+                            {
+                                configName.value = "PPS_MChip1";
+                            }
+                            string fileName = configName.value + ".json";
+                            string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                            string configDir = runDir + "Config\\Config\\";
+                            MyLogManager.Log($"Config Dir:{configDir}");
+                            if (Directory.Exists(configDir))
+                            {
+                                MyLogManager.Log($"Target Config:{configDir + fileName}");
+                                if (!File.Exists(configDir + fileName))
+                                {
+                                    MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                                else
+                                {
+                                    StreamReader streamReader = File.OpenText(configDir + fileName);
+                                    JObject src = (JObject)JToken.ReadFrom(new JsonTextReader(streamReader));
+                                    JObject dest = new JObject()
+                                    {
+                                        ["signalType"] = "CONFIG",
+                                        ["AIDParam"] = src["AIDParam"],
+                                        ["TermParam"] = src["TermParam"]
+                                    };
+
+                                    string str = dest.ToString(Formatting.None);
+                                    MyLogManager.Log($"Download Config str len:  {str.Length}");
+                                    MyLogManager.Log($"Download Config:  {str}");
+                                    SendDataToPOS?.Invoke(str);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        break;
+
+                    case "CAPK":
+                        MyLogManager.Log("Received CAPK signal");
+                        var capkName = signal.signalData.FirstOrDefault(sd => sd.id == "CONF_NAME");
+                        if (capkName != null && capkName.value != null)
+                        {
+                            string fileName = "PAYPASS_CAPK.json";
+                            string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                            string configDir = runDir + "Config\\CAPK\\";
+                            MyLogManager.Log($"Config Dir:{configDir}");
+                            if (Directory.Exists(configDir))
+                            {
+                                MyLogManager.Log($"Target CAPK:{configDir + fileName}");
+                                if (!File.Exists(configDir + fileName))
+                                {
+                                    MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                                else
+                                {
+                                    StreamReader streamReader = File.OpenText(configDir + fileName);
+                                    JObject src = (JObject)JToken.ReadFrom(new JsonTextReader(streamReader));
+                                    JObject dest = new JObject()
+                                    {
+                                        ["signalType"] = "CAPK",
+                                        ["CAPKParam"] = src["CAPKParam"],
+                                    };
+
+                                    string str = dest.ToString();
+                                    MyLogManager.Log($"Download CAPK:  {str}");
+                                    SendDataToPOS?.Invoke(str);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        break;
+
+                    case "REVOCATION_PK":
+                        MyLogManager.Log("Received REVOCATION_PK signal");
+                        var revopkName = signal.signalData.FirstOrDefault(sd => sd.id == "CONF_NAME");
+                        if (revopkName != null && revopkName.value != null)
+                        {
+                            string fileName = "PAYPASS_CAPK.json";
+                            string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                            string configDir = runDir + "Config\\CAPK\\";
+                            MyLogManager.Log($"Config Dir:{configDir}");
+                            if (Directory.Exists(configDir))
+                            {
+                                MyLogManager.Log($"Target CAPK:{configDir + fileName}");
+                                if (!File.Exists(configDir + fileName))
+                                {
+                                    MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                                else
+                                {
+                                    StreamReader streamReader = File.OpenText(configDir + fileName);
+                                    JObject src = (JObject)JToken.ReadFrom(new JsonTextReader(streamReader));
+                                    JObject dest = new JObject()
+                                    {
+                                        ["signalType"] = "CAPK",
+                                        ["CAPKParam"] = src["CAPKParam"],
+                                    };
+
+                                    string str = dest.ToString();
+                                    MyLogManager.Log($"Download CAPK:  {str}");
+                                    SendDataToPOS?.Invoke(str);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        break;
+
+
                     default:
                         break;
                 }
@@ -216,6 +338,7 @@ namespace MastercardHost
                                     };
 
                                     string str = dest.ToString();
+                                    MyLogManager.Log($"Download Config:  {str}");
                                     SendDataToPOS?.Invoke(str);
                                 }
                             }
@@ -224,8 +347,6 @@ namespace MastercardHost
                                 MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         }
-
-
                         break;
 
                     case "CLEAN":

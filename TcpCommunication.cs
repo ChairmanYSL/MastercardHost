@@ -166,8 +166,8 @@ namespace MastercardHost
         {
             try
             {
-                _tcpServer.SendString(_connectionId, data);
                 MyLogManager.Log($"ServerSendData:{_connectionId} || {data}");
+                _tcpServer.SendString(_connectionId, data);
             }
             catch (Exception ex)
             {

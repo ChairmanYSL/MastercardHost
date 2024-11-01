@@ -26,7 +26,17 @@ namespace MastercardHost
 
         private void TestForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _tcpServer?.StopListening();
+            try
+            {
+                if (_tcpServer != null && _tcpServer.Listening)
+                {
+                    _tcpServer.StopListening();
+                }
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"Close TestForm Exception: {ex.Message}"); ;
+            }
         }
 
         private void button_ACT_Click(object sender, EventArgs e)
