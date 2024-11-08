@@ -2,12 +2,9 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Security.RightsManagement;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using TcpSharp;
 
@@ -184,6 +181,7 @@ namespace MastercardHost
                                 }
                                 else
                                 {
+                                    
                                     StreamReader streamReader = File.OpenText(configDir + fileName);
                                     JObject src = (JObject)JToken.ReadFrom(new JsonTextReader(streamReader));
                                     JObject dest = new JObject()
@@ -401,6 +399,115 @@ namespace MastercardHost
             }
 
         }
+
+        private void ProcessFromTestTool_TEIMode(string receiveData)
+        {
+            try
+            {
+                Signal signal = JsonConvert.DeserializeObject<Signal>(receiveData);
+
+                MyLogManager.Log($"Received {signal.signalType} signal");
+                switch (signal.signalType)
+                {
+                    case "ACT":
+                        foreach (var tag in signal.signalData)
+                        {
+                            MyLogManager.Log($"ID:{tag.id}, Value:{tag.value}");
+                        }
+                        SendDataToPOS?.Invoke(receiveData);
+                        break;
+
+                    case "CONFIG":
+                        var configName = signal.signalData.FirstOrDefault(sd => sd.id == "CONF_NAME");
+                        if (configName != null && configName.value != null)
+                        {
+                            string fileName = configName.value + ".json";
+                            string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                            string configDir = runDir + "Config\\Config\\";
+                            MyLogManager.Log($"Config Dir:{configDir}");
+                            if (Directory.Exists(configDir))
+                            {
+                                MyLogManager.Log($"Target Config:{configDir + fileName}");
+                                if (!File.Exists(configDir + fileName))
+                                {
+                                    MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                                else
+                                {
+                                    StreamReader streamReader = File.OpenText(configDir + fileName);
+                                    JObject src = (JObject)JToken.ReadFrom(new JsonTextReader(streamReader));
+                                    JObject dest = new JObject()
+                                    {
+                                        ["signalType"] = "CONFIG",
+                                        ["AIDParam"] = src["AIDParam"],
+                                        ["TermParam"] = src["TermParam"]
+                                    };
+
+                                    string str = dest.ToString();
+                                    MyLogManager.Log($"Download Config:  {str}");
+                                    SendDataToPOS?.Invoke(str);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        break;
+
+                    case "CLEAN":
+                        var date = signal.signalData.FirstOrDefault(s => s.id == "9A");
+                        if (date != null && date.value != null)
+                        {
+                            MyLogManager.Log($"9A:  {date.value}");
+                        }
+
+                        var time = signal.signalData.FirstOrDefault(s => s.id == "9F21");
+                        if (time != null && time.value != null)
+                        {
+                            MyLogManager.Log($"9F21:   {time.value}");
+                        }
+                        SendDataToPOS?.Invoke(receiveData);
+                        break;
+
+                    case "DET":
+                        var det = signal.signalData.FirstOrDefault(s => s.id == "DET");
+                        if (det != null && det.value != null)
+                        {
+                            MyLogManager.Log($"DET:  {det.value}");
+                        }
+
+                        SendDataToPOS?.Invoke(receiveData);
+                        break;
+
+                    case "RUNTEST_ RESULT":
+                        var testResult = signal.signalData.FirstOrDefault(s => s.id == "TestResult");
+                        if (testResult != null && testResult.value != null)
+                        {
+                            MyLogManager.Log($"TestResult:  {testResult.value}");
+                        }
+                        SendDataToPOS?.Invoke(receiveData);
+                        break;
+
+                    case "TEST_INFO":
+                        foreach (var id in signal.signalData)
+                        {
+                            MyLogManager.Log($"{id.id}:  {id.value}");
+                        }
+
+                        SendDataToPOS?.Invoke(receiveData);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"Exception: {ex.Message}");
+            }
+        }
+
+
         private void ShowUIReq(byte[] data)     //refer to C-2 kernel book A.1.195 User Interface Request Data
         {
             byte messageId = data[0];
@@ -833,7 +940,7 @@ namespace MastercardHost
 
         public void Server_OnDataReceived(object sender, OnServerDataReceivedEventArgs e) 
         {
-            ProcessFromPOS(Encoding.UTF8.GetString(e.Data));
+            ProcessFromTestTool_TEIMode(Encoding.UTF8.GetString(e.Data));
         }
     }
 }

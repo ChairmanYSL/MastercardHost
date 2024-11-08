@@ -64,6 +64,7 @@ namespace MastercardHost
             this.textBox_IP_Addr_Client = new System.Windows.Forms.TextBox();
             this.label_Port_Client = new System.Windows.Forms.Label();
             this.label_IP_Addr_Client = new System.Windows.Forms.Label();
+            this.button_Test = new System.Windows.Forms.Button();
             this.button_ClearScreen = new System.Windows.Forms.Button();
             this.textBox_Script = new System.Windows.Forms.TextBox();
             this.label_Script = new System.Windows.Forms.Label();
@@ -78,7 +79,6 @@ namespace MastercardHost
             this.label_Config_Info = new System.Windows.Forms.Label();
             this.comboBox_Config = new System.Windows.Forms.ComboBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.button_Test = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -252,7 +252,6 @@ namespace MastercardHost
             this.tabPage_Server_Setting.Controls.Add(this.label_IP_Addr_Server);
             resources.ApplyResources(this.tabPage_Server_Setting, "tabPage_Server_Setting");
             this.tabPage_Server_Setting.Name = "tabPage_Server_Setting";
-            this.tabPage_Server_Setting.Text = global::MastercardHost.Properties.Resources.ServerSetting;
             this.tabPage_Server_Setting.UseVisualStyleBackColor = true;
             // 
             // button_Close_Server
@@ -299,7 +298,6 @@ namespace MastercardHost
             this.tabPage_Client_Setting.Controls.Add(this.label_IP_Addr_Client);
             resources.ApplyResources(this.tabPage_Client_Setting, "tabPage_Client_Setting");
             this.tabPage_Client_Setting.Name = "tabPage_Client_Setting";
-            this.tabPage_Client_Setting.Text = global::MastercardHost.Properties.Resources.ClientSetting;
             this.tabPage_Client_Setting.UseVisualStyleBackColor = true;
             // 
             // button_Close_Client
@@ -335,6 +333,13 @@ namespace MastercardHost
             // 
             resources.ApplyResources(this.label_IP_Addr_Client, "label_IP_Addr_Client");
             this.label_IP_Addr_Client.Name = "label_IP_Addr_Client";
+            // 
+            // button_Test
+            // 
+            resources.ApplyResources(this.button_Test, "button_Test");
+            this.button_Test.Name = "button_Test";
+            this.button_Test.UseVisualStyleBackColor = true;
+            this.button_Test.Click += new System.EventHandler(this.button_Test_Click);
             // 
             // button_ClearScreen
             // 
@@ -410,13 +415,6 @@ namespace MastercardHost
             // 
             resources.ApplyResources(this.richTextBox1, "richTextBox1");
             this.richTextBox1.Name = "richTextBox1";
-            // 
-            // button_Test
-            // 
-            resources.ApplyResources(this.button_Test, "button_Test");
-            this.button_Test.Name = "button_Test";
-            this.button_Test.UseVisualStyleBackColor = true;
-            this.button_Test.Click += new System.EventHandler(this.button_Test_Click);
             // 
             // MainForm
             // 
