@@ -13,10 +13,11 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using NLog;
+using System.IO.Ports;
 
 namespace MastercardHost
 {
-    public partial class MainForm : Form,INotifyPropertyChanged
+    public partial class MainForm : Form, INotifyPropertyChanged
     {
         private MainViewModel _viewModel;
         private int _logLimit;
@@ -36,7 +37,7 @@ namespace MastercardHost
             get => _logLimit;
             set
             {
-                if (_logLimit != value) 
+                if (_logLimit != value)
                 {
                     _logLimit = value;
                     OnPropertyChanged(nameof(LogLimit));
@@ -47,9 +48,9 @@ namespace MastercardHost
         private void BindViewModel()
         {
             //绑定IP地址、端口输入框属性
-            textBox_IP_Addr_Server.DataBindings.Add("Text", _viewModel, nameof(_viewModel.ServerIPAddr), false, DataSourceUpdateMode.OnPropertyChanged);
+            comboBox_IPAddr.DataBindings.Add("Text", _viewModel, nameof(_viewModel.ServerIPAddr), true, DataSourceUpdateMode.OnPropertyChanged);
             var portServerBinding = new Binding("Text", _viewModel, nameof(_viewModel.ServerPort), true, DataSourceUpdateMode.OnPropertyChanged);
-            portServerBinding.Format += (sender , e) =>
+            portServerBinding.Format += (sender, e) =>
             {
                 if (e.DesiredType != typeof(string))
                 {
@@ -75,33 +76,6 @@ namespace MastercardHost
             };
             textBox_Port_Server.DataBindings.Add(portServerBinding);
 
-            textBox_IP_Addr_Client.DataBindings.Add("Text", _viewModel, nameof(_viewModel.ClientIPAddr), false, DataSourceUpdateMode.OnPropertyChanged);
-            var portClientBinding = new Binding("Text", _viewModel, nameof(_viewModel.ClientPort), true, DataSourceUpdateMode.OnPropertyChanged);
-            portClientBinding.Format += (sender, e) =>
-            {
-                if (e.DesiredType != typeof(string))
-                {
-                    return;
-                }
-                e.Value = e.Value?.ToString() ?? string.Empty;
-            };
-            portClientBinding.Parse += (sender, e) =>
-            {
-                if (e.DesiredType != typeof(int))
-                {
-                    return;
-                }
-                if (int.TryParse((string)e.Value, out int result))
-                {
-                    e.Value = result;
-                }
-                else
-                {
-                    e.Value = 0;
-                }
-            };
-            textBox_Port_Client.DataBindings.Add(portClientBinding);
-
             textBox_RespCode.DataBindings.Add("Text", _viewModel, nameof(_viewModel.RespCode), false, DataSourceUpdateMode.OnPropertyChanged);
             textBox_IAD.DataBindings.Add("Text", _viewModel, nameof(_viewModel.IAD), false, DataSourceUpdateMode.OnPropertyChanged);
             textBox_Script.DataBindings.Add("Text", _viewModel, nameof(_viewModel.Script), false, DataSourceUpdateMode.OnPropertyChanged);
@@ -116,7 +90,7 @@ namespace MastercardHost
                     richTextBox1.Text = string.Join(Environment.NewLine, _viewModel.OutcomeText);
                 }));
             };
-            
+
             //绑定按钮Enabled属性
             button_Listen_Server.Click += (sender, e) => _viewModel.startListenCommand.Execute(null);
             Binding bindButtonServerStart = new Binding("Enabled", _viewModel, nameof(_viewModel.IsListenEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
@@ -126,22 +100,24 @@ namespace MastercardHost
             Binding bindButtonServerStop = new Binding("Enabled", _viewModel, nameof(_viewModel.IsStopListenEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
             button_Close_Server.DataBindings.Add(bindButtonServerStop);
 
-            button_Bind.Click += (sender, e) =>
-            {
-                MyLogManager.Log("Bind Button Click Event Happen");
-                _viewModel.startBindCommand.Execute(null);
-            }; 
-            Binding bindButtonClientStart = new Binding("Enabled", _viewModel, nameof(_viewModel.IsBindEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
-            button_Bind.DataBindings.Add(bindButtonClientStart);
 
-            button_Close_Client.Click += (sender, e) => _viewModel.stopBindCommand.Execute(null);
-            Binding bindBuutonClientStop = new Binding("Enabled", _viewModel, nameof(_viewModel.IsStopBindEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
-            button_Close_Client.DataBindings.Add(bindBuutonClientStop);
+            button_OpenSerial.Click += (sender, e) => _viewModel.OpenSerialPortCommand.Execute(null);
+            Binding bindButtonSerialOpen = new Binding("Enabled", _viewModel, nameof(_viewModel.IsOpenSerialEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+            button_OpenSerial.DataBindings.Add(bindButtonSerialOpen);
+
+            button_CloseSerial.Click += (sender, e) => _viewModel.CloseSerialPortCommand.Execute(null);
+            Binding bindButtonSerialClose = new Binding("Enabled", _viewModel, nameof(_viewModel.IsCloseSerialEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+            button_CloseSerial.DataBindings.Add(bindButtonSerialClose);
 
             button_ClearScreen.Click += (sender, e) => _viewModel.clearScreenCommand.Execute(null);
 
             Binding bindLogLimit = new Binding(nameof(LogLimit), _viewModel, nameof(_viewModel.OutcomeLimit), true, DataSourceUpdateMode.OnPropertyChanged);
             this.DataBindings.Add(bindLogLimit);
+        }
+
+        private void Button_Close_Server_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void TranslateLanguage()
@@ -193,7 +169,7 @@ namespace MastercardHost
 
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
-            this.toolStripMenuItem5.Checked= !this.toolStripMenuItem5.Checked;
+            this.toolStripMenuItem5.Checked = !this.toolStripMenuItem5.Checked;
 
             this.toolStripMenuItem3.Checked = false;
             this.toolStripMenuItem4.Checked = false;
@@ -203,7 +179,7 @@ namespace MastercardHost
 
         private void toolStripMenuItem6_Click(object sender, EventArgs e)
         {
-            this.toolStripMenuItem6.Checked= !this.toolStripMenuItem6.Checked;
+            this.toolStripMenuItem6.Checked = !this.toolStripMenuItem6.Checked;
 
             this.toolStripMenuItem3.Checked = false;
             this.toolStripMenuItem4.Checked = false;
@@ -232,7 +208,7 @@ namespace MastercardHost
                             }
                             else
                             {
-                                if(int.TryParse(input, out _logLimit))
+                                if (int.TryParse(input, out _logLimit))
                                 {
 
                                 }
@@ -250,7 +226,7 @@ namespace MastercardHost
                     }
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 MyLogManager.Log($"Exception: {ex.Message}");
             }
@@ -268,6 +244,59 @@ namespace MastercardHost
             {
                 _testForm.Focus(); // 如果窗口已打开，将焦点移至该窗口
             }
+        }
+
+        private void comboBox_SerialPort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //获取当前选中的串口号，设置到ViewModel中
+            _viewModel.SelectedPortName = comboBox_SerialPort.SelectedItem.ToString();
+            richTextBox1.Text += richTextBox1.Text + _viewModel.SelectedPortName+"已选中"+Environment.NewLine;
+            MyLogManager.Log(_viewModel.SelectedPortName + "已选中");
+        }
+
+        private void comboBox_SerialPort_DropDown(object sender, EventArgs e)
+        {
+            //获取所有可用串口号
+            string[] ports = SerialPort.GetPortNames();
+            if (ports.Length == 0)
+            {
+                System.Windows.MessageBox.Show("No serial port available", "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
+                MyLogManager.Log("No serial port available");
+                return;
+            }
+            //把串口号添加到下拉框
+            comboBox_SerialPort.Items.Clear();
+            foreach (string port in ports)
+            {
+                comboBox_SerialPort.Items.Add(port);
+            }
+        }
+
+        private void comboBox_IPAddr_DropDown(object sender, EventArgs e)
+        {
+            //获取本机所有可用的IPv4地址
+            comboBox_IPAddr.Items.Clear();
+            foreach (System.Net.IPAddress ip in System.Net.Dns.GetHostAddresses(System.Net.Dns.GetHostName()))
+            {
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                {
+                    comboBox_IPAddr.Items.Add(ip.ToString());
+                }
+            }
+            //如果没有可用的IPv4地址，弹出提示框
+            if (comboBox_IPAddr.Items.Count == 0)
+            {
+                System.Windows.MessageBox.Show("No IPv4 address available", "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
+                MyLogManager.Log("No IPv4 address available");
+            }
+        }
+
+        private void comboBox_IPAddr_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //获取当前选中的IP地址，设置到ViewModel中
+            _viewModel.ServerIPAddr = comboBox_IPAddr.SelectedItem.ToString();
+            richTextBox1.Text += richTextBox1.Text + _viewModel.ServerIPAddr + "已选中" + Environment.NewLine;
+            MyLogManager.Log(_viewModel.ServerIPAddr + "已选中");
         }
     }
 }

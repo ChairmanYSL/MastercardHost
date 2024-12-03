@@ -201,4 +201,7 @@
   <data name="TitleDialog" xml:space="preserve">
     <value>Please Input Only Number</value>
   </data>
+  <data name="Log_Switch" xml:space="preserve">
+    <value>Log Switch</value>
+  </data>
 </root>

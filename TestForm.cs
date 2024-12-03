@@ -1,12 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
 using TcpSharp;
 
@@ -191,7 +183,9 @@ namespace MastercardHost
                 else
                 {
                     MyLogManager.Log($"Parse Port to INT error");
-                    System.Windows.MessageBox.Show("Parse Port to INT error", "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
+
+                    // Replace the problematic line with the following:
+                    MessageBox.Show("Parse Port to INT error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 _tcpServer.Port = _port;

@@ -162,7 +162,7 @@
   <data name="LogRowLimit" xml:space="preserve">
     <value>日志行数限制</value>
   </data>
-  <data name="Log_Switch" xml:space="preserve">
+  <data name="LogSwitch" xml:space="preserve">
     <value>日志开关</value>
   </data>
   <data name="MainMenu" xml:space="preserve">
@@ -200,5 +200,8 @@
   </data>
   <data name="TitleDialog" xml:space="preserve">
     <value>仅限输入数字</value>
+  </data>
+  <data name="Log_Switch" xml:space="preserve">
+    <value>日志开关</value>
   </data>
 </root>

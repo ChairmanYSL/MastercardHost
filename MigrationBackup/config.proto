@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+option csharp_namespace = "MastercardHost.ConfigProtos";
+
+message ConfigProtocol {
+    repeated AID aid = 1;
+    TermParam termpar = 2;
+}
+
+message AID{
+    bytes aid = 1;
+    bytes transType = 2;
+    bytes appVer = 3;
+    bytes termFloorLmt = 4;
+    bytes termRiskManageData = 5;
+    bytes termType = 6;
+    bytes tacDefault = 7;
+    bytes tacOnline = 8;
+    bytes tacDeny = 9;
+    bytes clFloorLmt = 10;
+    bytes clTransLmt = 11;
+    bytes cvmLmt = 12;
+    bool supStausCheck = 13;
+    bool supClTransLmtCheck = 14;
+    bool supClFloorLmtCheck = 15;
+    bool supTermFloorLmtCheck = 16;
+    bool supCVMCheck = 17;
+    bytes kernelConf = 18;
+    bytes msdCVMCap_CVMReq = 19;
+    bytes rcTransLmt_NoCDCVM = 20;
+    bytes rcTransLmt_CDCVM = 21;
+    bytes msdCVMCap_NoCVMReq = 22;
+    bytes mobileSupID = 23;
+    bytes secueCap = 24;
+    bytes cvmCap_CVMReq = 25;
+    bytes cvmCap_NoCVMReq = 26;
+    bytes addTermCap = 27;
+    bytes termCap = 28;
+}
+
+message TermParam{
+    bytes acquirerID = 1;
+    bytes ifdSN = 2;
+    bytes merchanCateCode = 3;
+    bytes merchanID = 4;
+    bytes merchanName = 5;
+    bytes termCountryCode = 6;
+    bytes termID = 7;
+    bytes merchanCustData = 8;
+    bytes transCurrCode = 9;
+    bytes transCurrExp = 10;
+    bytes ttq = 11;
+    bytes transCateCode = 12;
+    bytes defualtUDOL = 13;
+    bytes dsACType = 14;
+    bytes dsInputCard = 15;
+    bytes dsInputTerm = 16;
+    bytes dsODSInfo = 17;
+    bytes dsODSInfoRd = 18;
+    bytes dsODSTerm = 19;
+    bytes dsvnTerm = 20;
+    bytes kernelID = 21;
+    bytes msdAppVer = 22;
+    bytes maxLifeTornLog = 23;
+    bytes maxNumberTornLog = 24;
+    bytes securCap = 25;
+    bytes proceed2FirFlg = 26;
+    bytes envelop1 = 27;
+    bytes envelop2 = 28;
+    bytes envelop3 = 29;
+    bytes envelop4 = 30;
+    bytes envelop5 = 31;
+    bytes tags2Read = 32;
+    bytes propTag = 33;
+}

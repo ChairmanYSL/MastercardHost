@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Configuration;
 using MvvmHelpers;
 
 namespace MastercardHost
@@ -17,7 +12,7 @@ namespace MastercardHost
         public Config Config
         {
             get => _config;
-            set => SetProperty(ref)
+            set => SettingsPropertyValue(ref _config, value);
         }
 
         public ServerSettings ServerSettings

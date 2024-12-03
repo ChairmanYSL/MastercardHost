@@ -54,7 +54,6 @@ namespace MastercardHost
             this.button_Close_Server = new System.Windows.Forms.Button();
             this.button_Listen_Server = new System.Windows.Forms.Button();
             this.textBox_Port_Server = new System.Windows.Forms.TextBox();
-            this.textBox_IP_Addr_Server = new System.Windows.Forms.TextBox();
             this.label_Port_Server = new System.Windows.Forms.Label();
             this.label_IP_Addr_Server = new System.Windows.Forms.Label();
             this.tabPage_Client_Setting = new System.Windows.Forms.TabPage();
@@ -64,6 +63,11 @@ namespace MastercardHost
             this.textBox_IP_Addr_Client = new System.Windows.Forms.TextBox();
             this.label_Port_Client = new System.Windows.Forms.Label();
             this.label_IP_Addr_Client = new System.Windows.Forms.Label();
+            this.tabPage_CommSet = new System.Windows.Forms.TabPage();
+            this.button_CloseSerial = new System.Windows.Forms.Button();
+            this.button_OpenSerial = new System.Windows.Forms.Button();
+            this.comboBox_SerialPort = new System.Windows.Forms.ComboBox();
+            this.label_SerialPort = new System.Windows.Forms.Label();
             this.button_Test = new System.Windows.Forms.Button();
             this.button_ClearScreen = new System.Windows.Forms.Button();
             this.textBox_Script = new System.Windows.Forms.TextBox();
@@ -79,6 +83,7 @@ namespace MastercardHost
             this.label_Config_Info = new System.Windows.Forms.Label();
             this.comboBox_Config = new System.Windows.Forms.ComboBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.comboBox_IPAddr = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -91,6 +96,7 @@ namespace MastercardHost
             this.tabControl_Server_Setting.SuspendLayout();
             this.tabPage_Server_Setting.SuspendLayout();
             this.tabPage_Client_Setting.SuspendLayout();
+            this.tabPage_CommSet.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -237,6 +243,7 @@ namespace MastercardHost
             // 
             this.tabControl_Server_Setting.Controls.Add(this.tabPage_Server_Setting);
             this.tabControl_Server_Setting.Controls.Add(this.tabPage_Client_Setting);
+            this.tabControl_Server_Setting.Controls.Add(this.tabPage_CommSet);
             resources.ApplyResources(this.tabControl_Server_Setting, "tabControl_Server_Setting");
             this.tabControl_Server_Setting.HotTrack = true;
             this.tabControl_Server_Setting.Name = "tabControl_Server_Setting";
@@ -244,10 +251,10 @@ namespace MastercardHost
             // 
             // tabPage_Server_Setting
             // 
+            this.tabPage_Server_Setting.Controls.Add(this.comboBox_IPAddr);
             this.tabPage_Server_Setting.Controls.Add(this.button_Close_Server);
             this.tabPage_Server_Setting.Controls.Add(this.button_Listen_Server);
             this.tabPage_Server_Setting.Controls.Add(this.textBox_Port_Server);
-            this.tabPage_Server_Setting.Controls.Add(this.textBox_IP_Addr_Server);
             this.tabPage_Server_Setting.Controls.Add(this.label_Port_Server);
             this.tabPage_Server_Setting.Controls.Add(this.label_IP_Addr_Server);
             resources.ApplyResources(this.tabPage_Server_Setting, "tabPage_Server_Setting");
@@ -272,11 +279,6 @@ namespace MastercardHost
             // 
             resources.ApplyResources(this.textBox_Port_Server, "textBox_Port_Server");
             this.textBox_Port_Server.Name = "textBox_Port_Server";
-            // 
-            // textBox_IP_Addr_Server
-            // 
-            resources.ApplyResources(this.textBox_IP_Addr_Server, "textBox_IP_Addr_Server");
-            this.textBox_IP_Addr_Server.Name = "textBox_IP_Addr_Server";
             // 
             // label_Port_Server
             // 
@@ -333,6 +335,41 @@ namespace MastercardHost
             // 
             resources.ApplyResources(this.label_IP_Addr_Client, "label_IP_Addr_Client");
             this.label_IP_Addr_Client.Name = "label_IP_Addr_Client";
+            // 
+            // tabPage_CommSet
+            // 
+            this.tabPage_CommSet.Controls.Add(this.button_CloseSerial);
+            this.tabPage_CommSet.Controls.Add(this.button_OpenSerial);
+            this.tabPage_CommSet.Controls.Add(this.comboBox_SerialPort);
+            this.tabPage_CommSet.Controls.Add(this.label_SerialPort);
+            resources.ApplyResources(this.tabPage_CommSet, "tabPage_CommSet");
+            this.tabPage_CommSet.Name = "tabPage_CommSet";
+            this.tabPage_CommSet.UseVisualStyleBackColor = true;
+            // 
+            // button_CloseSerial
+            // 
+            resources.ApplyResources(this.button_CloseSerial, "button_CloseSerial");
+            this.button_CloseSerial.Name = "button_CloseSerial";
+            this.button_CloseSerial.UseVisualStyleBackColor = true;
+            // 
+            // button_OpenSerial
+            // 
+            resources.ApplyResources(this.button_OpenSerial, "button_OpenSerial");
+            this.button_OpenSerial.Name = "button_OpenSerial";
+            this.button_OpenSerial.UseVisualStyleBackColor = true;
+            // 
+            // comboBox_SerialPort
+            // 
+            this.comboBox_SerialPort.FormattingEnabled = true;
+            resources.ApplyResources(this.comboBox_SerialPort, "comboBox_SerialPort");
+            this.comboBox_SerialPort.Name = "comboBox_SerialPort";
+            this.comboBox_SerialPort.DropDown += new System.EventHandler(this.comboBox_SerialPort_DropDown);
+            this.comboBox_SerialPort.SelectedIndexChanged += new System.EventHandler(this.comboBox_SerialPort_SelectedIndexChanged);
+            // 
+            // label_SerialPort
+            // 
+            resources.ApplyResources(this.label_SerialPort, "label_SerialPort");
+            this.label_SerialPort.Name = "label_SerialPort";
             // 
             // button_Test
             // 
@@ -416,6 +453,14 @@ namespace MastercardHost
             resources.ApplyResources(this.richTextBox1, "richTextBox1");
             this.richTextBox1.Name = "richTextBox1";
             // 
+            // comboBox_IPAddr
+            // 
+            resources.ApplyResources(this.comboBox_IPAddr, "comboBox_IPAddr");
+            this.comboBox_IPAddr.FormattingEnabled = true;
+            this.comboBox_IPAddr.Name = "comboBox_IPAddr";
+            this.comboBox_IPAddr.DropDown += new System.EventHandler(this.comboBox_IPAddr_DropDown);
+            this.comboBox_IPAddr.SelectedIndexChanged += new System.EventHandler(this.comboBox_IPAddr_SelectedIndexChanged);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -440,6 +485,8 @@ namespace MastercardHost
             this.tabPage_Server_Setting.PerformLayout();
             this.tabPage_Client_Setting.ResumeLayout(false);
             this.tabPage_Client_Setting.PerformLayout();
+            this.tabPage_CommSet.ResumeLayout(false);
+            this.tabPage_CommSet.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -468,7 +515,6 @@ namespace MastercardHost
         private System.Windows.Forms.Button button_Close_Server;
         private System.Windows.Forms.Button button_Listen_Server;
         private System.Windows.Forms.TextBox textBox_Port_Server;
-        private System.Windows.Forms.TextBox textBox_IP_Addr_Server;
         private System.Windows.Forms.Label label_Port_Server;
         private System.Windows.Forms.Label label_IP_Addr_Server;
         private System.Windows.Forms.TabPage tabPage_Client_Setting;
@@ -493,5 +539,11 @@ namespace MastercardHost
         private System.Windows.Forms.ComboBox comboBox_Config;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button button_Test;
+        private System.Windows.Forms.TabPage tabPage_CommSet;
+        private System.Windows.Forms.Button button_OpenSerial;
+        private System.Windows.Forms.ComboBox comboBox_SerialPort;
+        private System.Windows.Forms.Label label_SerialPort;
+        private System.Windows.Forms.Button button_CloseSerial;
+        private System.Windows.Forms.ComboBox comboBox_IPAddr;
     }
 }
