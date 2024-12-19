@@ -51,6 +51,7 @@ namespace MastercardHost
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tabControl_Server_Setting = new System.Windows.Forms.TabControl();
             this.tabPage_Server_Setting = new System.Windows.Forms.TabPage();
+            this.comboBox_IPAddr = new System.Windows.Forms.ComboBox();
             this.button_Close_Server = new System.Windows.Forms.Button();
             this.button_Listen_Server = new System.Windows.Forms.Button();
             this.textBox_Port_Server = new System.Windows.Forms.TextBox();
@@ -83,7 +84,6 @@ namespace MastercardHost
             this.label_Config_Info = new System.Windows.Forms.Label();
             this.comboBox_Config = new System.Windows.Forms.ComboBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.comboBox_IPAddr = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -260,6 +260,14 @@ namespace MastercardHost
             resources.ApplyResources(this.tabPage_Server_Setting, "tabPage_Server_Setting");
             this.tabPage_Server_Setting.Name = "tabPage_Server_Setting";
             this.tabPage_Server_Setting.UseVisualStyleBackColor = true;
+            // 
+            // comboBox_IPAddr
+            // 
+            resources.ApplyResources(this.comboBox_IPAddr, "comboBox_IPAddr");
+            this.comboBox_IPAddr.FormattingEnabled = true;
+            this.comboBox_IPAddr.Name = "comboBox_IPAddr";
+            this.comboBox_IPAddr.DropDown += new System.EventHandler(this.comboBox_IPAddr_DropDown);
+            this.comboBox_IPAddr.SelectedIndexChanged += new System.EventHandler(this.comboBox_IPAddr_SelectedIndexChanged);
             // 
             // button_Close_Server
             // 
@@ -447,19 +455,13 @@ namespace MastercardHost
             this.comboBox_Config.FormattingEnabled = true;
             resources.ApplyResources(this.comboBox_Config, "comboBox_Config");
             this.comboBox_Config.Name = "comboBox_Config";
+            this.comboBox_Config.DropDown += new System.EventHandler(this.comboBox_Config_DropDown);
+            this.comboBox_Config.SelectedIndexChanged += new System.EventHandler(this.comboBox_Config_SelectedIndexChanged);
             // 
             // richTextBox1
             // 
             resources.ApplyResources(this.richTextBox1, "richTextBox1");
             this.richTextBox1.Name = "richTextBox1";
-            // 
-            // comboBox_IPAddr
-            // 
-            resources.ApplyResources(this.comboBox_IPAddr, "comboBox_IPAddr");
-            this.comboBox_IPAddr.FormattingEnabled = true;
-            this.comboBox_IPAddr.Name = "comboBox_IPAddr";
-            this.comboBox_IPAddr.DropDown += new System.EventHandler(this.comboBox_IPAddr_DropDown);
-            this.comboBox_IPAddr.SelectedIndexChanged += new System.EventHandler(this.comboBox_IPAddr_SelectedIndexChanged);
             // 
             // MainForm
             // 

@@ -91,6 +91,7 @@ message TermParam{
     bytes envelop5 = 31;
     bytes tags2Read = 32;
     bytes propTag = 33;
+    bytes poiInfo = 34;
 }
 
 message CAPKList {

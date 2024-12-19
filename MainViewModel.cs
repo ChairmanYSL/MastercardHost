@@ -52,6 +52,7 @@ namespace MastercardHost
         private StopBits _stopBits;
 
         private string _currConfig;
+        private string _selectConfig;
         private bool _isOpenSerialEnabled;
         private bool _isCloseSerialEnabled;
 
@@ -236,6 +237,12 @@ namespace MastercardHost
         {
             get => _isCloseSerialEnabled;
             set => SetProperty(ref _isCloseSerialEnabled, value);
+        }
+
+        public string SelectConfig
+        {
+            get => _selectConfig;
+            set => SetProperty(ref _selectConfig, value);
         }
 
         public static ByteString HexStringToByteString(string hex)
@@ -515,6 +522,8 @@ namespace MastercardHost
         private void DownloadConfig(string jsonFilePath)
         {
             MyLogManager.Log("start DownloadConfig");
+            MyLogManager.Log($"input jsonFilePath: {jsonFilePath}");
+
             string jsonContent = File.ReadAllText(jsonFilePath);
             JObject jsonData = JObject.Parse(jsonContent);
 
@@ -570,6 +579,7 @@ namespace MastercardHost
                                         { "DF811C", (termMsg, val) => termMsg.MaxLifeTornLog = HexStringToByteString(val) },
                                         { "DF811D", (termMsg, val) => termMsg.MaxNumberTornLog = HexStringToByteString(val) },
                                         { "DF811F", (termMsg, val) => termMsg.SecurCap = HexStringToByteString(val) },
+                                        { "8B", (termMsg, val) => termMsg.PoiInfo = HexStringToByteString(val) },
                                         // 添加其他映射
                                     };
 
@@ -812,7 +822,7 @@ namespace MastercardHost
                                         CurrentConfig = configName.value;
                                         DownloadConfig(configDir + fileName);
                                     }
-                                    else 
+                                    else
                                     {
                                         Signal signal_config_ack = new Signal()
                                         {
@@ -1194,23 +1204,23 @@ namespace MastercardHost
                 //Display Hold Time
                 UpdateLogText("Hold Time: " + bytes[4].ToString("X2"));
 
-                switch(bytes[13])
-                {
-                    case 0x00:
-                        UpdateLogText("Value Qualifier:  NONE");
-                        break;
-                    case 0x01:
-                        UpdateLogText("Value Qualifier:  AMOUNT");
-                        UpdateLogText($"Value: {ByteArrayToHexString(bytes, 14, 6)}");
-                        break;
-                    case 0x02:
-                        UpdateLogText("Value Qualifier:  BALANCE");
-                        UpdateLogText($"Value: {ByteArrayToHexString(bytes, 14, 6)}");
-                        break;
-                    default:
-                        UpdateLogText("Value Qualifier:  RFU");
-                        break;
-                }
+                //switch(bytes[13])
+                //{
+                //    case 0x00:
+                //        UpdateLogText("Value Qualifier:  NONE");
+                //        break;
+                //    case 0x01:
+                //        UpdateLogText("Value Qualifier:  AMOUNT");
+                //        UpdateLogText($"Value: {ByteArrayToHexString(bytes, 14, 6)}");
+                //        break;
+                //    case 0x02:
+                //        UpdateLogText("Value Qualifier:  BALANCE");
+                //        UpdateLogText($"Value: {ByteArrayToHexString(bytes, 14, 6)}");
+                //        break;
+                //    default:
+                //        UpdateLogText("Value Qualifier:  RFU");
+                //        break;
+                //}
             }
         }
 
@@ -1252,7 +1262,7 @@ namespace MastercardHost
                 SignalProtocol signalProtocol = envelope.Signal;
                 MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
 
-                if (signalProtocol.Type == "OUT")
+                if (signalProtocol.Type == "OUT" || signalProtocol.Type == "MSG")
                 {
                     ParseOutSignal(signalProtocol.Data);
                     transFlag = true;
@@ -1263,26 +1273,31 @@ namespace MastercardHost
                     {
                         if (item.Id == "CONF_NAME")
                         {
-                            string fileName = item.Value + ".json";
-                            string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                            string configDir = runDir + "Config\\Config\\";
-                            MyLogManager.Log($"Config Dir:{configDir}");
-
-                            if (Directory.Exists(configDir))
+                            if (SelectConfig != null && SelectConfig != "")
                             {
-                                MyLogManager.Log($"Target Config:{configDir + fileName}");
-                                if (!File.Exists(configDir + fileName))
+                                string fileName = SelectConfig + ".json";
+                                string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                                string configDir = runDir + "Config\\Config\\";
+                                if (Directory.Exists(configDir))
                                 {
-                                    MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    if (!File.Exists(configDir + fileName))
+                                    {
+                                        MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
+                                    }
+                                    else
+                                    {
+                                        DownloadConfig(configDir + fileName);
+                                    }
                                 }
                                 else
                                 {
-                                    DownloadConfig(configDir + fileName);
+                                    MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                 }
                             }
                             else
                             {
-                                MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         }
                     }

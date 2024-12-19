@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using NLog;
 using System.IO.Ports;
+using System.IO;
 
 namespace MastercardHost
 {
@@ -297,6 +298,45 @@ namespace MastercardHost
             _viewModel.ServerIPAddr = comboBox_IPAddr.SelectedItem.ToString();
             richTextBox1.Text += richTextBox1.Text + _viewModel.ServerIPAddr + "已选中" + Environment.NewLine;
             MyLogManager.Log(_viewModel.ServerIPAddr + "已选中");
+        }
+
+        private void comboBox_Config_DropDown(object sender, EventArgs e)
+        {
+            string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            string configDir = runDir + "Config\\Config\\";
+            MyLogManager.Log($"Config Dir:{configDir}");
+
+            if (Directory.Exists(configDir))
+            {
+                string[] files = Directory.GetFiles(configDir);
+                if (files.Length == 0)
+                {
+                    System.Windows.MessageBox.Show("No config file available", "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
+                    MyLogManager.Log("No config file available");
+                    return;
+                }
+                comboBox_Config.Items.Clear();
+                foreach (string file in files)
+                {
+                    //去掉文件的后缀名，只显示文件名
+                    string fileName = file.Substring(file.LastIndexOf("\\") + 1);
+                    fileName = fileName.Substring(0, fileName.LastIndexOf("."));
+                    comboBox_Config.Items.Add(fileName);
+                }
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("No config file available", "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
+                MyLogManager.Log("No config file available");
+
+            }
+        }
+
+        private void comboBox_Config_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _viewModel.SelectConfig = comboBox_Config.SelectedItem.ToString();
+            richTextBox1.Text += richTextBox1.Text + "下载配置" + _viewModel.SelectConfig + Environment.NewLine;
+            MyLogManager.Log("下载配置" + _viewModel.ServerIPAddr);
         }
     }
 }
