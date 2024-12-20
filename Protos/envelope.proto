@@ -55,6 +55,7 @@ message AID{
     bytes cvmCap_NoCVMReq = 26;
     bytes addTermCap = 27;
     bytes termCap = 28;
+    bytes kernelID = 29;
 }
 
 message TermParam{

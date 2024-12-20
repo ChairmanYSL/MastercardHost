@@ -557,6 +557,7 @@ namespace MastercardHost
                                         { "DF8119", (aidMsg, val) => aidMsg.CvmCapNoCVMReq = HexStringToByteString(val) },
                                         { "9F40", (aidMsg, val) => aidMsg.AddTermCap = HexStringToByteString(val) },
                                         { "9F33", (aidMsg, val) => aidMsg.TermCap = HexStringToByteString(val) },
+                                        { "9F2A", (aidMsg, val) => aidMsg.KernelID = HexStringToByteString(val)},    
                                     };
 
             var termParamFieldMapping = new Dictionary<string, Action<TermParam, string>>()
