@@ -558,6 +558,7 @@ namespace MastercardHost
                                         { "9F40", (aidMsg, val) => aidMsg.AddTermCap = HexStringToByteString(val) },
                                         { "9F33", (aidMsg, val) => aidMsg.TermCap = HexStringToByteString(val) },
                                         { "9F2A", (aidMsg, val) => aidMsg.KernelID = HexStringToByteString(val)},    
+                                        // 添加其他映射
                                     };
 
             var termParamFieldMapping = new Dictionary<string, Action<TermParam, string>>()
@@ -581,6 +582,7 @@ namespace MastercardHost
                                         { "DF811D", (termMsg, val) => termMsg.MaxNumberTornLog = HexStringToByteString(val) },
                                         { "DF811F", (termMsg, val) => termMsg.SecurCap = HexStringToByteString(val) },
                                         { "8B", (termMsg, val) => termMsg.PoiInfo = HexStringToByteString(val) },
+                                        { "9F05", (termMsg, val) => termMsg.ProprietaryTag = HexStringToByteString(val) },
                                         // 添加其他映射
                                     };
 
