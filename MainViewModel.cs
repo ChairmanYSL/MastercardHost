@@ -56,6 +56,8 @@ namespace MastercardHost
         private bool _isOpenSerialEnabled;
         private bool _isCloseSerialEnabled;
 
+        private int _capkCounter;
+
         public MainViewModel()
         {
             _tcpServer = new TcpSharpSocketServer();
@@ -123,6 +125,8 @@ namespace MastercardHost
 
             _isOpenSerialEnabled = true;
             _isCloseSerialEnabled = false;
+
+            _capkCounter = 0;
         }
 
         public bool IsListenEnabled
@@ -670,7 +674,9 @@ namespace MastercardHost
                                         { "DF07", (capkMsg, val) => capkMsg.Arithind = HexStringToByteString(val) },
                                     };
 
-            CAPKList capkList = new CAPKList();
+            //CAPKList capkList = new CAPKList();
+            List<CAPK> capkList = new List<CAPK>();
+            bool flag=false;
 
             JArray capkParamArray = (JArray)jsonData["CAPKParam"];
             foreach (JObject capkItem in capkParamArray)
@@ -720,12 +726,42 @@ namespace MastercardHost
                     }
                 }
 
-                capkList.Capk.Add(capkMsg);
+                if (_capkCounter == 0)
+                {
+                    if (capkItem["9F06"]?.Value<string>() == "A000000004")
+                    {
+                        capkList.Add(capkMsg);
+                    }
+                }
+                else if(_capkCounter == 1) 
+                {
+                    if (capkItem["9F06"]?.Value<string>() == "B012345678")
+                    {
+                        capkList.Add(capkMsg);
+                    }
+                }
             }
+
+            if (_capkCounter == 0)
+            {
+                flag = false;
+                _capkCounter++;
+            }
+            else if (_capkCounter == 1)
+            {
+                flag = true;
+                _capkCounter = 0;
+            }
+
+            CAPKList capkSendList = new CAPKList()
+            { 
+                Capk = { capkList },
+                IsFinish = flag
+            };
 
             Envelope envelope = new Envelope()
             {
-                CapkList = capkList,
+                CapkList = capkSendList,
             };
 
             byte[] serializedData = envelope.ToByteArray();

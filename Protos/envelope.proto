@@ -97,7 +97,8 @@ message TermParam{
 }
 
 message CAPKList {
-  repeated CAPK capk = 1;
+    bool isFinish = 1;
+    repeated CAPK capk = 2;
 }
 
 message CAPK {
