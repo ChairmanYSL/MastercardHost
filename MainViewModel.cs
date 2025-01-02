@@ -700,7 +700,7 @@ namespace MastercardHost
                             if (!IsValidHexString(value))
                             {
                                 MyLogManager.Log($"Invalid hex string for field {key}: '{value}'");
-                                continue;
+                                //continue;
                             }
                             try
                             {
