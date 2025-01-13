@@ -94,6 +94,8 @@ message TermParam{
     bytes propTag = 33;
     bytes poiInfo = 34;
     bytes proprietaryTag = 35;
+    bytes emptyTagList = 36;
+    bytes notPresentTagList = 37;
 }
 
 message CAPKList {

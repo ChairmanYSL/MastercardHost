@@ -586,7 +586,9 @@ namespace MastercardHost
                                         { "DF811D", (termMsg, val) => termMsg.MaxNumberTornLog = HexStringToByteString(val) },
                                         { "DF811F", (termMsg, val) => termMsg.SecurCap = HexStringToByteString(val) },
                                         { "8B", (termMsg, val) => termMsg.PoiInfo = HexStringToByteString(val) },
-                                        { "9F05", (termMsg, val) => termMsg.ProprietaryTag = HexStringToByteString(val) },
+                                        { "DF830A", (termMsg, val) => termMsg.ProprietaryTag = HexStringToByteString(val) },
+                                        { "DF8308", (termMsg, val) => termMsg.EmptyTagList = HexStringToByteString(val) },
+                                        { "DF8309", (termMsg, val) => termMsg.NotPresentTagList = HexStringToByteString(val) },
                                         // 添加其他映射
                                     };
 
