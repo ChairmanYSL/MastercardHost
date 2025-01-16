@@ -18,9 +18,16 @@ for filename in os.listdir(directory_path):
             for item in data["AIDParam"]:
                 # item是AIDParam下的每个对象
                 # 判断9F2A是否已经存在
-                if "9F2A" not in item:
-                    item["9F2A"] = "02"
+                if item.get("9F06") == "A0000000041010" and item.get("9C") == "00":
+                    item["9F1D"] = "6CFF000000000000"
                     changed = True
+                elif item.get("9F06") == "A0000000041010" and item.get("9C") == "09":
+                    item["9F1D"] = None
+                    changed = True
+                elif item.get("9F06") == "A0000000043060":
+                    item["9F1D"] = "44FF800000000000"
+                    changed = True
+
 
             # 如果有修改则写回文件
             if changed:
