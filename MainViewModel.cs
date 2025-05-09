@@ -24,8 +24,11 @@ namespace MastercardHost
         public Command clearScreenCommand { get; }
         public Command OpenSerialPortCommand { get; }
         public Command CloseSerialPortCommand { get; }
+        public Command startBindCommand {  get; }
+        public Command stopBindCommand { get; }
 
         private TcpSharpSocketServer _tcpServer;
+        private TcpSharpSocketClient _tcpClient;
 
         private bool _isListenEnabled;
         private bool _isStopListenEnabled;
@@ -34,6 +37,7 @@ namespace MastercardHost
 
         private int _server_port;
         private string _server_ipAddr;
+        private string _client_ipAddr;
 
         private string _respCode;
         private string _iad;
@@ -61,6 +65,7 @@ namespace MastercardHost
         public MainViewModel()
         {
             _tcpServer = new TcpSharpSocketServer();
+            _tcpClient = new TcpSharpSocketClient();
             _serialPort = new SerialPort();
 
             _tcpServer.OnDataReceived += (sender, e) =>
@@ -99,11 +104,19 @@ namespace MastercardHost
                 UpdateLogText($"Server Stop Listen");
             };
 
+            _tcpClient.OnDataReceived += (sender, e) =>
+            {
+                string message = Encoding.UTF8.GetString(e.Data);
+                ProcessFromPOS(e.Data);
+            };
+
             startListenCommand = new Command(StartListen);
             stopListenCommand = new Command(StopListen);
             clearScreenCommand = new Command(CleanScreen);
             OpenSerialPortCommand = new Command(OpenSerialPort);
             CloseSerialPortCommand = new Command(CloseSerialPort);
+            startBindCommand = new Command(StartBind);
+            stopBindCommand = new Command(StopBind);
 
             _isListenEnabled = true;
             _isBindEnabled = true;
@@ -127,6 +140,11 @@ namespace MastercardHost
             _isCloseSerialEnabled = false;
 
             _capkCounter = 0;
+        }
+
+        private void _tcpClient_OnDataReceived(object sender, OnClientDataReceivedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public bool IsListenEnabled
@@ -163,6 +181,12 @@ namespace MastercardHost
         {
             get => _server_ipAddr;
             set => SetProperty(ref _server_ipAddr, value);
+        }
+
+        public string ClientIPAddr
+        {
+            get => _client_ipAddr;
+            set => SetProperty(ref _client_ipAddr, value);
         }
 
         public string RespCode
@@ -372,8 +396,6 @@ namespace MastercardHost
             return input ?? string.Empty;
         }
 
-
-
         public void UpdateLogText(string text)
         {
             _outcomeText.Add(text+Environment.NewLine);
@@ -479,6 +501,28 @@ namespace MastercardHost
             {
                 MessageBox.Show($"无法关闭串口 {SelectedPortName}：{ex.Message}");
             }
+        }
+
+        private void StartBind()
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(_client_ipAddr))
+                {
+                    _tcpClient.Host = _client_ipAddr;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"无法绑定到 {SelectedPortName}：{ex.Message}");
+            }
+        }
+
+        private void StopBind()
+        { 
+        
+        
         }
 
         private void TransFormSiganlToPOS(Signal signal)
@@ -934,6 +978,14 @@ namespace MastercardHost
                         TransFormSiganlToPOS(signal);
                         break;
 
+                    case "APDU_ACTIVATE":
+                        var apdu = signal.signalData.FirstOrDefault(s => s.id == "ACTIVATE");
+                        if (apdu != null && apdu.value != null)
+                        {
+                            MyLogManager.Log($"APDU:  {apdu.value}");
+                        }
+                        TransFormSiganlToPOS(signal);
+                        break;
 
                     default:
                         MyLogManager.Log("无法识别的Signal类型");
