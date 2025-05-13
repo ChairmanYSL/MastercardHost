@@ -96,6 +96,7 @@ message TermParam{
     bytes proprietaryTag = 35;
     bytes emptyTagList = 36;
     bytes notPresentTagList = 37;
+    bytes cardDataInputCap = 38;
 }
 
 message CAPKList {

@@ -633,6 +633,7 @@ namespace MastercardHost
                                         { "DF830A", (termMsg, val) => termMsg.ProprietaryTag = HexStringToByteString(val) },
                                         { "DF8308", (termMsg, val) => termMsg.EmptyTagList = HexStringToByteString(val) },
                                         { "DF8309", (termMsg, val) => termMsg.NotPresentTagList = HexStringToByteString(val) },
+                                        { "DF8117", (termMsg, val) => termMsg.CardDataInputCap = HexStringToByteString(val)},
                                         // 添加其他映射
                                     };
 
