@@ -678,6 +678,8 @@ namespace MastercardHost
             foreach (var property in termParamObj.Properties())
             {
                 string key = property.Name;
+                MyLogManager.Log($"Download Config key:  {key}");
+
                 JToken valueToken = property.Value;
 
                 if (termParamFieldMapping.ContainsKey(key))
