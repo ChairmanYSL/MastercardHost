@@ -685,6 +685,8 @@ namespace MastercardHost
                 if (termParamFieldMapping.ContainsKey(key))
                 {
                     string value = valueToken?.Value<string>();
+                    MyLogManager.Log($"Download Config value:  {value}");
+
                     termParamFieldMapping[key](termParamMsg, value);
                 }
                 else
