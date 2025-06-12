@@ -250,9 +250,16 @@ namespace MastercardHost
         private void comboBox_SerialPort_SelectedIndexChanged(object sender, EventArgs e)
         {
             //获取当前选中的串口号，设置到ViewModel中
-            _viewModel.SelectedPortName = comboBox_SerialPort.SelectedItem.ToString();
-            richTextBox1.Text += richTextBox1.Text + _viewModel.SelectedPortName+"已选中"+Environment.NewLine;
-            MyLogManager.Log(_viewModel.SelectedPortName + "已选中");
+            try
+            {
+                _viewModel.SelectedPortName = comboBox_SerialPort.SelectedItem.ToString();
+                richTextBox1.Text += richTextBox1.Text + _viewModel.SelectedPortName + "已选中" + Environment.NewLine;
+                MyLogManager.Log(_viewModel.SelectedPortName + "已选中");
+            }
+            catch (Exception ex) 
+            {
+                MyLogManager.Log($"选择串口异常:{ex.Message}");
+            }
         }
 
         private void comboBox_SerialPort_DropDown(object sender, EventArgs e)

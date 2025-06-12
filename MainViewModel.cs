@@ -13,9 +13,27 @@ using Google.Protobuf;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Google.Protobuf.WellKnownTypes;
+using System.Windows.Forms;
+using System.Net.Sockets;
 
 namespace MastercardHost
 {
+    public class ClientInfo
+    {
+        public string ConnectionId { get; set; }
+        public Socket Socket { get; set; }
+        public ClientType Type { get; set; } = ClientType.Unknown;
+        public DateTime ConnectTime { get; set; } = DateTime.Now;
+        // 可以添加更多客户端属性
+    }
+    public enum ClientType
+    {
+        Unknown,
+        ClientPOS,      // 第一种客户端类型
+        ClientTestTool, // 第二种客户端类型
+                 // 可以添加更多类型
+    }
+
     public class MainViewModel : BaseViewModel
     {
 
@@ -45,7 +63,8 @@ namespace MastercardHost
         private ObservableRangeCollection<string> _outcomeText;
 
         private int _outcomeLimit;
-        private string _connectionID;
+        private string _connectionIDTestTool;
+        private string _connectionIDPOS;
 
         private SerialPort _serialPort;
         //串口属性
@@ -61,6 +80,7 @@ namespace MastercardHost
         private bool _isCloseSerialEnabled;
 
         private int _capkCounter;
+        private bool isTestMode;
 
         public MainViewModel()
         {
@@ -68,18 +88,27 @@ namespace MastercardHost
             _tcpClient = new TcpSharpSocketClient();
             _serialPort = new SerialPort();
 
-            _tcpServer.OnDataReceived += (sender, e) =>
-            {
-                string message = Encoding.UTF8.GetString(e.Data);
-                ProcessFromTestTool(message);
-            };
+            _tcpServer.OnDataReceived += OnDataReceived;
+
             _tcpServer.OnConnected += (sender, e) => 
             {
-                _connectionID = e.ConnectionId;
                 UpdateLogText($"Connect on {e.IPAddress}:{e.Port}");
                 UpdateLogText($"Connect ID is: {e.ConnectionId}");
                 MyLogManager.Log($"Connect on {e.IPAddress}:{e.Port}");
                 MyLogManager.Log($"Connect ID is: {e.ConnectionId}");
+
+                _connectionIDTestTool = e.ConnectionId;
+
+                //if (e.IPAddress.Equals("127.0.0.1"))
+                //{
+                //    _connectionIDTestTool = e.ConnectionId;
+                //    MyLogManager.Log($"Test Tool Connect ID: {e.ConnectionId}");
+                //}
+                //else if (e.IPAddress.Contains("192.168.31."))
+                //{
+                //    _connectionIDPOS = e.ConnectionId;
+                //    MyLogManager.Log($"POS Connect ID: {e.ConnectionId}");
+                //}
             };
             _tcpServer.OnDisconnected += (sender, e) =>
             {
@@ -97,7 +126,7 @@ namespace MastercardHost
             };
             _tcpServer.OnStarted += (sender, e) =>
             {
-                UpdateLogText($"Server Started Listen");
+                UpdateLogText($"Server Started Listen on {_tcpServer.Port}");
             };
             _tcpServer.OnStopped += (sender, e) =>
             {
@@ -140,6 +169,7 @@ namespace MastercardHost
             _isCloseSerialEnabled = false;
 
             _capkCounter = 0;
+            isTestMode = false;
         }
 
         private void _tcpClient_OnDataReceived(object sender, OnClientDataReceivedEventArgs e)
@@ -418,7 +448,7 @@ namespace MastercardHost
             catch (Exception ex)
             {
                 // 显示弹窗提示用户
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -448,7 +478,7 @@ namespace MastercardHost
             {
                 if (string.IsNullOrEmpty(SelectedPortName))
                 {
-                    MessageBox.Show("请先选择一个串口号！");
+                    System.Windows.MessageBox.Show("请先选择一个串口号！");
                     return;
                 }
 
@@ -467,20 +497,20 @@ namespace MastercardHost
                 };
                 _serialPort.ErrorReceived += (sender, e) =>
                 {
-                    MessageBox.Show($"串口 {SelectedPortName} 发生错误：{e.EventType}");
+                    System.Windows.MessageBox.Show($"串口 {SelectedPortName} 发生错误：{e.EventType}");
                     _serialPort?.Close();
                     IsCloseSerialEnabled = false;
                     IsOpenSerialEnabled = true;
                 };
 
                 _serialPort.Open();
-                MessageBox.Show($"串口 {SelectedPortName} 已打开！");
+                System.Windows.MessageBox.Show($"串口 {SelectedPortName} 已打开！");
                 IsOpenSerialEnabled = false;
                 IsCloseSerialEnabled = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"无法打开串口 {SelectedPortName}：{ex.Message}");
+                System.Windows.MessageBox.Show($"无法打开串口 {SelectedPortName}：{ex.Message}");
             }
         }
 
@@ -492,14 +522,14 @@ namespace MastercardHost
                 if (_serialPort != null && _serialPort.IsOpen)
                 {
                     _serialPort.Close();
-                    MessageBox.Show("串口已关闭！");
+                    System.Windows.MessageBox.Show("串口已关闭！");
                     IsOpenSerialEnabled = true;
                     IsCloseSerialEnabled = false;
                 }
             }
             catch(Exception ex)
             {
-                MessageBox.Show($"无法关闭串口 {SelectedPortName}：{ex.Message}");
+                System.Windows.MessageBox.Show($"无法关闭串口 {SelectedPortName}：{ex.Message}");
             }
         }
 
@@ -515,7 +545,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"无法绑定到 {SelectedPortName}：{ex.Message}");
+                System.Windows.MessageBox.Show($"无法绑定到 {SelectedPortName}：{ex.Message}");
             }
         }
 
@@ -534,6 +564,8 @@ namespace MastercardHost
                     Type = signal.signalType,
                 };
 
+                //signalProtocol.Type += "_HOST";
+
                 foreach (var tag in signal.signalData)
                 {
                     MyLogManager.Log($"ID:{tag.id}, Value:{tag.value ?? "null"}");
@@ -551,7 +583,17 @@ namespace MastercardHost
                 };
 
                 byte[] serializedData = envelope.ToByteArray();
-                _serialPort.Write(serializedData, 0, serializedData.Length);
+
+                isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
+                MyLogManager.Log($"isTestMode: {isTestMode}");
+                if (isTestMode)
+                {
+                    _tcpServer.SendBytes(_connectionIDPOS, serializedData);
+                }
+                else
+                {
+                    _serialPort.Write(serializedData, 0, serializedData.Length);
+                }
             }
             catch (ArgumentNullException ex)
             {
@@ -705,7 +747,15 @@ namespace MastercardHost
             byte[] serializedData = envelope.ToByteArray();
 
             MyLogManager.Log($"Download Config data len:  {serializedData.Length}");
-            _serialPort.Write(serializedData, 0, serializedData.Length);
+            isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
+            if(isTestMode )
+            {
+                _tcpServer.SendBytes(_connectionIDPOS, serializedData);
+            }
+            else
+            {
+                _serialPort.Write(serializedData, 0, serializedData.Length);
+            }
         }
 
         private void DownloadCAPK(string jsonFilePath)
@@ -818,7 +868,15 @@ namespace MastercardHost
             byte[] serializedData = envelope.ToByteArray();
 
             MyLogManager.Log($"Download CAPK:  {envelope.ToString()}");
-            _serialPort.Write(serializedData, 0, serializedData.Length);
+            isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
+            if(isTestMode)
+            {
+                _tcpServer.SendBytes(_connectionIDPOS, serializedData);
+            }
+            else
+            {
+                _serialPort.Write(serializedData, 0, serializedData.Length);
+            }
         }
 
         private void DownloadRevokey(string jsonFilePath)
@@ -867,7 +925,276 @@ namespace MastercardHost
             byte[] serializedData = envelope.ToByteArray();
 
             MyLogManager.Log($"Download Revokey:  {serializedData}");
-            _serialPort.Write(serializedData, 0, serializedData.Length);
+            isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
+            if(isTestMode )
+            {
+                _tcpServer.SendBytes(_connectionIDPOS, serializedData);
+            }
+            else
+            {
+                _serialPort.Write(serializedData, 0, serializedData.Length);
+            }
+        }
+
+        private void OnDataReceived(object sender, OnServerDataReceivedEventArgs e)
+        {
+            string receiveData = Encoding.UTF8.GetString(e.Data);
+            MyLogManager.Log($"ConnectionId: {e.ConnectionId}");
+            try
+            {
+                if (e.ConnectionId.Equals(_connectionIDTestTool))
+                {
+                    Signal signal = JsonConvert.DeserializeObject<Signal>(receiveData);
+                    if (signal != null)
+                    {
+                        MyLogManager.Log($"_connectionIDTestTool Received {signal.signalType} signal");
+
+                        MyLogManager.Log($"Received Data: {Environment.NewLine}{receiveData}");
+                        switch (signal.signalType)
+                        {
+                            case "ACT":
+                                TransFormSiganlToPOS(signal);
+                                break;
+
+                            case "CONFIG":
+                                var configName = signal.signalData.FirstOrDefault(sd => sd.id == "CONF_NAME");
+                                if (configName != null && configName.value != null)
+                                {
+                                    string fileName = configName.value + ".json";
+                                    string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                                    string configDir = runDir + "Config\\Config\\";
+                                    MyLogManager.Log($"Config Dir:{configDir}");
+
+                                    if (Directory.Exists(configDir))
+                                    {
+                                        MyLogManager.Log($"Target Config:{configName.value}");
+                                        MyLogManager.Log($"Current Config:{CurrentConfig}");
+
+                                        if (!File.Exists(configDir + fileName))
+                                        {
+                                            System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
+                                        }
+                                        else
+                                        {
+                                            if (CurrentConfig == null || CurrentConfig == "" || CurrentConfig != configName.value)
+                                            {
+                                                CurrentConfig = configName.value;
+                                                DownloadConfig(configDir + fileName);
+                                            }
+                                            else
+                                            {
+                                                Signal signal_config_ack = new Signal()
+                                                {
+                                                    signalType = "CONFIG_ACK",
+                                                };
+                                                SignalData signalData = new SignalData()
+                                                {
+                                                    id = "ResponseCode",
+                                                    value = "YES",
+                                                };
+                                                signal_config_ack.signalData.Add(signalData);
+
+                                                string jstr = JsonConvert.SerializeObject(signal_config_ack);
+                                                MyLogManager.Log($"Send to TestTool: {jstr}");
+
+                                                _tcpServer.SendString(_connectionIDTestTool, jstr);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
+                                }
+                                break;
+
+                            case "CLEAN":
+                                var date = signal.signalData.FirstOrDefault(s => s.id == "9A");
+                                if (date != null && date.value != null)
+                                {
+                                    MyLogManager.Log($"9A:  {date.value}");
+                                }
+
+                                var time = signal.signalData.FirstOrDefault(s => s.id == "9F21");
+                                if (time != null && time.value != null)
+                                {
+                                    MyLogManager.Log($"9F21:   {time.value}");
+                                }
+                                TransFormSiganlToPOS(signal);
+                                break;
+
+                            case "DET":
+                                var det = signal.signalData.FirstOrDefault(s => s.id == "DET");
+                                if (det != null && det.value != null)
+                                {
+                                    MyLogManager.Log($"DET:  {det.value}");
+                                }
+                                TransFormSiganlToPOS(signal);
+                                break;
+
+                            case "RUNTEST_ RESULT":
+                                var testResult = signal.signalData.FirstOrDefault(s => s.id == "TestResult");
+                                if (testResult != null && testResult.value != null)
+                                {
+                                    MyLogManager.Log($"TestResult:  {testResult.value}");
+                                }
+                                TransFormSiganlToPOS(signal);
+                                break;
+
+                            case "TEST_INFO":
+                                foreach (var id in signal.signalData)
+                                {
+                                    MyLogManager.Log($"{id.id}:  {id.value}");
+                                }
+                                TransFormSiganlToPOS(signal);
+                                break;
+
+                            case "STOP":
+                                TransFormSiganlToPOS(signal);
+                                break;
+
+                            case "APDU_ACTIVATE":
+                                var apdu = signal.signalData.FirstOrDefault(s => s.id == "ACTIVATE");
+                                if (apdu != null && apdu.value != null)
+                                {
+                                    MyLogManager.Log($"APDU:  {apdu.value}");
+                                }
+                                TransFormSiganlToPOS(signal);
+                                break;
+
+                            default:
+                                MyLogManager.Log("无法识别的Signal类型");
+                                break;
+                        }
+                    }
+                }
+                else if (e.ConnectionId.Equals(_connectionIDPOS))
+                { 
+                    MyLogManager.Log($"_connectionIDPOS receive data: " + ByteArrayToHexString(e.Data, 0, e.Data.Length));
+
+                    Envelope envelope = Envelope.Parser.ParseFrom(e.Data);
+                    bool transFlag = false;
+
+                    MyLogManager.Log($"envelope.PayloadCase: {envelope.PayloadCase}");
+
+                    if (envelope.PayloadCase == Envelope.PayloadOneofCase.Signal)
+                    {
+                        SignalProtocol signalProtocol = envelope.Signal;
+                        MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
+
+                        if (signalProtocol.Type == "OUT" || signalProtocol.Type == "MSG")
+                        {
+                            ParseOutSignal(signalProtocol.Data);
+                            transFlag = true;
+                        }
+                        else if (signalProtocol.Type == "CONFIG")
+                        {
+                            foreach (var item in signalProtocol.Data)
+                            {
+                                if (item.Id == "CONF_NAME")
+                                {
+                                    if (SelectConfig != null && SelectConfig != "")
+                                    {
+                                        string fileName = SelectConfig + ".json";
+                                        string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                                        string configDir = runDir + "Config\\Config\\";
+                                        if (Directory.Exists(configDir))
+                                        {
+                                            if (!File.Exists(configDir + fileName))
+                                            {
+                                                System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                                MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
+                                            }
+                                            else
+                                            {
+                                                DownloadConfig(configDir + fileName);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.Windows.MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
+                                }
+                            }
+                        }
+                        else if (signalProtocol.Type == "CAPK")
+                        {
+                            string fileName = "PAYPASS_CAPK.json";
+                            string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                            string configDir = runDir + "Config\\CAPK\\";
+                            MyLogManager.Log($"CAPK Dir:{configDir}");
+
+                            if (Directory.Exists(configDir))
+                            {
+                                MyLogManager.Log($"Target CAPK:{configDir + fileName}");
+                                if (!File.Exists(configDir + fileName))
+                                {
+                                    System.Windows.MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                                else
+                                {
+                                    DownloadCAPK(configDir + fileName);
+                                }
+                            }
+                            else
+                            {
+                                System.Windows.MessageBox.Show("No CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        else if (signalProtocol.Type == "REVOCATION_PK")
+                        {
+                            string fileName = "PAYPASS_Revokey.json";
+                            string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                            string configDir = runDir + "Config\\Revocation_CAPK\\";
+                            MyLogManager.Log($"Revocation_CAPK Dir:{configDir}");
+
+                            if (Directory.Exists(configDir))
+                            {
+                                MyLogManager.Log($"Target Revocation_CAPK:{configDir + fileName}");
+                                if (!File.Exists(configDir + fileName))
+                                {
+                                    System.Windows.MessageBox.Show("Target Revocation_CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                                else
+                                {
+                                    DownloadRevokey(configDir + fileName);
+                                }
+                            }
+                            else
+                            {
+                                System.Windows.MessageBox.Show("No Revocation_CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        else if (signalProtocol.Type == "ACT_ACK" || signalProtocol.Type == "CONFIG_ACK" || signalProtocol.Type == "TEST_INFO_ACK")
+                        {
+                            transFlag = true;
+                        }
+                        else
+                        {
+                            MyLogManager.Log("Unrecognized Signal Type");
+                        }
+
+                        if (transFlag)
+                        {
+                            TransformSignalToTestTool(signalProtocol);
+                        }
+                    }
+                    else
+                    {
+                        MyLogManager.Log("Unrecognized Protocol Type");
+                    }   
+                }
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"OnDataReceived Exception: {ex.Message}");
+            }
         }
 
         private void ProcessFromTestTool(string receiveData)
@@ -902,7 +1229,7 @@ namespace MastercardHost
 
                                 if (!File.Exists(configDir + fileName))
                                 {
-                                    MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                     MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
                                 }
                                 else
@@ -927,13 +1254,14 @@ namespace MastercardHost
 
                                         string jstr = JsonConvert.SerializeObject(signal_config_ack);
                                         MyLogManager.Log($"Send to TestTool: {jstr}");
-                                        _tcpServer.SendString(_connectionID, jstr);
+                                        
+                                        _tcpServer.SendString(_connectionIDTestTool, jstr);
                                     }
                                 }
                             }
                             else
                             {
-                                MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         }
                         break;
@@ -1029,7 +1357,8 @@ namespace MastercardHost
             root.Add("signalData", signalDataArray);
 
             MyLogManager.Log($"Send to TestTool: {root.ToString()}");
-            _tcpServer.SendString(_connectionID, root.ToString());
+
+            _tcpServer.SendString(_connectionIDTestTool, root.ToString());
         }
 
         private void ShowOutcome(string outcome)
@@ -1380,7 +1709,7 @@ namespace MastercardHost
                                 {
                                     if (!File.Exists(configDir + fileName))
                                     {
-                                        MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                         MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
                                     }
                                     else
@@ -1390,12 +1719,12 @@ namespace MastercardHost
                                 }
                                 else
                                 {
-                                    MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                 }
                             }
                             else
                             {
-                                MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                System.Windows.MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                         }
                     }
@@ -1412,7 +1741,7 @@ namespace MastercardHost
                         MyLogManager.Log($"Target CAPK:{configDir + fileName}");
                         if (!File.Exists(configDir + fileName))
                         {
-                            MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            System.Windows.MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
                         {
@@ -1421,7 +1750,7 @@ namespace MastercardHost
                     }
                     else
                     {
-                        MessageBox.Show("No CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        System.Windows.MessageBox.Show("No CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 else if (signalProtocol.Type == "REVOCATION_PK")
@@ -1436,7 +1765,7 @@ namespace MastercardHost
                         MyLogManager.Log($"Target Revocation_CAPK:{configDir + fileName}");
                         if (!File.Exists(configDir + fileName))
                         {
-                            MessageBox.Show("Target Revocation_CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            System.Windows.MessageBox.Show("Target Revocation_CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else
                         {
@@ -1445,7 +1774,7 @@ namespace MastercardHost
                     }
                     else
                     {
-                        MessageBox.Show("No Revocation_CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        System.Windows.MessageBox.Show("No Revocation_CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 else if(signalProtocol.Type == "ACT_ACK" || signalProtocol.Type == "CONFIG_ACK" || signalProtocol.Type == "TEST_INFO_ACK")
