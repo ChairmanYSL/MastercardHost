@@ -97,6 +97,7 @@ message TermParam{
     bytes emptyTagList = 36;
     bytes notPresentTagList = 37;
     bytes cardDataInputCap = 38;
+    bytes rrpMinGrace = 39;
 }
 
 message CAPKList {
