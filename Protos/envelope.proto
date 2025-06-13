@@ -97,7 +97,8 @@ message TermParam{
     bytes emptyTagList = 36;
     bytes notPresentTagList = 37;
     bytes cardDataInputCap = 38;
-    bytes rrpMinGrace = 39;
+    bytes rrpMinGrace = 39;         //DF8132
+    bytes rrpAccuracyThreshold = 40;   //DF8136
 }
 
 message CAPKList {
