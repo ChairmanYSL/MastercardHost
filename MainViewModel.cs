@@ -677,6 +677,9 @@ namespace MastercardHost
                                         { "DF8309", (termMsg, val) => termMsg.NotPresentTagList = HexStringToByteString(val) },
                                         { "DF8117", (termMsg, val) => termMsg.CardDataInputCap = HexStringToByteString(val)},
                                         { "DF8132", (termMsg, val) => termMsg.RrpMinGrace = HexStringToByteString(val)},
+                                        { "DF8133", (termMsg, val) => termMsg.RrpMaxGrace = HexStringToByteString(val)},
+                                        { "DF8134", (termMsg, val) => termMsg.RrpExceptCAPDU = HexStringToByteString(val)},
+                                        { "DF8135", (termMsg, val) => termMsg.RrpExceptRAPDU = HexStringToByteString(val)},
                                         { "DF8136", (termMsg, val) => termMsg.RrpAccuracyThreshold = HexStringToByteString(val)},
                                         
                                         // 添加其他映射

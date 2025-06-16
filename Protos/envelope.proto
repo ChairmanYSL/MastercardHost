@@ -98,7 +98,10 @@ message TermParam{
     bytes notPresentTagList = 37;
     bytes cardDataInputCap = 38;
     bytes rrpMinGrace = 39;         //DF8132
-    bytes rrpAccuracyThreshold = 40;   //DF8136
+    bytes rrpMaxGrace = 40;         //DF8133
+    bytes rrpExceptCAPDU = 41;      //DF8134
+    bytes rrpExceptRAPDU = 42;      //DF8135
+    bytes rrpAccuracyThreshold = 43;   //DF8136
 }
 
 message CAPKList {
