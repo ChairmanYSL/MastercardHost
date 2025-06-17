@@ -90,10 +90,10 @@ message TermParam{
     bytes envelop3 = 29;
     bytes envelop4 = 30;
     bytes envelop5 = 31;
-    bytes tags2Read = 32;
+    bytes tagsToRead = 32;           //DF8112
     bytes propTag = 33;
     bytes poiInfo = 34;
-    bytes proprietaryTag = 35;
+    bytes proprietaryTag = 35;      //DF830A
     bytes emptyTagList = 36;
     bytes notPresentTagList = 37;
     bytes cardDataInputCap = 38;
