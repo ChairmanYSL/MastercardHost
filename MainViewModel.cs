@@ -563,7 +563,7 @@ namespace MastercardHost
                 {
                     Type = signal.signalType,
                 };
-
+                MyLogManager.Log($"send signalType: {signal.signalType}");
                 //signalProtocol.Type += "_HOST";
 
                 foreach (var tag in signal.signalData)
@@ -586,6 +586,8 @@ namespace MastercardHost
 
                 isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
                 MyLogManager.Log($"isTestMode: {isTestMode}");
+                MyLogManager.Log($"send to POS content: {envelope.ToString()}");
+
                 if (isTestMode)
                 {
                     _tcpServer.SendBytes(_connectionIDPOS, serializedData);
