@@ -23,6 +23,7 @@ namespace MastercardHost
         private MainViewModel _viewModel;
         private int _logLimit;
         private TestForm _testForm;
+        private readonly object _collectionLock = new object();
 
         public MainForm()
         {
@@ -48,72 +49,88 @@ namespace MastercardHost
 
         private void BindViewModel()
         {
-            //绑定IP地址、端口输入框属性
-            comboBox_IPAddr.DataBindings.Add("Text", _viewModel, nameof(_viewModel.ServerIPAddr), true, DataSourceUpdateMode.OnPropertyChanged);
-            var portServerBinding = new Binding("Text", _viewModel, nameof(_viewModel.ServerPort), true, DataSourceUpdateMode.OnPropertyChanged);
-            portServerBinding.Format += (sender, e) =>
+            try
             {
-                if (e.DesiredType != typeof(string))
+                //绑定IP地址、端口输入框属性
+                comboBox_IPAddr.DataBindings.Add("Text", _viewModel, nameof(_viewModel.ServerIPAddr), true, DataSourceUpdateMode.OnPropertyChanged);
+                var portServerBinding = new Binding("Text", _viewModel, nameof(_viewModel.ServerPort), true, DataSourceUpdateMode.OnPropertyChanged);
+                portServerBinding.Format += (sender, e) =>
                 {
-                    return;
-                }
-                e.Value = e.Value?.ToString() ?? string.Empty;
-            };
+                    if (e.DesiredType != typeof(string))
+                    {
+                        return;
+                    }
+                    e.Value = e.Value?.ToString() ?? string.Empty;
+                };
 
-            portServerBinding.Parse += (sender, e) =>
+                portServerBinding.Parse += (sender, e) =>
+                {
+                    if (e.DesiredType != typeof(int))
+                    {
+                        return;
+                    }
+                    if (int.TryParse((string)e.Value, out int result))
+                    {
+                        e.Value = result;
+                    }
+                    else
+                    {
+                        e.Value = 0;
+                    }
+                };
+                textBox_Port_Server.DataBindings.Add(portServerBinding);
+
+                textBox_RespCode.DataBindings.Add("Text", _viewModel, nameof(_viewModel.RespCode), false, DataSourceUpdateMode.OnPropertyChanged);
+                textBox_IAD.DataBindings.Add("Text", _viewModel, nameof(_viewModel.IAD), false, DataSourceUpdateMode.OnPropertyChanged);
+                textBox_Script.DataBindings.Add("Text", _viewModel, nameof(_viewModel.Script), false, DataSourceUpdateMode.OnPropertyChanged);
+
+                //禁用输入功能
+                richTextBox1.ReadOnly = true;
+                _viewModel.OutcomeText.CollectionChanged += (sender, e) =>
+                {
+                    string newText;
+                    lock (_viewModel.OutcomeText)
+                    {
+                        newText = string.Join(Environment.NewLine, _viewModel.OutcomeText);
+                    }
+
+                    if (richTextBox1.InvokeRequired)
+                    {
+                        richTextBox1.BeginInvoke((Action)(() => richTextBox1.Text = newText));
+                    }
+                    else
+                    {
+                        richTextBox1.Text = newText;
+                    }
+                };
+
+                //绑定按钮Enabled属性
+                button_Listen_Server.Click += (sender, e) => _viewModel.startListenCommand.Execute(null);
+                Binding bindButtonServerStart = new Binding("Enabled", _viewModel, nameof(_viewModel.IsListenEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+                button_Listen_Server.DataBindings.Add(bindButtonServerStart);
+
+                button_Close_Server.Click += (sender, e) => _viewModel.stopListenCommand.Execute(null);
+                Binding bindButtonServerStop = new Binding("Enabled", _viewModel, nameof(_viewModel.IsStopListenEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+                button_Close_Server.DataBindings.Add(bindButtonServerStop);
+
+
+                button_OpenSerial.Click += (sender, e) => _viewModel.OpenSerialPortCommand.Execute(null);
+                Binding bindButtonSerialOpen = new Binding("Enabled", _viewModel, nameof(_viewModel.IsOpenSerialEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+                button_OpenSerial.DataBindings.Add(bindButtonSerialOpen);
+
+                button_CloseSerial.Click += (sender, e) => _viewModel.CloseSerialPortCommand.Execute(null);
+                Binding bindButtonSerialClose = new Binding("Enabled", _viewModel, nameof(_viewModel.IsCloseSerialEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
+                button_CloseSerial.DataBindings.Add(bindButtonSerialClose);
+
+                button_ClearScreen.Click += (sender, e) => _viewModel.clearScreenCommand.Execute(null);
+
+                Binding bindLogLimit = new Binding(nameof(LogLimit), _viewModel, nameof(_viewModel.OutcomeLimit), true, DataSourceUpdateMode.OnPropertyChanged);
+                this.DataBindings.Add(bindLogLimit);
+            }
+            catch (Exception ex)
             {
-                if (e.DesiredType != typeof(int))
-                {
-                    return;
-                }
-                if (int.TryParse((string)e.Value, out int result))
-                {
-                    e.Value = result;
-                }
-                else
-                {
-                    e.Value = 0;
-                }
-            };
-            textBox_Port_Server.DataBindings.Add(portServerBinding);
-
-            textBox_RespCode.DataBindings.Add("Text", _viewModel, nameof(_viewModel.RespCode), false, DataSourceUpdateMode.OnPropertyChanged);
-            textBox_IAD.DataBindings.Add("Text", _viewModel, nameof(_viewModel.IAD), false, DataSourceUpdateMode.OnPropertyChanged);
-            textBox_Script.DataBindings.Add("Text", _viewModel, nameof(_viewModel.Script), false, DataSourceUpdateMode.OnPropertyChanged);
-
-            //禁用输入功能
-            richTextBox1.ReadOnly = true;
-            //richTextBox1.DataBindings.Add("Text", _viewModel, nameof(_viewModel.MainModel), false, DataSourceUpdateMode.OnPropertyChanged);
-            _viewModel.OutcomeText.CollectionChanged += (sender, e) =>
-            {
-                richTextBox1.Invoke((MethodInvoker)(() =>
-                {
-                    richTextBox1.Text = string.Join(Environment.NewLine, _viewModel.OutcomeText);
-                }));
-            };
-
-            //绑定按钮Enabled属性
-            button_Listen_Server.Click += (sender, e) => _viewModel.startListenCommand.Execute(null);
-            Binding bindButtonServerStart = new Binding("Enabled", _viewModel, nameof(_viewModel.IsListenEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
-            button_Listen_Server.DataBindings.Add(bindButtonServerStart);
-
-            button_Close_Server.Click += (sender, e) => _viewModel.stopListenCommand.Execute(null);
-            Binding bindButtonServerStop = new Binding("Enabled", _viewModel, nameof(_viewModel.IsStopListenEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
-            button_Close_Server.DataBindings.Add(bindButtonServerStop);
-
-
-            button_OpenSerial.Click += (sender, e) => _viewModel.OpenSerialPortCommand.Execute(null);
-            Binding bindButtonSerialOpen = new Binding("Enabled", _viewModel, nameof(_viewModel.IsOpenSerialEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
-            button_OpenSerial.DataBindings.Add(bindButtonSerialOpen);
-
-            button_CloseSerial.Click += (sender, e) => _viewModel.CloseSerialPortCommand.Execute(null);
-            Binding bindButtonSerialClose = new Binding("Enabled", _viewModel, nameof(_viewModel.IsCloseSerialEnabled), true, DataSourceUpdateMode.OnPropertyChanged);
-            button_CloseSerial.DataBindings.Add(bindButtonSerialClose);
-
-            button_ClearScreen.Click += (sender, e) => _viewModel.clearScreenCommand.Execute(null);
-
-            Binding bindLogLimit = new Binding(nameof(LogLimit), _viewModel, nameof(_viewModel.OutcomeLimit), true, DataSourceUpdateMode.OnPropertyChanged);
-            this.DataBindings.Add(bindLogLimit);
+                MyLogManager.Log($"BindViewModel Exception: {ex.Message}");
+            }
         }
 
         private void Button_Close_Server_Click(object sender, EventArgs e)
