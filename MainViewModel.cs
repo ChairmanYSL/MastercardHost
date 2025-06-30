@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Google.Protobuf.WellKnownTypes;
 using System.Windows.Forms;
 using System.Net.Sockets;
+using System.Collections.Concurrent;
 
 namespace MastercardHost
 {
@@ -81,16 +82,18 @@ namespace MastercardHost
 
         private int _capkCounter;
         private bool isTestMode;
+        private List<string> _connections;
 
         public MainViewModel()
         {
             _tcpServer = new TcpSharpSocketServer();
             _tcpClient = new TcpSharpSocketClient();
             _serialPort = new SerialPort();
+            _connections = new List<string>();
 
             _tcpServer.OnDataReceived += OnDataReceived;
 
-            _tcpServer.OnConnected += (sender, e) => 
+            _tcpServer.OnConnected += (sender, e) =>
             {
                 UpdateLogText($"Connect on {e.IPAddress}:{e.Port}");
                 UpdateLogText($"Connect ID is: {e.ConnectionId}");
@@ -98,17 +101,20 @@ namespace MastercardHost
                 MyLogManager.Log($"Connect ID is: {e.ConnectionId}");
 
                 _connectionIDTestTool = e.ConnectionId;
+                _connections.Add(e.ConnectionId);
 
-                //if (e.IPAddress.Equals("127.0.0.1"))
-                //{
-                //    _connectionIDTestTool = e.ConnectionId;
-                //    MyLogManager.Log($"Test Tool Connect ID: {e.ConnectionId}");
-                //}
-                //else if (e.IPAddress.Contains("192.168.31."))
-                //{
-                //    _connectionIDPOS = e.ConnectionId;
-                //    MyLogManager.Log($"POS Connect ID: {e.ConnectionId}");
-                //}
+                //测试工具不会主动释放连接，积压太多可能导致无法收到ACT信号，在这里主动断开连接
+                if (_connections.Count > 10)
+                {
+                    foreach (var conn in _connections)
+                    {
+                        if (_tcpServer.GetClient(conn) != null)
+                        {
+                            _tcpServer.Disconnect(conn);
+                            _connections.Remove(conn);
+                        }
+                    }
+                }
             };
             _tcpServer.OnDisconnected += (sender, e) =>
             {
@@ -1041,7 +1047,7 @@ namespace MastercardHost
                                 TransFormSiganlToPOS(signal);
                                 break;
 
-                            case "RUNTEST_ RESULT":
+                            case "RUNTEST_RESULT":
                                 var testResult = signal.signalData.FirstOrDefault(s => s.id == "TestResult");
                                 if (testResult != null && testResult.value != null)
                                 {
@@ -1697,10 +1703,16 @@ namespace MastercardHost
                 SignalProtocol signalProtocol = envelope.Signal;
                 MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
 
-                if (signalProtocol.Type == "OUT" || signalProtocol.Type == "MSG")
+                if (signalProtocol.Type == "MSG")
                 {
                     ParseOutSignal(signalProtocol.Data);
                     transFlag = true;
+                }                
+                else if (signalProtocol.Type == "OUT")
+                {
+                    ParseOutSignal(signalProtocol.Data);
+                    transFlag = true;
+                    _tcpServer.Disconnect(_connectionIDTestTool);
                 }
                 else if (signalProtocol.Type == "CONFIG")
                 {
