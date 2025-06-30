@@ -84,7 +84,7 @@ message TermParam{
     bytes maxLifeTornLog = 23;
     bytes maxNumberTornLog = 24;
     bytes securCap = 25;
-    bytes proceed2FirFlg = 26;
+    bytes proceed2FirFlg = 26;      //DF8110
     bytes envelop1 = 27;
     bytes envelop2 = 28;
     bytes envelop3 = 29;

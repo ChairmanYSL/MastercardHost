@@ -99,6 +99,7 @@ namespace MastercardHost
                 UpdateLogText($"Connect ID is: {e.ConnectionId}");
                 MyLogManager.Log($"Connect on {e.IPAddress}:{e.Port}");
                 MyLogManager.Log($"Connect ID is: {e.ConnectionId}");
+                MyLogManager.Log($"_connections.Count is: {_connections.Count}");
 
                 //测试工具不会主动释放连接，积压太多可能导致无法收到ACT信号，在这里主动断开连接
                 if (_connections.Count > 10)
@@ -691,6 +692,7 @@ namespace MastercardHost
                                         { "DF8135", (termMsg, val) => termMsg.RrpExceptRAPDU = HexStringToByteString(val)},
                                         { "DF8136", (termMsg, val) => termMsg.RrpAccuracyThreshold = HexStringToByteString(val)},
                                         { "DF8112", (termMsg, val) => termMsg.TagsToRead = HexStringToByteString(val)},
+                                        { "DF8110", (termMsg, val) => termMsg.Proceed2FirFlg = HexStringToByteString(val)},
                                         // 添加其他映射
                                     };
 
