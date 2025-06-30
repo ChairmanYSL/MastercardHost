@@ -100,9 +100,6 @@ namespace MastercardHost
                 MyLogManager.Log($"Connect on {e.IPAddress}:{e.Port}");
                 MyLogManager.Log($"Connect ID is: {e.ConnectionId}");
 
-                _connectionIDTestTool = e.ConnectionId;
-                _connections.Add(e.ConnectionId);
-
                 //测试工具不会主动释放连接，积压太多可能导致无法收到ACT信号，在这里主动断开连接
                 if (_connections.Count > 10)
                 {
@@ -115,6 +112,10 @@ namespace MastercardHost
                         }
                     }
                 }
+
+                _connectionIDTestTool = e.ConnectionId;
+                _connections.Add(e.ConnectionId);
+
             };
             _tcpServer.OnDisconnected += (sender, e) =>
             {
