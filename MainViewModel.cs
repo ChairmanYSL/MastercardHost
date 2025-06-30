@@ -594,7 +594,7 @@ namespace MastercardHost
 
                 isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
                 MyLogManager.Log($"isTestMode: {isTestMode}");
-                MyLogManager.Log($"send to POS content: {envelope.ToString()}");
+                MyLogManager.Log($"send to POS content: {JsonFormatter.Default.Format(envelope)}");
 
                 if (isTestMode)
                 {
@@ -737,14 +737,14 @@ namespace MastercardHost
             foreach (var property in termParamObj.Properties())
             {
                 string key = property.Name;
-                MyLogManager.Log($"Download Config key:  {key}");
+                //MyLogManager.Log($"Download Config key:  {key}");
 
                 JToken valueToken = property.Value;
 
                 if (termParamFieldMapping.ContainsKey(key))
                 {
                     string value = valueToken?.Value<string>();
-                    MyLogManager.Log($"Download Config value:  {value}");
+                    //MyLogManager.Log($"Download Config value:  {value}");
 
                     termParamFieldMapping[key](termParamMsg, value);
                 }
@@ -763,7 +763,7 @@ namespace MastercardHost
 
             byte[] serializedData = envelope.ToByteArray();
 
-            MyLogManager.Log($"Download Config data len:  {serializedData.Length}");
+            MyLogManager.Log($"Download Config data  {JsonFormatter.Default.Format(envelope)}");
             isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
             if(isTestMode )
             {
@@ -804,14 +804,14 @@ namespace MastercardHost
                 foreach (var property in capkItem.Properties())
                 {
                     string key = property.Name;
-                    MyLogManager.Log($"Processing CAPK field: {key}");
+                    //MyLogManager.Log($"Processing CAPK field: {key}");
 
                     JToken valueToken = property.Value;
 
                     if (capkFieldMapping.ContainsKey(key))
                     {
                         string value = valueToken?.Value<string>();
-                        MyLogManager.Log($"Processing CAPK field: {key}, value: {value}");
+                        //MyLogManager.Log($"Processing CAPK field: {key}, value: {value}");
 
                         if (string.IsNullOrEmpty(value))
                         {
@@ -884,7 +884,7 @@ namespace MastercardHost
 
             byte[] serializedData = envelope.ToByteArray();
 
-            MyLogManager.Log($"Download CAPK:  {envelope.ToString()}");
+            MyLogManager.Log($"Download CAPK:  {JsonFormatter.Default.Format(envelope)}");
             isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
             if(isTestMode)
             {
@@ -941,7 +941,7 @@ namespace MastercardHost
 
             byte[] serializedData = envelope.ToByteArray();
 
-            MyLogManager.Log($"Download Revokey:  {serializedData}");
+            MyLogManager.Log($"Download Revokey:  {JsonFormatter.Default.Format(envelope)}");
             isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
             if(isTestMode )
             {
