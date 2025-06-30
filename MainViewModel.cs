@@ -1692,10 +1692,13 @@ namespace MastercardHost
 
         private void ProcessFromPOS(byte[] data)
         {
-            MyLogManager.Log($"receive data: " + ByteArrayToHexString(data, 0, data.Length));
-
             Envelope envelope = Envelope.Parser.ParseFrom(data);
             bool transFlag = false;
+
+            if (envelope != null)
+            { 
+                MyLogManager.Log($"Received data from POS: {envelope.ToString()}");
+            }
 
             MyLogManager.Log($"envelope.PayloadCase: {envelope.PayloadCase}");
 
@@ -1704,16 +1707,10 @@ namespace MastercardHost
                 SignalProtocol signalProtocol = envelope.Signal;
                 MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
 
-                if (signalProtocol.Type == "MSG")
+                if (signalProtocol.Type == "OUT" || signalProtocol.Type == "MSG")
                 {
                     ParseOutSignal(signalProtocol.Data);
                     transFlag = true;
-                }                
-                else if (signalProtocol.Type == "OUT")
-                {
-                    ParseOutSignal(signalProtocol.Data);
-                    transFlag = true;
-                    _tcpServer.Disconnect(_connectionIDTestTool);
                 }
                 else if (signalProtocol.Type == "CONFIG")
                 {
