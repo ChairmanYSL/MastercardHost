@@ -102,14 +102,17 @@ namespace MastercardHost
                 MyLogManager.Log($"_connections.Count is: {_connections.Count}");
 
                 //测试工具不会主动释放连接，积压太多可能导致无法收到ACT信号，在这里主动断开连接
-                if (_connections.Count > 10)
+                lock(_connections)
                 {
-                    foreach (var conn in _connections)
+                    if (_connections.Count > 10)
                     {
-                        if (_tcpServer.GetClient(conn) != null)
+                        foreach (var conn in _connections)
                         {
-                            _tcpServer.Disconnect(conn);
-                            _connections.Remove(conn);
+                            if (_tcpServer.GetClient(conn) != null)
+                            {
+                                _tcpServer.Disconnect(conn);
+                                _connections.Remove(conn);
+                            }
                         }
                     }
                 }
