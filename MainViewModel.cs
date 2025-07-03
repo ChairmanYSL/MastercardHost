@@ -347,7 +347,26 @@ namespace MastercardHost
             if (string.IsNullOrEmpty(val))
                 return false;
 
-            return val == "1" || val == "01";
+            // 转换为小写并去除前后空格  
+            string normalizedValue = val.Trim().ToLower();
+
+            // 使用传统的switch语句  
+            switch (normalizedValue)
+            {
+                case "true":
+                case "1":
+                case "yes":
+                case "y":
+                    return true;
+                case "false":
+                case "0":
+                case "no":
+                case "n":
+                    return false;
+                default:
+                    // 如果以上都不匹配，尝试用bool.Parse（可能会抛出异常）  
+                    return bool.Parse(val);
+            }
         }
 
         public static byte[] HexStringToByteArray(String hexString)
@@ -624,157 +643,143 @@ namespace MastercardHost
 
         private void DownloadConfig(string jsonFilePath)
         {
-            MyLogManager.Log("start DownloadConfig");
-            MyLogManager.Log($"input jsonFilePath: {jsonFilePath}");
-
-            string jsonContent = File.ReadAllText(jsonFilePath);
-            JObject jsonData = JObject.Parse(jsonContent);
-
-            var aidFieldMapping = new Dictionary<string, Action<AID, string>>()
-                                {
-                                        { "9F06", (aidMsg, val) => aidMsg.Aid = HexStringToByteString(val) },
-                                        { "9C", (aidMsg, val) => aidMsg.TransType = HexStringToByteString(val) },
-                                        { "9F09", (aidMsg, val) => aidMsg.AppVer = HexStringToByteString(val) },
-                                        { "9F1B", (aidMsg, val) => aidMsg.TermFloorLmt = HexStringToByteString(val) },
-                                        { "9F1D", (aidMsg, val) => aidMsg.TermRiskManageData = HexStringToByteString(val) },
-                                        { "9F35", (aidMsg, val) => aidMsg.TermType = HexStringToByteString(val) },
-                                        { "DF11", (aidMsg, val) => aidMsg.TacDefault = HexStringToByteString(val) },
-                                        { "DF12", (aidMsg, val) => aidMsg.TacOnline = HexStringToByteString(val) },
-                                        { "DF13", (aidMsg, val) => aidMsg.TacDeny = HexStringToByteString(val) },
-                                        { "DF19", (aidMsg, val) => aidMsg.ClFloorLmt = HexStringToByteString(val) },
-                                        { "DF20", (aidMsg, val) => aidMsg.ClTransLmt = HexStringToByteString(val) },
-                                        { "DF21", (aidMsg, val) => aidMsg.CvmLmt = HexStringToByteString(val) },
-                                        { "DF32", (aidMsg, val) => aidMsg.SupStausCheck = StringToBool(val) },
-                                        { "DF33", (aidMsg, val) => aidMsg.SupClTransLmtCheck = StringToBool(val) },
-                                        { "DF34", (aidMsg, val) => aidMsg.SupClFloorLmtCheck = StringToBool(val) },
-                                        { "DF35", (aidMsg, val) => aidMsg.SupTermFloorLmtCheck = StringToBool(val) },
-                                        { "DF36", (aidMsg, val) => aidMsg.SupCVMCheck = StringToBool(val) },
-                                        { "DF811B", (aidMsg, val) => aidMsg.KernelConf = HexStringToByteString(val) },
-                                        { "DF811E", (aidMsg, val) => aidMsg.MsdCVMCapCVMReq = HexStringToByteString(val) },
-                                        { "DF8124", (aidMsg, val) => aidMsg.RcTransLmtNoCDCVM = HexStringToByteString(val) },
-                                        { "DF8125", (aidMsg, val) => aidMsg.RcTransLmtCDCVM = HexStringToByteString(val) },
-                                        { "DF812C", (aidMsg, val) => aidMsg.MsdCVMCapNoCVMReq = HexStringToByteString(val) },
-                                        { "9F7E", (aidMsg, val) => aidMsg.MobileSupID = HexStringToByteString(val) },
-                                        { "DF811F", (aidMsg, val) => aidMsg.SecueCap = HexStringToByteString(val) },
-                                        { "DF8118", (aidMsg, val) => aidMsg.CvmCapCVMReq = HexStringToByteString(val) },
-                                        { "DF8119", (aidMsg, val) => aidMsg.CvmCapNoCVMReq = HexStringToByteString(val) },
-                                        { "9F40", (aidMsg, val) => aidMsg.AddTermCap = HexStringToByteString(val) },
-                                        { "9F33", (aidMsg, val) => aidMsg.TermCap = HexStringToByteString(val) },
-                                        { "9F2A", (aidMsg, val) => aidMsg.KernelID = HexStringToByteString(val)},    
-                                        // 添加其他映射
-                                    };
-
-            var termParamFieldMapping = new Dictionary<string, Action<TermParam, string>>()
-                                    {
-                                        { "9F01", (termMsg, val) => termMsg.AcquirerID = HexStringToByteString(val) },
-                                        { "9F1E", (termMsg, val) => termMsg.IfdSN = AsciiStringToByteString(val) },
-                                        { "9F15", (termMsg, val) => termMsg.MerchanCateCode = HexStringToByteString(val) },
-                                        { "9F16", (termMsg, val) => termMsg.MerchanID = AsciiStringToByteString(val) },
-                                        { "9F4E", (termMsg, val) => termMsg.MerchanName = AsciiStringToByteString(val) },
-                                        { "9F1A", (termMsg, val) => termMsg.TermCountryCode = HexStringToByteString(val) },
-                                        { "9F1C", (termMsg, val) => termMsg.TermID = AsciiStringToByteString(val) },
-                                        { "9F7C", (termMsg, val) => termMsg.MerchanCustData = HexStringToByteString(val) },
-                                        { "5F2A", (termMsg, val) => termMsg.TransCurrCode = HexStringToByteString(val) },
-                                        { "5F36", (termMsg, val) => termMsg.TransCurrExp = HexStringToByteString(val) },
-                                        { "9F66", (termMsg, val) => termMsg.Ttq = HexStringToByteString(val) },
-                                        { "9F53", (termMsg, val) => termMsg.TransCateCode = HexStringToByteString(val) },
-                                        { "DF811A", (termMsg, val) => termMsg.DefualtUDOL = HexStringToByteString(val) },
-                                        { "DF810C", (termMsg, val) => termMsg.KernelID = HexStringToByteString(val) },
-                                        { "9F6D", (termMsg, val) => termMsg.MsdAppVer = HexStringToByteString(val) },
-                                        { "DF811C", (termMsg, val) => termMsg.MaxLifeTornLog = HexStringToByteString(val) },
-                                        { "DF811D", (termMsg, val) => termMsg.MaxNumberTornLog = HexStringToByteString(val) },
-                                        { "DF811F", (termMsg, val) => termMsg.SecurCap = HexStringToByteString(val) },
-                                        { "8B", (termMsg, val) => termMsg.PoiInfo = HexStringToByteString(val) },
-                                        { "DF830A", (termMsg, val) => termMsg.ProprietaryTag = HexStringToByteString(val) },
-                                        { "DF8308", (termMsg, val) => termMsg.EmptyTagList = HexStringToByteString(val) },
-                                        { "DF8309", (termMsg, val) => termMsg.NotPresentTagList = HexStringToByteString(val) },
-                                        { "DF8117", (termMsg, val) => termMsg.CardDataInputCap = HexStringToByteString(val)},
-                                        { "DF8132", (termMsg, val) => termMsg.RrpMinGrace = HexStringToByteString(val)},
-                                        { "DF8133", (termMsg, val) => termMsg.RrpMaxGrace = HexStringToByteString(val)},
-                                        { "DF8134", (termMsg, val) => termMsg.RrpExceptCAPDU = HexStringToByteString(val)},
-                                        { "DF8135", (termMsg, val) => termMsg.RrpExceptRAPDU = HexStringToByteString(val)},
-                                        { "DF8136", (termMsg, val) => termMsg.RrpAccuracyThreshold = HexStringToByteString(val)},
-                                        { "DF8112", (termMsg, val) => termMsg.TagsToRead = HexStringToByteString(val)},
-                                        { "DF8110", (termMsg, val) => termMsg.Proceed2FirFlg = HexStringToByteString(val)},
-                                        // 添加其他映射
-                                    };
-
-            ConfigProtocol configProtocol = new ConfigProtocol();
-
-            JArray aidParamArray = (JArray)jsonData["AIDParam"];
-
-            foreach (JObject aidItem in aidParamArray)
+            try
             {
-                AID aidMsg = new AID();
+                MyLogManager.Log("start DownloadConfig");
+                MyLogManager.Log($"input jsonFilePath: {jsonFilePath}");
 
-                foreach (var property in aidItem.Properties())
+                string jsonContent = File.ReadAllText(jsonFilePath);
+                JObject jsonData = JObject.Parse(jsonContent);
+
+                var aidFieldMapping = new Dictionary<string, Action<AID, JToken>>()
+                                {
+                                        { "9F06", (aidMsg, val) => aidMsg.Aid = val.Type != JTokenType.Null ? HexStringToByteString(val.Value<string>()):ByteString.Empty },
+                                        { "9C", (aidMsg, val) => aidMsg.TransType = val.Type != JTokenType.Null ? HexStringToByteString(val.Value<string>()):ByteString.Empty },
+                                        { "9F09", (aidMsg, val) => aidMsg.AppVer = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F1B", (aidMsg, val) => aidMsg.TermFloorLmt = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F1D", (aidMsg, val) => aidMsg.TermRiskManageData = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F35", (aidMsg, val) => aidMsg.TermType = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF11", (aidMsg, val) => aidMsg.TacDefault = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF12", (aidMsg, val) => aidMsg.TacOnline = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF13", (aidMsg, val) => aidMsg.TacDeny = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF19", (aidMsg, val) => aidMsg.ClFloorLmt = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF20", (aidMsg, val) => aidMsg.ClTransLmt = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF21", (aidMsg, val) => aidMsg.CvmLmt = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF32", (aidMsg, val) => aidMsg.SupStausCheck = val.Type == JTokenType.Null ? false :StringToBool(val.Value<string>()) },
+                                        { "DF33", (aidMsg, val) => aidMsg.SupClTransLmtCheck = val.Type == JTokenType.Null ? false :StringToBool(val.Value<string>()) },
+                                        { "DF34", (aidMsg, val) => aidMsg.SupClFloorLmtCheck = val.Type == JTokenType.Null ? false : StringToBool(val.Value < string >()) },
+                                        { "DF35", (aidMsg, val) => aidMsg.SupTermFloorLmtCheck = val.Type == JTokenType.Null ? false : StringToBool(val.Value < string >()) },
+                                        { "DF36", (aidMsg, val) => aidMsg.SupCVMCheck = val.Type == JTokenType.Null ? false : StringToBool(val.Value < string >()) },
+                                        { "DF811B", (aidMsg, val) => aidMsg.KernelConf = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF811E", (aidMsg, val) => aidMsg.MsdCVMCapCVMReq = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF8124", (aidMsg, val) => aidMsg.RcTransLmtNoCDCVM = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF8125", (aidMsg, val) => aidMsg.RcTransLmtCDCVM = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF812C", (aidMsg, val) => aidMsg.MsdCVMCapNoCVMReq = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F7E", (aidMsg, val) => aidMsg.MobileSupID = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF811F", (aidMsg, val) => aidMsg.SecueCap = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF8118", (aidMsg, val) => aidMsg.CvmCapCVMReq = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF8119", (aidMsg, val) => aidMsg.CvmCapNoCVMReq = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F40", (aidMsg, val) => aidMsg.AddTermCap = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F33", (aidMsg, val) => aidMsg.TermCap = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F2A", (aidMsg, val) => aidMsg.KernelID = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},    
+                                        // 添加其他映射
+                                    };
+
+                var termParamFieldMapping = new Dictionary<string, Action<TermParam, JToken>>()
+                                    {
+                                        { "9F01", (termMsg, val) => termMsg.AcquirerID = val.Type != JTokenType.Null ? HexStringToByteString(val.Value<string>()):ByteString.Empty },
+                                        { "9F1E", (termMsg, val) => termMsg.IfdSN = val.Type != JTokenType.Null ? AsciiStringToByteString(val.Value<string>()): ByteString.Empty},
+                                        { "9F15", (termMsg, val) => termMsg.MerchanCateCode = val.Type != JTokenType.Null ? HexStringToByteString(val.Value<string>()):ByteString.Empty },
+                                        { "9F16", (termMsg, val) => termMsg.MerchanID = val.Type != JTokenType.Null ? AsciiStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F4E", (termMsg, val) => termMsg.MerchanName = val.Type != JTokenType.Null ? AsciiStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F1A", (termMsg, val) => termMsg.TermCountryCode = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F1C", (termMsg, val) => termMsg.TermID = val.Type != JTokenType.Null ? AsciiStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F7C", (termMsg, val) => termMsg.MerchanCustData = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "5F2A", (termMsg, val) => termMsg.TransCurrCode = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "5F36", (termMsg, val) => termMsg.TransCurrExp = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F66", (termMsg, val) => termMsg.Ttq = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F53", (termMsg, val) => termMsg.TransCateCode = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF811A", (termMsg, val) => termMsg.DefualtUDOL = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF810C", (termMsg, val) => termMsg.KernelID = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "9F6D", (termMsg, val) => termMsg.MsdAppVer = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF811C", (termMsg, val) => termMsg.MaxLifeTornLog = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF811D", (termMsg, val) => termMsg.MaxNumberTornLog = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF811F", (termMsg, val) => termMsg.SecurCap = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "8B", (termMsg, val) => termMsg.PoiInfo = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF830A", (termMsg, val) => termMsg.ProprietaryTag = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF8308", (termMsg, val) => termMsg.EmptyTagList = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF8309", (termMsg, val) => termMsg.NotPresentTagList = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty },
+                                        { "DF8117", (termMsg, val) => termMsg.CardDataInputCap = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "DF8132", (termMsg, val) => termMsg.RrpMinGrace = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "DF8133", (termMsg, val) => termMsg.RrpMaxGrace = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "DF8134", (termMsg, val) => termMsg.RrpExceptCAPDU = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "DF8135", (termMsg, val) => termMsg.RrpExceptRAPDU = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "DF8136", (termMsg, val) => termMsg.RrpAccuracyThreshold = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "DF8112", (termMsg, val) => termMsg.TagsToRead = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "DF8110", (termMsg, val) => termMsg.Proceed2FirFlg = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        // 添加其他映射
+                                    };
+
+                ConfigProtocol configProtocol = new ConfigProtocol();
+
+
+                if (jsonData.TryGetValue("AIDParam", out var aidParamToken) && aidParamToken is JArray aidParamArray)
                 {
-                    string key = property.Name;
-                    JToken valueToken = property.Value;
-
-                    //MyLogManager.Log($"key = {key}");
-
-                    if (aidFieldMapping.ContainsKey(key))
+                    foreach (JObject aidItem in aidParamArray)
                     {
-                        string value = valueToken?.Value<string>();
-                        //MyLogManager.Log($"value = {value}");
-                        //if(key.Equals("9F33"))
-                        //{
-                        //    MyLogManager.Log("///////////////////////////////");
-                        //}
-                        aidFieldMapping[key](aidMsg, value);
-                    }
-                    else
-                    {
-                        //TODO: 处理其他可能的扩展字段
+                        AID aidMsg = new AID();
+
+                        foreach (var mapping in aidFieldMapping)
+                        {
+                            if (aidItem.TryGetValue(mapping.Key, out var valueToken))
+                            {
+                                // 直接传递JToken给映射函数
+                                mapping.Value(aidMsg, valueToken);
+                            }
+                        }
+
+                        configProtocol.Aid.Add(aidMsg);
                     }
                 }
 
-                configProtocol.Aid.Add(aidMsg);
-            }
-
-            // 处理 TermParam 对象
-            JObject termParamObj = (JObject)jsonData["TermParam"];
-            TermParam termParamMsg = new TermParam();
-
-            foreach (var property in termParamObj.Properties())
-            {
-                string key = property.Name;
-                //MyLogManager.Log($"Download Config key:  {key}");
-
-                JToken valueToken = property.Value;
-
-                if (termParamFieldMapping.ContainsKey(key))
+                // 处理 TermParam 对象
+                if (jsonData.TryGetValue("TermParam", out var termParamToken) && termParamToken is JObject termParamObj)
                 {
-                    string value = valueToken?.Value<string>();
-                    //MyLogManager.Log($"Download Config value:  {value}");
+                    TermParam termParamMsg = new TermParam();
 
-                    termParamFieldMapping[key](termParamMsg, value);
+                    foreach (var mapping in termParamFieldMapping)
+                    {
+                        if (termParamObj.TryGetValue(mapping.Key, out var valueToken))
+                        {
+                            mapping.Value(termParamMsg, valueToken);
+                        }
+                    }
+
+                    configProtocol.Termpar = termParamMsg;
+                }
+
+                Envelope envelope = new Envelope()
+                {
+                    Config = configProtocol
+                };
+
+                byte[] serializedData = envelope.ToByteArray();
+
+                MyLogManager.Log($"Download Config data  {JsonFormatter.Default.Format(envelope)}");
+                isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
+                if (isTestMode)
+                {
+                    _tcpServer.SendBytes(_connectionIDPOS, serializedData);
                 }
                 else
                 {
-                    //TODO: 处理其他可能的扩展字段
+                    _serialPort.Write(serializedData, 0, serializedData.Length);
                 }
             }
-
-            configProtocol.Termpar = termParamMsg;
-
-            Envelope envelope = new Envelope()
+            catch (Exception ex)
             {
-                Config = configProtocol
-            };
-
-            byte[] serializedData = envelope.ToByteArray();
-
-            MyLogManager.Log($"Download Config data  {JsonFormatter.Default.Format(envelope)}");
-            isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
-            if(isTestMode )
-            {
-                _tcpServer.SendBytes(_connectionIDPOS, serializedData);
-            }
-            else
-            {
-                _serialPort.Write(serializedData, 0, serializedData.Length);
+                MyLogManager.Log($"DownloadConfig Exception: {ex.Message}");
+                System.Windows.MessageBox.Show($"下载配置时发生错误: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
