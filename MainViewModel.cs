@@ -12,12 +12,8 @@ using MastercardHost.MessageProtos;
 using Google.Protobuf;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using Google.Protobuf.WellKnownTypes;
-using System.Windows.Forms;
 using System.Net.Sockets;
-using System.Collections.Concurrent;
-using ProtoBuf;
-using ProtoBuf.Meta;
+
 
 namespace MastercardHost
 {
@@ -768,12 +764,9 @@ namespace MastercardHost
                 };
 
                 byte[] serializedData = envelope.ToByteArray();
-                string protoJson = JsonFormatter.Default.Format(envelope);
-                var formattedJson = JObject.Parse(protoJson).ToString(Formatting.Indented);
-                var jObj = JObject.Parse(formattedJson);
-                DecodeBase64Fields(jObj);
 
-                MyLogManager.Log($"Download Config data  {jObj.ToString()}");
+                MyLogManager.Log($"Download Config data:\n");
+                LogFormattedProtobuf(envelope);
                 isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
                 if (isTestMode)
                 {
@@ -900,12 +893,9 @@ namespace MastercardHost
 
             byte[] serializedData = envelope.ToByteArray();
 
-            string protoJson = JsonFormatter.Default.Format(envelope);
-            var formattedJson = JObject.Parse(protoJson).ToString(Formatting.Indented);
-            var jObj = JObject.Parse(formattedJson);
-            DecodeBase64Fields(jObj);
+            MyLogManager.Log($"Download CAPK data:\n");
+            LogFormattedProtobuf(envelope);
 
-            MyLogManager.Log($"Download Config data  {jObj.ToString()}");
 
             isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
             if(isTestMode)
@@ -963,12 +953,8 @@ namespace MastercardHost
 
             byte[] serializedData = envelope.ToByteArray();
 
-            string protoJson = JsonFormatter.Default.Format(envelope);
-            var formattedJson = JObject.Parse(protoJson).ToString(Formatting.Indented);
-            var jObj = JObject.Parse(formattedJson);
-            DecodeBase64Fields(jObj);
-
-            MyLogManager.Log($"Download Config data  {jObj.ToString()}");
+            MyLogManager.Log($"Download Revokey data:\n");
+            LogFormattedProtobuf(envelope);
 
             isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
             if(isTestMode )
@@ -1851,34 +1837,93 @@ namespace MastercardHost
             }
         }
 
-        private string FormatProtobufMessage(IMessage message)
+        private void LogFormattedProtobuf(IMessage message)
         {
-            var json = JsonFormatter.Default.Format(message);
-            var jObject = JObject.Parse(json);
-            DecodeBase64Fields(jObject);
-            return jObject.ToString(Formatting.Indented);
+            try
+            {
+                // 1. 使用Protobuf的JsonFormatter转换为JSON
+                string protoJson = JsonFormatter.Default.Format(message);
+
+                // 2. 解析为JObject以便处理
+                var jObj = JObject.Parse(protoJson);
+
+                // 3. 解码所有Base64字段
+                DecodeAllBinaryFields(jObj);
+
+                // 4. 美化输出
+                MyLogManager.Log("Formatted Data:\n" +
+                               jObj.ToString(Formatting.Indented));
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"Error formatting protobuf: {ex.Message}");
+            }
         }
 
-        private void DecodeBase64Fields(JToken token)
+        private void DecodeAllBinaryFields(JToken token)
         {
-            if (token is JObject obj)
+            switch (token)
             {
-                foreach (var prop in obj.Properties().ToList())
-                {
-                    if (prop.Value.Type == JTokenType.String)
+                case JObject obj:
+                    foreach (var property in obj.Properties().ToList())
                     {
-                        try
+                        if (property.Value.Type == JTokenType.String)
                         {
-                            var bytes = Convert.FromBase64String(prop.Value.ToString());
-                            prop.Value = "0x" + BitConverter.ToString(bytes).Replace("-", "");
+                            // 尝试解码Base64
+                            property.Value = DecodeBase64String(property.Value.ToString());
                         }
-                        catch { /* 忽略非Base64字段 */ }
+                        else
+                        {
+                            DecodeAllBinaryFields(property.Value);
+                        }
                     }
-                    else if (prop.Value.HasValues)
+                    break;
+
+                case JArray array:
+                    foreach (var item in array)
                     {
-                        DecodeBase64Fields(prop.Value);
+                        DecodeAllBinaryFields(item);
+                    }
+                    break;
+            }
+        }
+
+        private JToken DecodeBase64String(string base64Str)
+        {
+            try
+            {
+                byte[] bytes = Convert.FromBase64String(base64Str);
+
+                // 情况1：如果是纯ASCII可打印字符
+                if (bytes.All(b => b >= 32 && b <= 126))
+                {
+                    return JToken.FromObject($"ASCII: {Encoding.ASCII.GetString(bytes)}");
+                }
+                // 情况2：如果是数值型数据（如金额、限额等）
+                else if (bytes.Length <= 8) // 假设8字节以内的可能是数值
+                {
+                    // 小端序转换为数值
+                    ulong numericValue = bytes.Length switch
+                    {
+                        1 => bytes[0],
+                        2 => BitConverter.ToUInt16(bytes.Reverse().ToArray(), 0),
+                        4 => BitConverter.ToUInt32(bytes.Reverse().ToArray(), 0),
+                        8 => BitConverter.ToUInt64(bytes.Reverse().ToArray(), 0),
+                        _ => 0
+                    };
+
+                    if (numericValue != 0 || bytes.All(b => b == 0))
+                    {
+                        return JToken.FromObject($"NUM: 0x{numericValue:X}");
                     }
                 }
+
+                // 默认情况：转换为十六进制字符串
+                return JToken.FromObject($"HEX: {BitConverter.ToString(bytes).Replace("-", "")}");
+            }
+            catch
+            {
+                return JToken.FromObject(base64Str); // 不是有效的Base64则保持原样
             }
         }
     }
