@@ -1713,13 +1713,8 @@ namespace MastercardHost
 
             if (envelope != null)
             {
-                string protoJson = JsonFormatter.Default.Format(envelope);
-                var formattedJson = JObject.Parse(protoJson).ToString(Formatting.Indented);
-                var jObj = JObject.Parse(formattedJson);
-                DecodeBase64Fields(jObj);
-
-                MyLogManager.Log($"ProcessFromPOS receive:\n  {jObj.ToString()}");
-
+                MyLogManager.Log($"ProcessFromPOS receive:\n ");
+                LogFormattedProtobuf(envelope);
             }
 
             MyLogManager.Log($"envelope.PayloadCase: {envelope.PayloadCase}");
@@ -1903,14 +1898,7 @@ namespace MastercardHost
                 else if (bytes.Length <= 8) // 假设8字节以内的可能是数值
                 {
                     // 小端序转换为数值
-                    ulong numericValue = bytes.Length switch
-                    {
-                        1 => bytes[0],
-                        2 => BitConverter.ToUInt16(bytes.Reverse().ToArray(), 0),
-                        4 => BitConverter.ToUInt32(bytes.Reverse().ToArray(), 0),
-                        8 => BitConverter.ToUInt64(bytes.Reverse().ToArray(), 0),
-                        _ => 0
-                    };
+                    ulong numericValue = ConvertBytesToNumeric(bytes);
 
                     if (numericValue != 0 || bytes.All(b => b == 0))
                     {
@@ -1924,6 +1912,32 @@ namespace MastercardHost
             catch
             {
                 return JToken.FromObject(base64Str); // 不是有效的Base64则保持原样
+            }
+        }
+        private ulong ConvertBytesToNumeric(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length == 0)
+                return 0;
+
+            // 注意：这里反转字节序转换为小端序
+            byte[] reversedBytes = bytes.Reverse().ToArray();
+
+            switch (bytes.Length)
+            {
+                case 1:
+                    return bytes[0];
+                case 2:
+                    return BitConverter.ToUInt16(reversedBytes, 0);
+                case 4:
+                    return BitConverter.ToUInt32(reversedBytes, 0);
+                case 8:
+                    return BitConverter.ToUInt64(reversedBytes, 0);
+                default:
+                    // 对于其他长度，尝试转换为尽可能大的数值
+                    if (bytes.Length < 2) return bytes[0];
+                    if (bytes.Length < 4) return BitConverter.ToUInt16(reversedBytes.Take(2).ToArray(), 0);
+                    if (bytes.Length < 8) return BitConverter.ToUInt32(reversedBytes.Take(4).ToArray(), 0);
+                    return BitConverter.ToUInt64(reversedBytes.Take(8).ToArray(), 0);
             }
         }
     }
