@@ -16,6 +16,8 @@ using Google.Protobuf.WellKnownTypes;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Collections.Concurrent;
+using ProtoBuf;
+using ProtoBuf.Meta;
 
 namespace MastercardHost
 {
@@ -766,8 +768,12 @@ namespace MastercardHost
                 };
 
                 byte[] serializedData = envelope.ToByteArray();
+                string protoJson = JsonFormatter.Default.Format(envelope);
+                var formattedJson = JObject.Parse(protoJson).ToString(Formatting.Indented);
+                var jObj = JObject.Parse(formattedJson);
+                DecodeBase64Fields(jObj);
 
-                MyLogManager.Log($"Download Config data  {JsonFormatter.Default.Format(envelope)}");
+                MyLogManager.Log($"Download Config data  {jObj.ToString()}");
                 isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
                 if (isTestMode)
                 {
@@ -894,7 +900,13 @@ namespace MastercardHost
 
             byte[] serializedData = envelope.ToByteArray();
 
-            MyLogManager.Log($"Download CAPK:  {JsonFormatter.Default.Format(envelope)}");
+            string protoJson = JsonFormatter.Default.Format(envelope);
+            var formattedJson = JObject.Parse(protoJson).ToString(Formatting.Indented);
+            var jObj = JObject.Parse(formattedJson);
+            DecodeBase64Fields(jObj);
+
+            MyLogManager.Log($"Download Config data  {jObj.ToString()}");
+
             isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
             if(isTestMode)
             {
@@ -951,7 +963,13 @@ namespace MastercardHost
 
             byte[] serializedData = envelope.ToByteArray();
 
-            MyLogManager.Log($"Download Revokey:  {JsonFormatter.Default.Format(envelope)}");
+            string protoJson = JsonFormatter.Default.Format(envelope);
+            var formattedJson = JObject.Parse(protoJson).ToString(Formatting.Indented);
+            var jObj = JObject.Parse(formattedJson);
+            DecodeBase64Fields(jObj);
+
+            MyLogManager.Log($"Download Config data  {jObj.ToString()}");
+
             isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
             if(isTestMode )
             {
@@ -1708,8 +1726,14 @@ namespace MastercardHost
             bool transFlag = false;
 
             if (envelope != null)
-            { 
-                MyLogManager.Log($"Received data from POS: {envelope.ToString()}");
+            {
+                string protoJson = JsonFormatter.Default.Format(envelope);
+                var formattedJson = JObject.Parse(protoJson).ToString(Formatting.Indented);
+                var jObj = JObject.Parse(formattedJson);
+                DecodeBase64Fields(jObj);
+
+                MyLogManager.Log($"ProcessFromPOS receive:\n  {jObj.ToString()}");
+
             }
 
             MyLogManager.Log($"envelope.PayloadCase: {envelope.PayloadCase}");
@@ -1827,5 +1851,35 @@ namespace MastercardHost
             }
         }
 
+        private string FormatProtobufMessage(IMessage message)
+        {
+            var json = JsonFormatter.Default.Format(message);
+            var jObject = JObject.Parse(json);
+            DecodeBase64Fields(jObject);
+            return jObject.ToString(Formatting.Indented);
+        }
+
+        private void DecodeBase64Fields(JToken token)
+        {
+            if (token is JObject obj)
+            {
+                foreach (var prop in obj.Properties().ToList())
+                {
+                    if (prop.Value.Type == JTokenType.String)
+                    {
+                        try
+                        {
+                            var bytes = Convert.FromBase64String(prop.Value.ToString());
+                            prop.Value = "0x" + BitConverter.ToString(bytes).Replace("-", "");
+                        }
+                        catch { /* 忽略非Base64字段 */ }
+                    }
+                    else if (prop.Value.HasValues)
+                    {
+                        DecodeBase64Fields(prop.Value);
+                    }
+                }
+            }
+        }
     }
 }
