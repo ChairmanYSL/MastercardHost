@@ -86,22 +86,10 @@ namespace MastercardHost
 
                 //禁用输入功能
                 richTextBox1.ReadOnly = true;
-                _viewModel.OutcomeText.CollectionChanged += (sender, e) =>
+                _viewModel.Logs.CollectionChanged += (sender, e) =>
                 {
-                    string newText;
-                    lock (_viewModel.OutcomeText)
-                    {
-                        newText = string.Join(Environment.NewLine, _viewModel.OutcomeText);
-                    }
-
-                    if (richTextBox1.InvokeRequired)
-                    {
-                        richTextBox1.BeginInvoke((Action)(() => richTextBox1.Text = newText));
-                    }
-                    else
-                    {
-                        richTextBox1.Text = newText;
-                    }
+                    var logs = _viewModel.Logs.ToArray(); // 线程安全快照
+                    richTextBox1.Text = string.Join(Environment.NewLine, logs);
                 };
 
                 //绑定按钮Enabled属性
@@ -124,7 +112,7 @@ namespace MastercardHost
 
                 button_ClearScreen.Click += (sender, e) => _viewModel.clearScreenCommand.Execute(null);
 
-                Binding bindLogLimit = new Binding(nameof(LogLimit), _viewModel, nameof(_viewModel.OutcomeLimit), true, DataSourceUpdateMode.OnPropertyChanged);
+                Binding bindLogLimit = new Binding(nameof(LogLimit), _viewModel, nameof(_viewModel.MaxLogCount), true, DataSourceUpdateMode.OnPropertyChanged);
                 this.DataBindings.Add(bindLogLimit);
             }
             catch (Exception ex)

@@ -13,6 +13,9 @@ using Google.Protobuf;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Collections.ObjectModel;
+using System.Collections.Concurrent;
+using System.Windows.Forms;
 
 
 namespace MastercardHost
@@ -59,9 +62,11 @@ namespace MastercardHost
         private string _respCode;
         private string _iad;
         private string _script;
-        private ObservableRangeCollection<string> _outcomeText;
+        public ObservableCollection<string> Logs { get; } = new ObservableCollection<string>();
+        private readonly ConcurrentQueue<string> _logQueue = new ConcurrentQueue<string>();
+        private readonly object _lock = new object();
 
-        private int _outcomeLimit;
+        public int MaxLogCount { get; set; } = 1000;
         private string _connectionIDTestTool;
         private string _connectionIDPOS;
 
@@ -166,8 +171,7 @@ namespace MastercardHost
 
             _respCode = "00";
             _iad = "";
-            _script = "";
-            _outcomeText = new ObservableRangeCollection<string>();
+            _script = "";          
 
             _baudRate = 115200;
             _parity = Parity.None;
@@ -274,18 +278,6 @@ namespace MastercardHost
         {
             get => _stopBits;
             set => SetProperty(ref _stopBits, value);
-        }
-
-        public ObservableRangeCollection<string> OutcomeText
-        {
-            get => _outcomeText;
-            set => SetProperty(ref _outcomeText, value);
-        }
-
-        public int OutcomeLimit
-        {
-            get => _outcomeLimit;
-            set => SetProperty(ref _outcomeLimit, value);
         }
 
         public string CurrentConfig
@@ -458,11 +450,25 @@ namespace MastercardHost
 
         public void UpdateLogText(string text)
         {
-            _outcomeText.Add(text+Environment.NewLine);
-            //TODO: 添加通过菜单控制自动清log的行数限制
-            if (_outcomeText.Count > 100)
+            lock (_lock)
             {
-                _outcomeText.Clear();
+                _logQueue.Enqueue($"{DateTime.Now:HH:mm:ss} - {text}");
+
+                // 保持队列长度
+                while (_logQueue.Count > MaxLogCount)
+                {
+                    _logQueue.TryDequeue(out _);
+                }
+
+                // 批量更新UI
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    Logs.Clear();
+                    foreach (var log in _logQueue)
+                    {
+                        Logs.Add(log);
+                    }
+                });
             }
         }
 
@@ -499,7 +505,7 @@ namespace MastercardHost
 
         private void CleanScreen(object parameter)
         {
-            _outcomeText.Clear();
+            Logs.Clear();
         }
 
         private void OpenSerialPort()
@@ -717,6 +723,8 @@ namespace MastercardHost
                                         { "DF8136", (termMsg, val) => termMsg.RrpAccuracyThreshold = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
                                         { "DF8112", (termMsg, val) => termMsg.TagsToRead = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
                                         { "DF8110", (termMsg, val) => termMsg.Proceed2FirFlg = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "DF810D", (termMsg, val) => termMsg.DsvnTerm = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F5C", (termMsg, val) => termMsg.DsReqOperaID = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
                                         // 添加其他映射
                                     };
 

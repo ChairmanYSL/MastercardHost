@@ -77,8 +77,8 @@ message TermParam{
     optional bytes dsInputTerm = 16;
     optional bytes dsODSInfo = 17;
     optional bytes dsODSInfoRd = 18;
-    optional bytes dsODSTerm = 19;
-    optional bytes dsvnTerm = 20;
+    optional bytes dsODSTerm = 19;              //DF63
+    optional bytes dsvnTerm = 20;               //DF810D
     optional bytes kernelID = 21;
     optional bytes msdAppVer = 22;
     optional bytes maxLifeTornLog = 23;
@@ -102,6 +102,7 @@ message TermParam{
     optional bytes rrpExceptCAPDU = 41;      //DF8134
     optional bytes rrpExceptRAPDU = 42;      //DF8135
     optional bytes rrpAccuracyThreshold = 43;   //DF8136
+    optional bytes dsReqOperaID = 44;           //9F5C
 }
 
 message CAPKList {
