@@ -357,11 +357,13 @@ namespace MastercardHost
                 case "1":
                 case "yes":
                 case "y":
+                case "01":
                     return true;
                 case "false":
                 case "0":
                 case "no":
                 case "n":
+                case "00":
                     return false;
                 default:
                     // 如果以上都不匹配，尝试用bool.Parse（可能会抛出异常）  
