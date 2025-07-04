@@ -16,6 +16,8 @@ using System.Net.Sockets;
 using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
 using System.Windows.Forms;
+using System.Windows.Controls;
+using System.Threading;
 
 
 namespace MastercardHost
@@ -38,7 +40,7 @@ namespace MastercardHost
 
     public class MainViewModel : BaseViewModel
     {
-
+        private readonly SynchronizationContext _uiContext;
         public Command startListenCommand { get; }
         public Command stopListenCommand { get; }
         public Command clearScreenCommand { get; }
@@ -63,8 +65,6 @@ namespace MastercardHost
         private string _iad;
         private string _script;
         public ObservableCollection<string> Logs { get; } = new ObservableCollection<string>();
-        private readonly ConcurrentQueue<string> _logQueue = new ConcurrentQueue<string>();
-        private readonly object _lock = new object();
 
         public int MaxLogCount { get; set; } = 1000;
         private string _connectionIDTestTool;
@@ -89,6 +89,7 @@ namespace MastercardHost
 
         public MainViewModel()
         {
+            _uiContext = SynchronizationContext.Current ?? throw new InvalidOperationException("必须在UI线程创建ViewModel");
             _tcpServer = new TcpSharpSocketServer();
             _tcpClient = new TcpSharpSocketClient();
             _serialPort = new SerialPort();
@@ -450,26 +451,16 @@ namespace MastercardHost
 
         public void UpdateLogText(string text)
         {
-            lock (_lock)
+            _uiContext.Post(_ =>
             {
-                _logQueue.Enqueue($"{DateTime.Now:HH:mm:ss} - {text}");
+                Logs.Add(text);
 
-                // 保持队列长度
-                while (_logQueue.Count > MaxLogCount)
+                // 限制日志条数
+                while (Logs.Count > MaxLogCount)
                 {
-                    _logQueue.TryDequeue(out _);
+                    Logs.RemoveAt(0);
                 }
-
-                // 批量更新UI
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    Logs.Clear();
-                    foreach (var log in _logQueue)
-                    {
-                        Logs.Add(log);
-                    }
-                });
-            }
+            }, null);
         }
 
         private void StartListen(object parameter)

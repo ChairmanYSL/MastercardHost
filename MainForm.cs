@@ -88,8 +88,21 @@ namespace MastercardHost
                 richTextBox1.ReadOnly = true;
                 _viewModel.Logs.CollectionChanged += (sender, e) =>
                 {
-                    var logs = _viewModel.Logs.ToArray(); // 线程安全快照
-                    richTextBox1.Text = string.Join(Environment.NewLine, logs);
+                    // 创建集合的快照副本以避免线程问题
+                    var snapshot = _viewModel.Logs.ToList();
+
+                    // 使用控件的Invoke方法
+                    if (richTextBox1.InvokeRequired)
+                    {
+                        richTextBox1.Invoke(new Action(() =>
+                        {
+                            richTextBox1.Text = string.Join(Environment.NewLine, snapshot);
+                        }));
+                    }
+                    else
+                    {
+                        richTextBox1.Text = string.Join(Environment.NewLine, snapshot);
+                    }
                 };
 
                 //绑定按钮Enabled属性
