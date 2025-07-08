@@ -716,6 +716,16 @@ namespace MastercardHost
                                         { "DF8110", (termMsg, val) => termMsg.Proceed2FirFlg = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
                                         { "DF810D", (termMsg, val) => termMsg.DsvnTerm = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
                                         { "9F5C", (termMsg, val) => termMsg.DsReqOperaID = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F70", (termMsg, val) => termMsg.Envelop1 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F71", (termMsg, val) => termMsg.Envelop2 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F72", (termMsg, val) => termMsg.Envelop3 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F73", (termMsg, val) => termMsg.Envelop4 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F74", (termMsg, val) => termMsg.Envelop5 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F75", (termMsg, val) => termMsg.UnProtectEnvelope1 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F76", (termMsg, val) => termMsg.UnProtectEnvelope2 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F77", (termMsg, val) => termMsg.UnProtectEnvelope3 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F78", (termMsg, val) => termMsg.UnProtectEnvelope4 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "9F79", (termMsg, val) => termMsg.UnProtectEnvelope5 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},                                      
                                         // 添加其他映射
                                     };
 

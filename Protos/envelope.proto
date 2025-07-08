@@ -85,11 +85,11 @@ message TermParam{
     optional bytes maxNumberTornLog = 24;
     optional bytes securCap = 25;
     optional bytes proceed2FirFlg = 26;      //DF8110
-    optional bytes envelop1 = 27;
-    optional bytes envelop2 = 28;
-    optional bytes envelop3 = 29;
-    optional bytes envelop4 = 30;
-    optional bytes envelop5 = 31;
+    optional bytes envelop1 = 27;           //9F70
+    optional bytes envelop2 = 28;           //9F71
+    optional bytes envelop3 = 29;           //9F72
+    optional bytes envelop4 = 30;           //9F73
+    optional bytes envelop5 = 31;           //9F74
     optional bytes tagsToRead = 32;           //DF8112
     optional bytes propTag = 33;
     optional bytes poiInfo = 34;
@@ -103,6 +103,11 @@ message TermParam{
     optional bytes rrpExceptRAPDU = 42;      //DF8135
     optional bytes rrpAccuracyThreshold = 43;   //DF8136
     optional bytes dsReqOperaID = 44;           //9F5C
+    optional bytes unProtectEnvelope1 = 45;      //9F75
+    optional bytes unProtectEnvelope2 = 46;      //9F76
+    optional bytes unProtectEnvelope3 = 47;      //9F77
+    optional bytes unProtectEnvelope4 = 48;      //9F78
+    optional bytes unProtectEnvelope5 = 49;      //9F79
 }
 
 message CAPKList {
