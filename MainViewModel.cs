@@ -85,7 +85,7 @@ namespace MastercardHost
 
         private int _capkCounter;
         private bool isTestMode;
-        private List<string> _connections;
+        //private List<string> _connections;
 
         public MainViewModel()
         {
@@ -93,7 +93,7 @@ namespace MastercardHost
             _tcpServer = new TcpSharpSocketServer();
             _tcpClient = new TcpSharpSocketClient();
             _serialPort = new SerialPort();
-            _connections = new List<string>();
+            //_connections = new List<string>();
 
             _tcpServer.OnDataReceived += OnDataReceived;
 
@@ -103,26 +103,12 @@ namespace MastercardHost
                 UpdateLogText($"Connect ID is: {e.ConnectionId}");
                 MyLogManager.Log($"Connect on {e.IPAddress}:{e.Port}");
                 MyLogManager.Log($"Connect ID is: {e.ConnectionId}");
-                MyLogManager.Log($"_connections.Count is: {_connections.Count}");
+                //MyLogManager.Log($"_connections.Count is: {_connections.Count}");
 
                 //测试工具不会主动释放连接，积压太多可能导致无法收到ACT信号，在这里主动断开连接
-                lock(_connections)
-                {
-                    if (_connections.Count > 10)
-                    {
-                        foreach (var conn in _connections)
-                        {
-                            if (_tcpServer.GetClient(conn) != null)
-                            {
-                                _tcpServer.Disconnect(conn);
-                                _connections.Remove(conn);
-                            }
-                        }
-                    }
-                }
 
                 _connectionIDTestTool = e.ConnectionId;
-                _connections.Add(e.ConnectionId);
+                //_connections.Add(e.ConnectionId);
 
             };
             _tcpServer.OnDisconnected += (sender, e) =>
@@ -1222,7 +1208,7 @@ namespace MastercardHost
 
                         if (transFlag)
                         {
-                            TransformSignalToTestTool(signalProtocol);
+                            TransformSignalToTestTool(signalProtocol, true);
                         }
                     }
                     else
@@ -1371,7 +1357,7 @@ namespace MastercardHost
             }
         }
 
-        private void TransformSignalToTestTool(SignalProtocol signalProtocol)
+        private void TransformSignalToTestTool(SignalProtocol signalProtocol, bool disconnectFlag)
         {
             JObject root = new JObject();
             root.Add("signalType", signalProtocol.Type);
@@ -1399,6 +1385,13 @@ namespace MastercardHost
             MyLogManager.Log($"Send to TestTool: {root.ToString()}");
 
             _tcpServer.SendString(_connectionIDTestTool, root.ToString());
+
+            if (disconnectFlag)
+            {
+                Thread.Sleep(5);
+                _tcpServer.Disconnect(_connectionIDTestTool);
+                MyLogManager.Log($"Disconnected from TestTool: {_connectionIDTestTool}");
+            }
         }
 
         private void ShowOutcome(string outcome)
@@ -1718,7 +1711,7 @@ namespace MastercardHost
         private void ProcessFromPOS(byte[] data)
         {
             Envelope envelope = Envelope.Parser.ParseFrom(data);
-            bool transFlag = false;
+            bool transFlag = false,disconnectFlag=false;
 
             if (envelope != null)
             {
@@ -1733,7 +1726,13 @@ namespace MastercardHost
                 SignalProtocol signalProtocol = envelope.Signal;
                 MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
 
-                if (signalProtocol.Type == "OUT" || signalProtocol.Type == "MSG")
+                if (signalProtocol.Type == "OUT")
+                {
+                    ParseOutSignal(signalProtocol.Data);
+                    transFlag = true;
+                    disconnectFlag = true;
+                }
+                else if(signalProtocol.Type == "MSG")
                 {
                     ParseOutSignal(signalProtocol.Data);
                     transFlag = true;
@@ -1832,7 +1831,7 @@ namespace MastercardHost
 
                 if(transFlag)
                 {
-                    TransformSignalToTestTool(signalProtocol);
+                    TransformSignalToTestTool(signalProtocol, disconnectFlag);
                 }
             }
             else
