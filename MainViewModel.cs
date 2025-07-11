@@ -85,7 +85,8 @@ namespace MastercardHost
 
         private int _capkCounter;
         private bool isTestMode;
-        //private List<string> _connections;
+        private List<string> _connections;
+        private object _lock = new object();
 
         public MainViewModel()
         {
@@ -108,7 +109,10 @@ namespace MastercardHost
                 //测试工具不会主动释放连接，积压太多可能导致无法收到ACT信号，在这里主动断开连接
 
                 _connectionIDTestTool = e.ConnectionId;
-                //_connections.Add(e.ConnectionId);
+                lock(_lock)
+                {
+                    _connections.Add(e.ConnectionId);
+                }
 
             };
             _tcpServer.OnDisconnected += (sender, e) =>
@@ -1388,9 +1392,21 @@ namespace MastercardHost
 
             if (disconnectFlag)
             {
-                Thread.Sleep(5);
-                _tcpServer.Disconnect(_connectionIDTestTool);
-                MyLogManager.Log($"Disconnected from TestTool: {_connectionIDTestTool}");
+                lock(_lock)
+                {
+                    if(_connections.Count > 10)
+                    {
+                        for(int i = 0; i < 9; i++)
+                        {
+                            if (_tcpServer.GetClient(_connections[i]) != null)
+                            {
+                                _tcpServer.Disconnect(_connections[i]);
+                                _connections.RemoveAt(i);
+                                MyLogManager.Log($"Disconnected of TestTool: {_connections[i]}");
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -1898,14 +1914,6 @@ namespace MastercardHost
                 if (base64Str.Length > 1024) return base64Str;
 
                 byte[] bytes = Convert.FromBase64String(base64Str);
-
-
-                // 尝试解码为 UTF-8 字符串
-                string utf8Str = Encoding.UTF8.GetString(bytes);
-                if (utf8Str.All(c => !char.IsControl(c) || c == '\n' || c == '\r' || c == '\t'))
-                {
-                    return $"UTF8: {utf8Str}";
-                }
 
                 // 如果是纯 ASCII 可打印字符
                 if (bytes.All(b => b >= 32 && b <= 126))
