@@ -1726,133 +1726,145 @@ namespace MastercardHost
 
         private void ProcessFromPOS(byte[] data)
         {
-            Envelope envelope = Envelope.Parser.ParseFrom(data);
-            bool transFlag = false,disconnectFlag=false;
-
-            if (envelope != null)
+            try
             {
-                MyLogManager.Log($"ProcessFromPOS receive:\n ");
-                LogFormattedProtobuf(envelope);
-            }
+                Envelope envelope = Envelope.Parser.ParseFrom(data);
+                bool transFlag = false, disconnectFlag = false;
 
-            MyLogManager.Log($"envelope.PayloadCase: {envelope.PayloadCase}");
-
-            if (envelope.PayloadCase == Envelope.PayloadOneofCase.Signal)
-            {
-                SignalProtocol signalProtocol = envelope.Signal;
-                MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
-
-                if (signalProtocol.Type == "OUT")
+                if (envelope != null)
                 {
-                    ParseOutSignal(signalProtocol.Data);
-                    transFlag = true;
-                    disconnectFlag = true;
+                    MyLogManager.Log($"ProcessFromPOS receive:\n ");
+                    LogFormattedProtobuf(envelope);
                 }
-                else if(signalProtocol.Type == "MSG")
+                else
                 {
-                    ParseOutSignal(signalProtocol.Data);
-                    transFlag = true;
+                    MyLogManager.Log("ProtocolBuf parse error");
+                    return;
                 }
-                else if (signalProtocol.Type == "CONFIG")
+
+                MyLogManager.Log($"envelope.PayloadCase: {envelope.PayloadCase}");
+
+                if (envelope.PayloadCase == Envelope.PayloadOneofCase.Signal)
                 {
-                    foreach (var item in signalProtocol.Data)
+                    SignalProtocol signalProtocol = envelope.Signal;
+                    MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
+
+                    if (signalProtocol.Type == "OUT")
                     {
-                        if (item.Id == "CONF_NAME")
+                        ParseOutSignal(signalProtocol.Data);
+                        transFlag = true;
+                        disconnectFlag = true;
+                    }
+                    else if (signalProtocol.Type == "MSG")
+                    {
+                        ParseOutSignal(signalProtocol.Data);
+                        transFlag = true;
+                    }
+                    else if (signalProtocol.Type == "CONFIG")
+                    {
+                        foreach (var item in signalProtocol.Data)
                         {
-                            if (SelectConfig != null && SelectConfig != "")
+                            if (item.Id == "CONF_NAME")
                             {
-                                string fileName = SelectConfig + ".json";
-                                string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                                string configDir = runDir + "Config\\Config\\";
-                                if (Directory.Exists(configDir))
+                                if (SelectConfig != null && SelectConfig != "")
                                 {
-                                    if (!File.Exists(configDir + fileName))
+                                    string fileName = SelectConfig + ".json";
+                                    string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                                    string configDir = runDir + "Config\\Config\\";
+                                    if (Directory.Exists(configDir))
                                     {
-                                        System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                        MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
+                                        if (!File.Exists(configDir + fileName))
+                                        {
+                                            System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
+                                        }
+                                        else
+                                        {
+                                            DownloadConfig(configDir + fileName);
+                                        }
                                     }
                                     else
                                     {
-                                        DownloadConfig(configDir + fileName);
+                                        System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                     }
                                 }
                                 else
                                 {
-                                    System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    System.Windows.MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                                 }
+                            }
+                        }
+                    }
+                    else if (signalProtocol.Type == "CAPK")
+                    {
+                        string fileName = "PAYPASS_CAPK.json";
+                        string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                        string configDir = runDir + "Config\\CAPK\\";
+                        MyLogManager.Log($"CAPK Dir:{configDir}");
+
+                        if (Directory.Exists(configDir))
+                        {
+                            MyLogManager.Log($"Target CAPK:{configDir + fileName}");
+                            if (!File.Exists(configDir + fileName))
+                            {
+                                System.Windows.MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
                             else
                             {
-                                System.Windows.MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                DownloadCAPK(configDir + fileName);
                             }
                         }
-                    }
-                }
-                else if (signalProtocol.Type == "CAPK")
-                {
-                    string fileName = "PAYPASS_CAPK.json";
-                    string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                    string configDir = runDir + "Config\\CAPK\\";
-                    MyLogManager.Log($"CAPK Dir:{configDir}");
-
-                    if (Directory.Exists(configDir))
-                    {
-                        MyLogManager.Log($"Target CAPK:{configDir + fileName}");
-                        if (!File.Exists(configDir + fileName))
+                        else
                         {
-                            System.Windows.MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            System.Windows.MessageBox.Show("No CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    else if (signalProtocol.Type == "REVOCATION_PK")
+                    {
+                        string fileName = "PAYPASS_Revokey.json";
+                        string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                        string configDir = runDir + "Config\\Revocation_CAPK\\";
+                        MyLogManager.Log($"Revocation_CAPK Dir:{configDir}");
+
+                        if (Directory.Exists(configDir))
+                        {
+                            MyLogManager.Log($"Target Revocation_CAPK:{configDir + fileName}");
+                            if (!File.Exists(configDir + fileName))
+                            {
+                                System.Windows.MessageBox.Show("Target Revocation_CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                            else
+                            {
+                                DownloadRevokey(configDir + fileName);
+                            }
                         }
                         else
                         {
-                            DownloadCAPK(configDir + fileName);
+                            System.Windows.MessageBox.Show("No Revocation_CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
+                    }
+                    else if (signalProtocol.Type == "DEK" || signalProtocol.Type == "ACT_ACK" || signalProtocol.Type == "CONFIG_ACK" || signalProtocol.Type == "TEST_INFO_ACK")
+                    {
+                        transFlag = true;
                     }
                     else
                     {
-                        System.Windows.MessageBox.Show("No CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MyLogManager.Log("Unrecognized Signal Type");
                     }
-                }
-                else if (signalProtocol.Type == "REVOCATION_PK")
-                {
-                    string fileName = "PAYPASS_Revokey.json";
-                    string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                    string configDir = runDir + "Config\\Revocation_CAPK\\";
-                    MyLogManager.Log($"Revocation_CAPK Dir:{configDir}");
 
-                    if (Directory.Exists(configDir))
+                    if (transFlag)
                     {
-                        MyLogManager.Log($"Target Revocation_CAPK:{configDir + fileName}");
-                        if (!File.Exists(configDir + fileName))
-                        {
-                            System.Windows.MessageBox.Show("Target Revocation_CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                        else
-                        {
-                            DownloadRevokey(configDir + fileName);
-                        }
+                        TransformSignalToTestTool(signalProtocol, disconnectFlag);
                     }
-                    else
-                    {
-                        System.Windows.MessageBox.Show("No Revocation_CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-                else if(signalProtocol.Type == "DEK" || signalProtocol.Type == "ACT_ACK" || signalProtocol.Type == "CONFIG_ACK" || signalProtocol.Type == "TEST_INFO_ACK")
-                {
-                    transFlag = true;
                 }
                 else
                 {
-                    MyLogManager.Log("Unrecognized Signal Type");
-                }
-
-                if(transFlag)
-                {
-                    TransformSignalToTestTool(signalProtocol, disconnectFlag);
+                    MyLogManager.Log("Unrecognized Protocol Type");
                 }
             }
-            else
+            catch (Exception ex) 
             {
-                MyLogManager.Log("Unrecognized Protocol Type");
+                MyLogManager.Log($"ProcessFromPOS Exception: {ex.Message}");
             }
         }
 
