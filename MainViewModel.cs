@@ -94,7 +94,7 @@ namespace MastercardHost
             _tcpServer = new TcpSharpSocketServer();
             _tcpClient = new TcpSharpSocketClient();
             _serialPort = new SerialPort();
-            //_connections = new List<string>();
+            _connections = new List<string>();
 
             _tcpServer.OnDataReceived += OnDataReceived;
 
