@@ -109,6 +109,7 @@ message TermParam{
     optional bytes unProtectEnvelope4 = 48;      //9F78
     optional bytes unProtectEnvelope5 = 49;      //9F79
     optional bytes tagsToWriteBeforeGAC = 50;    //FF8102
+    optional bytes tagsToWriteAfterGAC = 51;     //FF8103
 }
 
 message CAPKList {
