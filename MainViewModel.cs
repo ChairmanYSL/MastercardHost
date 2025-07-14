@@ -715,7 +715,8 @@ namespace MastercardHost
                                         { "9F76", (termMsg, val) => termMsg.UnProtectEnvelope2 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
                                         { "9F77", (termMsg, val) => termMsg.UnProtectEnvelope3 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
                                         { "9F78", (termMsg, val) => termMsg.UnProtectEnvelope4 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
-                                        { "9F79", (termMsg, val) => termMsg.UnProtectEnvelope5 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},                                      
+                                        { "9F79", (termMsg, val) => termMsg.UnProtectEnvelope5 = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},
+                                        { "FF8102", (termMsg, val) => termMsg.TagsToWriteBeforeGAC = val.Type != JTokenType.Null ? HexStringToByteString(val.Value < string >()) : ByteString.Empty},                                      
                                         // 添加其他映射
                                     };
 
