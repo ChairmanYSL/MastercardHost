@@ -363,5 +363,10 @@ namespace MastercardHost
             richTextBox1.Text += richTextBox1.Text + "下载配置" + _viewModel.SelectConfig + Environment.NewLine;
             MyLogManager.Log("下载配置" + _viewModel.ServerIPAddr);
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

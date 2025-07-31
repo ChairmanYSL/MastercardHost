@@ -601,18 +601,18 @@ namespace MastercardHost
 
                 byte[] serializedData = envelope.ToByteArray();
 
-                isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
-                MyLogManager.Log($"isTestMode: {isTestMode}");
+                //isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
+                //MyLogManager.Log($"isTestMode: {isTestMode}");
                 MyLogManager.Log($"send to POS content: {JsonFormatter.Default.Format(envelope)}");
 
-                if (isTestMode)
-                {
-                    _tcpServer.SendBytes(_connectionIDPOS, serializedData);
-                }
-                else
-                {
+                //if (isTestMode)
+                //{
+                //    _tcpServer.SendBytes(_connectionIDPOS, serializedData);
+                //}
+                //else
+                //{
                     _serialPort.Write(serializedData, 0, serializedData.Length);
-                }
+                //}
             }
             catch (ArgumentNullException ex)
             {
@@ -768,15 +768,15 @@ namespace MastercardHost
 
                 MyLogManager.Log($"Download Config data:\n");
                 LogFormattedProtobuf(envelope);
-                isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
-                if (isTestMode)
-                {
-                    _tcpServer.SendBytes(_connectionIDPOS, serializedData);
-                }
-                else
-                {
+                //isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
+                //if (isTestMode)
+                //{
+                //    _tcpServer.SendBytes(_connectionIDPOS, serializedData);
+                //}
+                //else
+                //{
                     _serialPort.Write(serializedData, 0, serializedData.Length);
-                }
+                //}
             }
             catch (Exception ex)
             {
@@ -898,15 +898,15 @@ namespace MastercardHost
             LogFormattedProtobuf(envelope);
 
 
-            isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
-            if(isTestMode)
-            {
-                _tcpServer.SendBytes(_connectionIDPOS, serializedData);
-            }
-            else
-            {
+            //isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
+            //if(isTestMode)
+            //{
+            //    _tcpServer.SendBytes(_connectionIDPOS, serializedData);
+            //}
+            //else
+            //{
                 _serialPort.Write(serializedData, 0, serializedData.Length);
-            }
+            //}
         }
 
         private void DownloadRevokey(string jsonFilePath)
@@ -957,15 +957,15 @@ namespace MastercardHost
             MyLogManager.Log($"Download Revokey data:\n");
             LogFormattedProtobuf(envelope);
 
-            isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
-            if(isTestMode )
-            {
-                _tcpServer.SendBytes(_connectionIDPOS, serializedData);
-            }
-            else
-            {
+            //isTestMode = System.Windows.Forms.Application.OpenForms.OfType<TestForm>().Any();
+            //if(isTestMode )
+            //{
+            //    _tcpServer.SendBytes(_connectionIDPOS, serializedData);
+            //}
+            //else
+            //{
                 _serialPort.Write(serializedData, 0, serializedData.Length);
-            }
+            //}
         }
 
         private void OnDataReceived(object sender, OnServerDataReceivedEventArgs e)
@@ -1473,15 +1473,16 @@ namespace MastercardHost
                         break;
                 }
                 //Display Online Response Data
-                switch(bytes[2])
-                {
-                    case 0xF0:
-                        UpdateLogText("Online Response Data:  N/A");
-                        break;
-                    default:
-                        UpdateLogText("Online Response Data:  RFU");
-                        break;
-                }
+                UpdateLogText("Online Response Data:  N/A");
+                //switch (bytes[2])
+                //{
+                //    case 0xF0:
+                //        UpdateLogText("Online Response Data:  N/A");
+                //        break;
+                //    default:
+                //        UpdateLogText("Online Response Data:  RFU");
+                //        break;
+                //}
                 //Display CVM
                 switch (bytes[3])
                 { 
@@ -1565,6 +1566,7 @@ namespace MastercardHost
                 }
                 //Display Removal Timeout
                 UpdateLogText("Removal Timeout: " + bytes[7].ToString("X2"));
+                UpdateLogText("_____________________________________");
             }
         }
 
@@ -1583,6 +1585,8 @@ namespace MastercardHost
                         UpdateLogText($"{item.Key}: {item.Value}");
                     }
                 }
+
+                UpdateLogText("_____________________________________");
             }
         }
 
@@ -1601,6 +1605,7 @@ namespace MastercardHost
                         UpdateLogText($"{item.Key}: {item.Value}");
                     }
                 }
+                UpdateLogText("_____________________________________");
             }
         }
 
@@ -1681,7 +1686,7 @@ namespace MastercardHost
                 }
                 //Display Hold Time
                 UpdateLogText("Hold Time: " + bytes[4].ToString("X2"));
-
+                UpdateLogText("_____________________________________");
                 //switch(bytes[13])
                 //{
                 //    case 0x00:
@@ -1712,7 +1717,7 @@ namespace MastercardHost
                         ShowOutcome(data.Value);
                         break;
                     case "DataRecord":
-                        ShowOutcome(data.Value);
+                        ShowDataRecord(data.Value);
                         break;
                     case "DiscData":
                         ShowDiscData(data.Value);

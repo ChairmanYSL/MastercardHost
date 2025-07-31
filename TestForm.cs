@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
 using System.Windows.Forms;
 using TcpSharp;
 
@@ -50,28 +52,65 @@ namespace MastercardHost
         {
             try
             {
-                string data = @"{
-                                    ""signalType"": ""ACT"",
-                                    ""signalData"": [
-                                        { ""id"": ""9F02"", ""value"": ""000000001500"" },
-                                        { ""id"": ""5F57"", ""value"": null },
-                                        { ""id"": ""9F03"", ""value"": null },
-                                        { ""id"": ""DF8104"", ""value"": null },
-                                        { ""id"": ""DF8105"", ""value"": null },
-                                        { ""id"": ""9F7C"", ""value"": ""1122334455667788990011223344556677889900"" },
-                                        { ""id"": ""9F53"", ""value"": ""46"" },
-                                        { ""id"": ""5F2A"", ""value"": ""0978"" },
-                                        { ""id"": ""5F36"", ""value"": ""02"" },
-                                        { ""id"": ""9A"", ""value"": ""250514"" },
-                                        { ""id"": ""9F21"", ""value"": ""195212"" },
-                                        { ""id"": ""9C"", ""value"": ""00"" }
-                                    ]
-                                }";
-                //_tcpServer.SendString(_connectID, data);
-                _tcpClient.SendString(data);
-                MyLogManager.Log($"client send data:{data}");
+                string data = @"{  
+                                   ""signalType"": ""ACT"",  
+                                   ""signalData"": [  
+                                       { ""id"": ""5F57"", ""value"": null },                                       
+                                       { ""id"": ""DF8104"", ""value"": null },  
+                                       { ""id"": ""DF8105"", ""value"": null },  
+                                       { ""id"": ""9F7C"", ""value"": ""1122334455667788990011223344556677889900"" },  
+                                       { ""id"": ""9F53"", ""value"": ""46"" },  
+                                       { ""id"": ""5F2A"", ""value"": ""0978"" },  
+                                       { ""id"": ""5F36"", ""value"": ""02"" },                                     
+                                       { ""id"": ""9F21"", ""value"": ""195212"" }  
+                                   ]  
+                               }";
+                var jsonObject = JObject.Parse(data);
+                var signalData = (JArray)jsonObject["signalData"]; // Cast to JArray to access Add method  
+
+                // 处理金额  
+                string amount = this.textBox_Amount.Text.Trim();
+                MyLogManager.Log($"amount:{amount}");
+
+                if (string.IsNullOrEmpty(amount))
+                {
+                    amount = "000000000001";
+                }
+                else
+                {
+                    amount = new string(amount.Where(char.IsDigit).ToArray());
+
+                    // 如果输入超过12位，截取最后12位
+                    if (amount.Length > 12)
+                    {
+                        amount = amount.Substring(amount.Length - 12);
+                    }
+                    // 填充到12位
+                    amount = amount.PadLeft(12, '0');
+                }
+
+                // 处理其他金额  
+                string amountOther = this.textBox_OthAmt.Text.Trim();
+                amountOther = amountOther.PadLeft(12, '0');
+
+                // 交易类型  
+                string transType = this.textBox_TranType.Text.Trim();
+
+                // 添加新字段到signalData数组  
+                signalData.Add(new JObject(new JProperty("id", "9F02"), new JProperty("value", amount)));
+                signalData.Add(new JObject(new JProperty("id", "9C"), new JProperty("value", transType)));
+                signalData.Add(new JObject(new JProperty("id", "9F03"), new JProperty("value", string.IsNullOrEmpty(amountOther) ? null : amountOther)));
+
+                // 添加日期  
+                DateTime currentTime = DateTime.Now;
+                signalData.Add(new JObject(new JProperty("id", "9A"), new JProperty("value", $"{currentTime:yyMMdd}")));
+
+                // 发送数据  
+                string finalData = jsonObject.ToString();
+                _tcpClient.SendString(finalData);
+                MyLogManager.Log($"client send data:{finalData}");
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 MyLogManager.Log($"Exception: {ex.Message}");
             }
@@ -191,7 +230,7 @@ namespace MastercardHost
                     _tcpServer.StopListening();
                 }
 
-                if (int.TryParse(this.textBox_Port.Text, out _port))
+                if (int.TryParse(this.textBox_TranType.Text, out _port))
                 {
 
                 }

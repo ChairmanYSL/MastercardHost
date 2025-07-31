@@ -16,9 +16,9 @@ namespace MastercardHost
 {
     internal static class Program
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
+        //[DllImport("kernel32.dll", SetLastError = true)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //static extern bool AllocConsole();
         private static readonly Logger Logger = LogManager.GetLogger("logconsole");
         /// <summary>
         /// 应用程序的主入口点。
@@ -26,8 +26,8 @@ namespace MastercardHost
         [STAThread]
         static void Main()
         {
-            AllocConsole();
-            Console.WriteLine("Hello, World!");
+            //AllocConsole();
+            //Console.WriteLine("Hello, World!");
             var currentCulture = CultureInfo.CurrentUICulture;
 
             // 配置NLog
@@ -61,11 +61,11 @@ namespace MastercardHost
             string configFilePath = GetNLogConfigFilePath();
             if (!string.IsNullOrEmpty(configFilePath))
             {
-                Console.WriteLine($"NLog config file: {configFilePath}");
+                MyLogManager.Log($"NLog configuration file loaded from: {configFilePath}");
             }
             else
             {
-                Console.WriteLine("NLog configuration file path could not be determined.");
+                MessageBox.Show("NLog configuration file path could not be determined.", "NLog Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             // 测试日志输出

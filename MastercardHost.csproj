@@ -11,9 +11,9 @@
     <Configurations>Release;Debug</Configurations>
     <AssemblyTitle>MastercardHost</AssemblyTitle>
     <AssemblyCompany>Checkmat International BJJ</AssemblyCompany>
-    <AssemblyProduct>Mastercard Auto Test Host</AssemblyProduct>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyProduct>Mastercard Auto Test Host(1.0.0.1)</AssemblyProduct>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>False</Optimize>

@@ -35,11 +35,12 @@
             this.button_RUNTEST_RESULT = new System.Windows.Forms.Button();
             this.button_STOP = new System.Windows.Forms.Button();
             this.button_TEST_INFO = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox_Port = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.textBox_Amount = new System.Windows.Forms.TextBox();
+            this.textBox_TranType = new System.Windows.Forms.TextBox();
+            this.label_Amount = new System.Windows.Forms.Label();
+            this.label_TransType = new System.Windows.Forms.Label();
+            this.label_OtherAmt = new System.Windows.Forms.Label();
+            this.textBox_OthAmt = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button_ACT
@@ -119,63 +120,71 @@
             this.button_TEST_INFO.UseVisualStyleBackColor = true;
             this.button_TEST_INFO.Click += new System.EventHandler(this.button_TEST_INFO_Click);
             // 
-            // textBox1
+            // textBox_Amount
             // 
-            this.textBox1.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(443, 261);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(211, 29);
-            this.textBox1.TabIndex = 7;
+            this.textBox_Amount.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox_Amount.Location = new System.Drawing.Point(443, 261);
+            this.textBox_Amount.Name = "textBox_Amount";
+            this.textBox_Amount.Size = new System.Drawing.Size(211, 29);
+            this.textBox_Amount.TabIndex = 7;
             // 
-            // textBox_Port
+            // textBox_TranType
             // 
-            this.textBox_Port.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox_Port.Location = new System.Drawing.Point(443, 356);
-            this.textBox_Port.Name = "textBox_Port";
-            this.textBox_Port.Size = new System.Drawing.Size(211, 29);
-            this.textBox_Port.TabIndex = 8;
+            this.textBox_TranType.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox_TranType.Location = new System.Drawing.Point(443, 364);
+            this.textBox_TranType.Name = "textBox_TranType";
+            this.textBox_TranType.Size = new System.Drawing.Size(211, 29);
+            this.textBox_TranType.TabIndex = 8;
             // 
-            // label1
+            // label_Amount
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(371, 264);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 19);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "IP";
+            this.label_Amount.AutoSize = true;
+            this.label_Amount.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label_Amount.Location = new System.Drawing.Point(357, 264);
+            this.label_Amount.Name = "label_Amount";
+            this.label_Amount.Size = new System.Drawing.Size(69, 19);
+            this.label_Amount.TabIndex = 9;
+            this.label_Amount.Text = "Amount";
             // 
-            // label2
+            // label_TransType
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(357, 359);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 19);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Port";
+            this.label_TransType.AutoSize = true;
+            this.label_TransType.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label_TransType.Location = new System.Drawing.Point(317, 367);
+            this.label_TransType.Name = "label_TransType";
+            this.label_TransType.Size = new System.Drawing.Size(109, 19);
+            this.label_TransType.TabIndex = 10;
+            this.label_TransType.Text = "Trans Type";
             // 
-            // button1
+            // label_OtherAmt
             // 
-            this.button1.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.button1.Location = new System.Drawing.Point(676, 303);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(82, 44);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Listen";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.label_OtherAmt.AutoSize = true;
+            this.label_OtherAmt.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label_OtherAmt.Location = new System.Drawing.Point(301, 316);
+            this.label_OtherAmt.Name = "label_OtherAmt";
+            this.label_OtherAmt.Size = new System.Drawing.Size(139, 19);
+            this.label_OtherAmt.TabIndex = 12;
+            this.label_OtherAmt.Text = "Amount(Other)";
+            // 
+            // textBox_OthAmt
+            // 
+            this.textBox_OthAmt.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.textBox_OthAmt.Location = new System.Drawing.Point(443, 313);
+            this.textBox_OthAmt.Name = "textBox_OthAmt";
+            this.textBox_OthAmt.Size = new System.Drawing.Size(211, 29);
+            this.textBox_OthAmt.TabIndex = 13;
             // 
             // TestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox_Port);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBox_OthAmt);
+            this.Controls.Add(this.label_OtherAmt);
+            this.Controls.Add(this.label_TransType);
+            this.Controls.Add(this.label_Amount);
+            this.Controls.Add(this.textBox_TranType);
+            this.Controls.Add(this.textBox_Amount);
             this.Controls.Add(this.button_TEST_INFO);
             this.Controls.Add(this.button_STOP);
             this.Controls.Add(this.button_RUNTEST_RESULT);
@@ -200,10 +209,11 @@
         private System.Windows.Forms.Button button_RUNTEST_RESULT;
         private System.Windows.Forms.Button button_STOP;
         private System.Windows.Forms.Button button_TEST_INFO;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox_Port;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBox_Amount;
+        private System.Windows.Forms.TextBox textBox_TranType;
+        private System.Windows.Forms.Label label_Amount;
+        private System.Windows.Forms.Label label_TransType;
+        private System.Windows.Forms.Label label_OtherAmt;
+        private System.Windows.Forms.TextBox textBox_OthAmt;
     }
 }

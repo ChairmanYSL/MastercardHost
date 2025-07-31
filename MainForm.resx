@@ -121,37 +121,6 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>800, 25</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="menuStrip1.Text" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
-    <value>menuStrip1</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 21</value>
-  </data>
-  <data name="logRowLimitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 22</value>
-  </data>
   <data name="toolStripMenuItem3.Size" type="System.Drawing.Size, System.Drawing">
     <value>138, 22</value>
   </data>
@@ -179,7 +148,7 @@
   <data name="ToolStripMenuItem_SelfDefine.Size" type="System.Drawing.Size, System.Drawing">
     <value>138, 22</value>
   </data>
-  <data name="logSwitchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="logRowLimitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>158, 22</value>
   </data>
   <data name="openToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
@@ -188,17 +157,48 @@
   <data name="closeToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>108, 22</value>
   </data>
-  <data name="logLocationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="logSwitchToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>158, 22</value>
-  </data>
-  <data name="logLocationToolStripMenuItem.Text" xml:space="preserve">
-    <value>Log Type</value>
   </data>
   <data name="fileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 22</value>
   </data>
   <data name="appToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 22</value>
+  </data>
+  <data name="logLocationToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>158, 22</value>
+  </data>
+  <data name="logLocationToolStripMenuItem.Text" xml:space="preserve">
+    <value>Log Type</value>
+  </data>
+  <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 21</value>
+  </data>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>800, 25</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="splitContainer1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
@@ -216,6 +216,171 @@
   <data name="splitContainer2.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
     <value>Horizontal</value>
   </data>
+  <data name="comboBox_IPAddr.Font" type="System.Drawing.Font, System.Drawing">
+    <value>宋体, 10.5pt</value>
+  </data>
+  <data name="comboBox_IPAddr.ItemHeight" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="comboBox_IPAddr.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 16</value>
+  </data>
+  <data name="comboBox_IPAddr.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 22</value>
+  </data>
+  <data name="comboBox_IPAddr.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;comboBox_IPAddr.Name" xml:space="preserve">
+    <value>comboBox_IPAddr</value>
+  </data>
+  <data name="&gt;&gt;comboBox_IPAddr.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;comboBox_IPAddr.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;comboBox_IPAddr.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="button_Close_Server.Location" type="System.Drawing.Point, System.Drawing">
+    <value>160, 64</value>
+  </data>
+  <data name="button_Close_Server.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 36</value>
+  </data>
+  <data name="button_Close_Server.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Server.Name" xml:space="preserve">
+    <value>button_Close_Server</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Server.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="button_Listen_Server.Location" type="System.Drawing.Point, System.Drawing">
+    <value>161, 10</value>
+  </data>
+  <data name="button_Listen_Server.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 40</value>
+  </data>
+  <data name="button_Listen_Server.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;button_Listen_Server.Name" xml:space="preserve">
+    <value>button_Listen_Server</value>
+  </data>
+  <data name="&gt;&gt;button_Listen_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_Listen_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;button_Listen_Server.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="textBox_Port_Server.Location" type="System.Drawing.Point, System.Drawing">
+    <value>51, 67</value>
+  </data>
+  <data name="textBox_Port_Server.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 21</value>
+  </data>
+  <data name="textBox_Port_Server.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Server.Name" xml:space="preserve">
+    <value>textBox_Port_Server</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Server.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="label_Port_Server.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="label_Port_Server.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_Port_Server.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 71</value>
+  </data>
+  <data name="label_Port_Server.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 12</value>
+  </data>
+  <data name="label_Port_Server.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="label_Port_Server.Text" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Server.Name" xml:space="preserve">
+    <value>label_Port_Server</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Server.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="label_IP_Addr_Server.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="label_IP_Addr_Server.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_IP_Addr_Server.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 16</value>
+  </data>
+  <data name="label_IP_Addr_Server.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 12</value>
+  </data>
+  <data name="label_IP_Addr_Server.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="label_IP_Addr_Server.Text" xml:space="preserve">
+    <value>IP</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Server.Name" xml:space="preserve">
+    <value>label_IP_Addr_Server</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Server.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Server.Parent" xml:space="preserve">
+    <value>tabPage_Server_Setting</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Server.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tabPage_Server_Setting.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage_Server_Setting.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage_Server_Setting.Size" type="System.Drawing.Size, System.Drawing">
+    <value>264, 114</value>
+  </data>
+  <data name="tabPage_Server_Setting.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="tabPage_Server_Setting.Text" xml:space="preserve">
+    <value>TEI_setting</value>
+  </data>
   <data name="&gt;&gt;tabPage_Server_Setting.Name" xml:space="preserve">
     <value>tabPage_Server_Setting</value>
   </data>
@@ -228,6 +393,159 @@
   <data name="&gt;&gt;tabPage_Server_Setting.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="button_Close_Client.Location" type="System.Drawing.Point, System.Drawing">
+    <value>166, 47</value>
+  </data>
+  <data name="button_Close_Client.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 30</value>
+  </data>
+  <data name="button_Close_Client.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Client.Name" xml:space="preserve">
+    <value>button_Close_Client</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Client.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Client.Parent" xml:space="preserve">
+    <value>tabPage_Client_Setting</value>
+  </data>
+  <data name="&gt;&gt;button_Close_Client.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="button_Bind.Location" type="System.Drawing.Point, System.Drawing">
+    <value>167, 8</value>
+  </data>
+  <data name="button_Bind.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 33</value>
+  </data>
+  <data name="button_Bind.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;button_Bind.Name" xml:space="preserve">
+    <value>button_Bind</value>
+  </data>
+  <data name="&gt;&gt;button_Bind.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_Bind.Parent" xml:space="preserve">
+    <value>tabPage_Client_Setting</value>
+  </data>
+  <data name="&gt;&gt;button_Bind.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="textBox_Port_Client.Location" type="System.Drawing.Point, System.Drawing">
+    <value>50, 55</value>
+  </data>
+  <data name="textBox_Port_Client.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 21</value>
+  </data>
+  <data name="textBox_Port_Client.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Client.Name" xml:space="preserve">
+    <value>textBox_Port_Client</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Client.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Client.Parent" xml:space="preserve">
+    <value>tabPage_Client_Setting</value>
+  </data>
+  <data name="&gt;&gt;textBox_Port_Client.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="textBox_IP_Addr_Client.Location" type="System.Drawing.Point, System.Drawing">
+    <value>34, 11</value>
+  </data>
+  <data name="textBox_IP_Addr_Client.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 21</value>
+  </data>
+  <data name="textBox_IP_Addr_Client.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;textBox_IP_Addr_Client.Name" xml:space="preserve">
+    <value>textBox_IP_Addr_Client</value>
+  </data>
+  <data name="&gt;&gt;textBox_IP_Addr_Client.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox_IP_Addr_Client.Parent" xml:space="preserve">
+    <value>tabPage_Client_Setting</value>
+  </data>
+  <data name="&gt;&gt;textBox_IP_Addr_Client.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="label_Port_Client.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_Port_Client.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 58</value>
+  </data>
+  <data name="label_Port_Client.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 12</value>
+  </data>
+  <data name="label_Port_Client.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="label_Port_Client.Text" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Client.Name" xml:space="preserve">
+    <value>label_Port_Client</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Client.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Client.Parent" xml:space="preserve">
+    <value>tabPage_Client_Setting</value>
+  </data>
+  <data name="&gt;&gt;label_Port_Client.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="label_IP_Addr_Client.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_IP_Addr_Client.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 14</value>
+  </data>
+  <data name="label_IP_Addr_Client.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 12</value>
+  </data>
+  <data name="label_IP_Addr_Client.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="label_IP_Addr_Client.Text" xml:space="preserve">
+    <value>IP</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Client.Name" xml:space="preserve">
+    <value>label_IP_Addr_Client</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Client.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Client.Parent" xml:space="preserve">
+    <value>tabPage_Client_Setting</value>
+  </data>
+  <data name="&gt;&gt;label_IP_Addr_Client.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tabPage_Client_Setting.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage_Client_Setting.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage_Client_Setting.Size" type="System.Drawing.Size, System.Drawing">
+    <value>264, 114</value>
+  </data>
+  <data name="tabPage_Client_Setting.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tabPage_Client_Setting.Text" xml:space="preserve">
+    <value>PCB_Setting</value>
+  </data>
   <data name="&gt;&gt;tabPage_Client_Setting.Name" xml:space="preserve">
     <value>tabPage_Client_Setting</value>
   </data>
@@ -239,6 +557,132 @@
   </data>
   <data name="&gt;&gt;tabPage_Client_Setting.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="button_CloseSerial.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="button_CloseSerial.Location" type="System.Drawing.Point, System.Drawing">
+    <value>181, 62</value>
+  </data>
+  <data name="button_CloseSerial.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 35</value>
+  </data>
+  <data name="button_CloseSerial.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="button_CloseSerial.Text" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="&gt;&gt;button_CloseSerial.Name" xml:space="preserve">
+    <value>button_CloseSerial</value>
+  </data>
+  <data name="&gt;&gt;button_CloseSerial.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_CloseSerial.Parent" xml:space="preserve">
+    <value>tabPage_CommSet</value>
+  </data>
+  <data name="&gt;&gt;button_CloseSerial.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="button_OpenSerial.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="button_OpenSerial.Location" type="System.Drawing.Point, System.Drawing">
+    <value>181, 11</value>
+  </data>
+  <data name="button_OpenSerial.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 35</value>
+  </data>
+  <data name="button_OpenSerial.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="button_OpenSerial.Text" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="&gt;&gt;button_OpenSerial.Name" xml:space="preserve">
+    <value>button_OpenSerial</value>
+  </data>
+  <data name="&gt;&gt;button_OpenSerial.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button_OpenSerial.Parent" xml:space="preserve">
+    <value>tabPage_CommSet</value>
+  </data>
+  <data name="&gt;&gt;button_OpenSerial.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="comboBox_SerialPort.IntegralHeight" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="comboBox_SerialPort.Location" type="System.Drawing.Point, System.Drawing">
+    <value>55, 11</value>
+  </data>
+  <data name="comboBox_SerialPort.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 20</value>
+  </data>
+  <data name="comboBox_SerialPort.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="&gt;&gt;comboBox_SerialPort.Name" xml:space="preserve">
+    <value>comboBox_SerialPort</value>
+  </data>
+  <data name="&gt;&gt;comboBox_SerialPort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;comboBox_SerialPort.Parent" xml:space="preserve">
+    <value>tabPage_CommSet</value>
+  </data>
+  <data name="&gt;&gt;comboBox_SerialPort.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label_SerialPort.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Bottom, Left, Right</value>
+  </data>
+  <data name="label_SerialPort.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label_SerialPort.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label_SerialPort.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 14</value>
+  </data>
+  <data name="label_SerialPort.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="label_SerialPort.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="label_SerialPort.Text" xml:space="preserve">
+    <value>Serial</value>
+  </data>
+  <data name="&gt;&gt;label_SerialPort.Name" xml:space="preserve">
+    <value>label_SerialPort</value>
+  </data>
+  <data name="&gt;&gt;label_SerialPort.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label_SerialPort.Parent" xml:space="preserve">
+    <value>tabPage_CommSet</value>
+  </data>
+  <data name="&gt;&gt;label_SerialPort.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tabPage_CommSet.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage_CommSet.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage_CommSet.Size" type="System.Drawing.Size, System.Drawing">
+    <value>264, 114</value>
+  </data>
+  <data name="tabPage_CommSet.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tabPage_CommSet.Text" xml:space="preserve">
+    <value>Comm_Setting</value>
   </data>
   <data name="&gt;&gt;tabPage_CommSet.Name" xml:space="preserve">
     <value>tabPage_CommSet</value>
@@ -735,678 +1179,6 @@
   <data name="&gt;&gt;splitContainer1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;comboBox_IPAddr.Name" xml:space="preserve">
-    <value>comboBox_IPAddr</value>
-  </data>
-  <data name="&gt;&gt;comboBox_IPAddr.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;comboBox_IPAddr.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;comboBox_IPAddr.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Server.Name" xml:space="preserve">
-    <value>button_Close_Server</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Server.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;button_Listen_Server.Name" xml:space="preserve">
-    <value>button_Listen_Server</value>
-  </data>
-  <data name="&gt;&gt;button_Listen_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_Listen_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;button_Listen_Server.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Server.Name" xml:space="preserve">
-    <value>textBox_Port_Server</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Server.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Server.Name" xml:space="preserve">
-    <value>label_Port_Server</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Server.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Server.Name" xml:space="preserve">
-    <value>label_IP_Addr_Server</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Server.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="tabPage_Server_Setting.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabPage_Server_Setting.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabPage_Server_Setting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>264, 114</value>
-  </data>
-  <data name="tabPage_Server_Setting.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="tabPage_Server_Setting.Text" xml:space="preserve">
-    <value>TEI_setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Server_Setting.Name" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Server_Setting.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Server_Setting.Parent" xml:space="preserve">
-    <value>tabControl_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Server_Setting.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="comboBox_IPAddr.Font" type="System.Drawing.Font, System.Drawing">
-    <value>宋体, 10.5pt</value>
-  </data>
-  <data name="comboBox_IPAddr.ItemHeight" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="comboBox_IPAddr.Location" type="System.Drawing.Point, System.Drawing">
-    <value>34, 16</value>
-  </data>
-  <data name="comboBox_IPAddr.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 22</value>
-  </data>
-  <data name="comboBox_IPAddr.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="&gt;&gt;comboBox_IPAddr.Name" xml:space="preserve">
-    <value>comboBox_IPAddr</value>
-  </data>
-  <data name="&gt;&gt;comboBox_IPAddr.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;comboBox_IPAddr.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;comboBox_IPAddr.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="button_Close_Server.Location" type="System.Drawing.Point, System.Drawing">
-    <value>160, 64</value>
-  </data>
-  <data name="button_Close_Server.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 36</value>
-  </data>
-  <data name="button_Close_Server.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Server.Name" xml:space="preserve">
-    <value>button_Close_Server</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Server.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="button_Listen_Server.Location" type="System.Drawing.Point, System.Drawing">
-    <value>161, 10</value>
-  </data>
-  <data name="button_Listen_Server.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 40</value>
-  </data>
-  <data name="button_Listen_Server.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;button_Listen_Server.Name" xml:space="preserve">
-    <value>button_Listen_Server</value>
-  </data>
-  <data name="&gt;&gt;button_Listen_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_Listen_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;button_Listen_Server.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="textBox_Port_Server.Location" type="System.Drawing.Point, System.Drawing">
-    <value>51, 67</value>
-  </data>
-  <data name="textBox_Port_Server.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 21</value>
-  </data>
-  <data name="textBox_Port_Server.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Server.Name" xml:space="preserve">
-    <value>textBox_Port_Server</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Server.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="label_Port_Server.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
-  </data>
-  <data name="label_Port_Server.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_Port_Server.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 71</value>
-  </data>
-  <data name="label_Port_Server.Size" type="System.Drawing.Size, System.Drawing">
-    <value>29, 12</value>
-  </data>
-  <data name="label_Port_Server.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="label_Port_Server.Text" xml:space="preserve">
-    <value>Port</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Server.Name" xml:space="preserve">
-    <value>label_Port_Server</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Server.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="label_IP_Addr_Server.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
-  </data>
-  <data name="label_IP_Addr_Server.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_IP_Addr_Server.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 16</value>
-  </data>
-  <data name="label_IP_Addr_Server.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 12</value>
-  </data>
-  <data name="label_IP_Addr_Server.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="label_IP_Addr_Server.Text" xml:space="preserve">
-    <value>IP</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Server.Name" xml:space="preserve">
-    <value>label_IP_Addr_Server</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Server.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Server.Parent" xml:space="preserve">
-    <value>tabPage_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Server.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Client.Name" xml:space="preserve">
-    <value>button_Close_Client</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Client.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;button_Bind.Name" xml:space="preserve">
-    <value>button_Bind</value>
-  </data>
-  <data name="&gt;&gt;button_Bind.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_Bind.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;button_Bind.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Client.Name" xml:space="preserve">
-    <value>textBox_Port_Client</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Client.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;textBox_IP_Addr_Client.Name" xml:space="preserve">
-    <value>textBox_IP_Addr_Client</value>
-  </data>
-  <data name="&gt;&gt;textBox_IP_Addr_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_IP_Addr_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;textBox_IP_Addr_Client.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Client.Name" xml:space="preserve">
-    <value>label_Port_Client</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Client.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Client.Name" xml:space="preserve">
-    <value>label_IP_Addr_Client</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Client.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="tabPage_Client_Setting.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabPage_Client_Setting.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabPage_Client_Setting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>264, 114</value>
-  </data>
-  <data name="tabPage_Client_Setting.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="tabPage_Client_Setting.Text" xml:space="preserve">
-    <value>PCB_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Client_Setting.Name" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Client_Setting.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Client_Setting.Parent" xml:space="preserve">
-    <value>tabControl_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_Client_Setting.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="button_Close_Client.Location" type="System.Drawing.Point, System.Drawing">
-    <value>166, 47</value>
-  </data>
-  <data name="button_Close_Client.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 30</value>
-  </data>
-  <data name="button_Close_Client.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Client.Name" xml:space="preserve">
-    <value>button_Close_Client</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;button_Close_Client.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="button_Bind.Location" type="System.Drawing.Point, System.Drawing">
-    <value>167, 8</value>
-  </data>
-  <data name="button_Bind.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 33</value>
-  </data>
-  <data name="button_Bind.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;button_Bind.Name" xml:space="preserve">
-    <value>button_Bind</value>
-  </data>
-  <data name="&gt;&gt;button_Bind.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_Bind.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;button_Bind.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="textBox_Port_Client.Location" type="System.Drawing.Point, System.Drawing">
-    <value>50, 55</value>
-  </data>
-  <data name="textBox_Port_Client.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 21</value>
-  </data>
-  <data name="textBox_Port_Client.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Client.Name" xml:space="preserve">
-    <value>textBox_Port_Client</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;textBox_Port_Client.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="textBox_IP_Addr_Client.Location" type="System.Drawing.Point, System.Drawing">
-    <value>34, 11</value>
-  </data>
-  <data name="textBox_IP_Addr_Client.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 21</value>
-  </data>
-  <data name="textBox_IP_Addr_Client.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;textBox_IP_Addr_Client.Name" xml:space="preserve">
-    <value>textBox_IP_Addr_Client</value>
-  </data>
-  <data name="&gt;&gt;textBox_IP_Addr_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox_IP_Addr_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;textBox_IP_Addr_Client.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="label_Port_Client.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_Port_Client.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 58</value>
-  </data>
-  <data name="label_Port_Client.Size" type="System.Drawing.Size, System.Drawing">
-    <value>29, 12</value>
-  </data>
-  <data name="label_Port_Client.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="label_Port_Client.Text" xml:space="preserve">
-    <value>Port</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Client.Name" xml:space="preserve">
-    <value>label_Port_Client</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;label_Port_Client.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="label_IP_Addr_Client.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_IP_Addr_Client.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 14</value>
-  </data>
-  <data name="label_IP_Addr_Client.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 12</value>
-  </data>
-  <data name="label_IP_Addr_Client.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="label_IP_Addr_Client.Text" xml:space="preserve">
-    <value>IP</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Client.Name" xml:space="preserve">
-    <value>label_IP_Addr_Client</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Client.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Client.Parent" xml:space="preserve">
-    <value>tabPage_Client_Setting</value>
-  </data>
-  <data name="&gt;&gt;label_IP_Addr_Client.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;button_CloseSerial.Name" xml:space="preserve">
-    <value>button_CloseSerial</value>
-  </data>
-  <data name="&gt;&gt;button_CloseSerial.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_CloseSerial.Parent" xml:space="preserve">
-    <value>tabPage_CommSet</value>
-  </data>
-  <data name="&gt;&gt;button_CloseSerial.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;button_OpenSerial.Name" xml:space="preserve">
-    <value>button_OpenSerial</value>
-  </data>
-  <data name="&gt;&gt;button_OpenSerial.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_OpenSerial.Parent" xml:space="preserve">
-    <value>tabPage_CommSet</value>
-  </data>
-  <data name="&gt;&gt;button_OpenSerial.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;comboBox_SerialPort.Name" xml:space="preserve">
-    <value>comboBox_SerialPort</value>
-  </data>
-  <data name="&gt;&gt;comboBox_SerialPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;comboBox_SerialPort.Parent" xml:space="preserve">
-    <value>tabPage_CommSet</value>
-  </data>
-  <data name="&gt;&gt;comboBox_SerialPort.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;label_SerialPort.Name" xml:space="preserve">
-    <value>label_SerialPort</value>
-  </data>
-  <data name="&gt;&gt;label_SerialPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_SerialPort.Parent" xml:space="preserve">
-    <value>tabPage_CommSet</value>
-  </data>
-  <data name="&gt;&gt;label_SerialPort.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="tabPage_CommSet.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabPage_CommSet.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabPage_CommSet.Size" type="System.Drawing.Size, System.Drawing">
-    <value>264, 114</value>
-  </data>
-  <data name="tabPage_CommSet.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="tabPage_CommSet.Text" xml:space="preserve">
-    <value>Comm_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_CommSet.Name" xml:space="preserve">
-    <value>tabPage_CommSet</value>
-  </data>
-  <data name="&gt;&gt;tabPage_CommSet.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage_CommSet.Parent" xml:space="preserve">
-    <value>tabControl_Server_Setting</value>
-  </data>
-  <data name="&gt;&gt;tabPage_CommSet.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="button_CloseSerial.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="button_CloseSerial.Location" type="System.Drawing.Point, System.Drawing">
-    <value>181, 62</value>
-  </data>
-  <data name="button_CloseSerial.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 35</value>
-  </data>
-  <data name="button_CloseSerial.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="button_CloseSerial.Text" xml:space="preserve">
-    <value>Close</value>
-  </data>
-  <data name="&gt;&gt;button_CloseSerial.Name" xml:space="preserve">
-    <value>button_CloseSerial</value>
-  </data>
-  <data name="&gt;&gt;button_CloseSerial.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_CloseSerial.Parent" xml:space="preserve">
-    <value>tabPage_CommSet</value>
-  </data>
-  <data name="&gt;&gt;button_CloseSerial.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="button_OpenSerial.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="button_OpenSerial.Location" type="System.Drawing.Point, System.Drawing">
-    <value>181, 11</value>
-  </data>
-  <data name="button_OpenSerial.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 35</value>
-  </data>
-  <data name="button_OpenSerial.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="button_OpenSerial.Text" xml:space="preserve">
-    <value>Open</value>
-  </data>
-  <data name="&gt;&gt;button_OpenSerial.Name" xml:space="preserve">
-    <value>button_OpenSerial</value>
-  </data>
-  <data name="&gt;&gt;button_OpenSerial.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;button_OpenSerial.Parent" xml:space="preserve">
-    <value>tabPage_CommSet</value>
-  </data>
-  <data name="&gt;&gt;button_OpenSerial.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="comboBox_SerialPort.IntegralHeight" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="comboBox_SerialPort.Location" type="System.Drawing.Point, System.Drawing">
-    <value>55, 11</value>
-  </data>
-  <data name="comboBox_SerialPort.Size" type="System.Drawing.Size, System.Drawing">
-    <value>105, 20</value>
-  </data>
-  <data name="comboBox_SerialPort.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="&gt;&gt;comboBox_SerialPort.Name" xml:space="preserve">
-    <value>comboBox_SerialPort</value>
-  </data>
-  <data name="&gt;&gt;comboBox_SerialPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;comboBox_SerialPort.Parent" xml:space="preserve">
-    <value>tabPage_CommSet</value>
-  </data>
-  <data name="&gt;&gt;comboBox_SerialPort.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="label_SerialPort.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
-  </data>
-  <data name="label_SerialPort.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label_SerialPort.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label_SerialPort.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 14</value>
-  </data>
-  <data name="label_SerialPort.Size" type="System.Drawing.Size, System.Drawing">
-    <value>41, 12</value>
-  </data>
-  <data name="label_SerialPort.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="label_SerialPort.Text" xml:space="preserve">
-    <value>Serial</value>
-  </data>
-  <data name="&gt;&gt;label_SerialPort.Name" xml:space="preserve">
-    <value>label_SerialPort</value>
-  </data>
-  <data name="&gt;&gt;label_SerialPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label_SerialPort.Parent" xml:space="preserve">
-    <value>tabPage_CommSet</value>
-  </data>
-  <data name="&gt;&gt;label_SerialPort.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -1417,7 +1189,7 @@
     <value>800, 450</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>MasterCard Auto Test Tool</value>
+    <value>MasterCard Auto Test Tool(1.0.0.1)</value>
   </data>
   <data name="&gt;&gt;toolStripMenuItem1.Name" xml:space="preserve">
     <value>toolStripMenuItem1</value>
