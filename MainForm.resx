@@ -1189,7 +1189,7 @@
     <value>800, 450</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>MasterCard Auto Test Tool(1.0.0.1)</value>
+    <value>MastercardHost 1.0.0.3</value>
   </data>
   <data name="&gt;&gt;toolStripMenuItem1.Name" xml:space="preserve">
     <value>toolStripMenuItem1</value>

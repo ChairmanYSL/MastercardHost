@@ -1596,15 +1596,114 @@ namespace MastercardHost
 
             if (discData != null)
             {
-                TLVObject tLVObject = new TLVObject();
-
-                if (tLVObject.Parse(discData))
+                byte[] bytes = HexStringToByteArray(discData);
+                switch (bytes[0])
                 {
-                    foreach (var item in tLVObject.TlvDic)
-                    {
-                        UpdateLogText($"{item.Key}: {item.Value}");
-                    }
+                    case 0x00:
+                        UpdateLogText("L1: OK");
+                        break;
+                    case 0x01:
+                        UpdateLogText("L1: TIME OUT ERROR");
+                        break;
+                    case 0x02:
+                        UpdateLogText("L1: TRANSMISSION ERROR");
+                        break;
+                    case 0x03:
+                        UpdateLogText("L1: PROTOCOL ERROR");
+                        break;
+                    default:
+                        UpdateLogText("L1: RFU");
+                        break;
                 }
+                switch (bytes[1])
+                {
+                    case 0x00:
+                        UpdateLogText("L2: OK");
+                        break;
+                    case 0x01:
+                        UpdateLogText("L2: CARD DATA MISSING");
+                        break;
+                    case 0x02:
+                        UpdateLogText("L2: CAM FAILED");
+                        break;
+                    case 0x03:
+                        UpdateLogText("L2: STATUS BYTES");
+                        break;
+                    case 0x04:
+                        UpdateLogText("L2: PARSING ERROR");
+                        break;
+                    case 0x05:
+                        UpdateLogText("L2: MAX LIMIT EXCEEDED");
+                        break;
+                    case 0x06:
+                        UpdateLogText("L2: CARD DATA ERROR");
+                        break;
+                    case 0x07:
+                        UpdateLogText("L2: MAGSTRIPE NOT SUPPORTED");
+                        break;
+                    case 0x08:
+                        UpdateLogText("L2: NO PPSE");
+                        break;
+                    case 0x09:
+                        UpdateLogText("L2: PPSE FAULT");
+                        break;
+                    case 0x0A:
+                        UpdateLogText("L2: EMPTY CANDIDATE LIST");
+                        break;
+                    case 0x0B:
+                        UpdateLogText("L2: IDS READ ERROR");
+                        break;
+                    case 0x0C:
+                        UpdateLogText("L2: IDS WRITE ERROR");
+                        break;
+                    case 0x0D:
+                        UpdateLogText("L2: IDS DATA ERROR");
+                        break;
+                    case 0x0E:
+                        UpdateLogText("L2: IDS NO MATCHING AC");
+                        break;
+                    case 0x0F:
+                        UpdateLogText("L2: TERMINAL DATA ERROR");
+                        break;
+                    default:
+                        UpdateLogText("L2: RFU");
+                        break;
+                }
+                switch (bytes[2])
+                {
+                    case 0x00:
+                        UpdateLogText("L3: OK");
+                        break;
+                    case 0x01:
+                        UpdateLogText("L3: TIME OUT");
+                        break;
+                    case 0x02:
+                        UpdateLogText("L3: STOP");
+                        break;
+                    case 0x03:
+                        UpdateLogText("L3: AMOUNT NOT PRESENT");
+                        break;
+                    default:
+                        UpdateLogText("L3: RFU");
+                        break;
+                }
+
+                //截取discData的第四个字符和第五个字符
+
+
+                UpdateLogText("SW12: " + discData.Substring(3,2));
+                
+
+
+                //TLVObject tLVObject = new TLVObject();
+
+                //if (tLVObject.Parse(discData))
+                //{
+                //    foreach (var item in tLVObject.TlvDic)
+                //    {
+                //        UpdateLogText($"{item.Key}: {item.Value}");
+                //    }
+                //}
                 UpdateLogText("_____________________________________");
             }
         }

@@ -27,8 +27,8 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=D:\Work\VS_Project\MastercardHost\InnoSetup
-OutputBaseFilename=mysetup
+OutputDir=E:\Work\VS_Project\MastercardHost\InnoSetup
+OutputBaseFilename=xld_mastercard_tei
 Password=123456
 Encryption=yes
 Compression=lzma
@@ -42,25 +42,25 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\Config\*"; DestDir: "{app}\Config"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\Google.Protobuf.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\MastercardHost.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\MastercardHost.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\MvvmHelpers.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\nlog.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\NLog.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\TcpSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Work\VS_Project\MastercardHost\bin\Debug\net48\zh-CN\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\Config\*"; DestDir: "{app}\Config"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\Google.Protobuf.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\MastercardHost.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\MastercardHost.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\MvvmHelpers.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\nlog.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\NLog.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\TcpSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\zh-CN\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
@@ -82,15 +82,21 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 Type: filesandordirs; Name: "{app}"
 
 [UninstallDelete]
-; å¸è½½æ—¶å½»åº•åˆ é™¤æ•´ä¸ªç›®å½•
-Type: filesandordirs; Name: "{app}"
+; å¸è½½æ—¶å½»åº•åˆ é™¤æ•´ä¸ªç›®å½?Type: filesandordirs; Name: "{app}"
 
 [Code]
-// å£°æ˜ Windows API
-function TerminateProcessByID(ProcessID: Cardinal): Boolean;
+// ÉùÃ÷ Windows API
+function TerminateProcess(hProcess: THandle; uExitCode: UINT): BOOL;
 external 'TerminateProcess@kernel32.dll stdcall';
+function OpenProcess(dwDesiredAccess: DWORD; bInheritHandle: BOOL; dwProcessId: DWORD): THandle;
+external 'OpenProcess@kernel32.dll stdcall';
+function CloseHandle(hObject: THandle): BOOL;
+external 'CloseHandle@kernel32.dll stdcall';
 
-// æ£€æŸ¥è¿›ç¨‹æ˜¯å¦å­˜åœ¨
+const
+  PROCESS_TERMINATE = $0001;
+
+// ¼ì²é½ø³ÌÊÇ·ñ´æÔÚ
 function IsProcessRunning(const ExeName: string): Boolean;
 var
   WMIC, WbemScriptor, ProcessList: Variant;
@@ -108,11 +114,12 @@ begin
   end;
 end;
 
-// ç»ˆæ­¢è¿›ç¨‹ï¼ˆé™é»˜æ¨¡å¼ï¼Œä»…åœ¨å¤±è´¥æ—¶å¼¹çª—ï¼‰
+// ÖÕÖ¹½ø³Ì
 procedure KillProcessSilently(const ExeName: string);
 var
   WMIC, WbemScriptor, ProcessList, Process: Variant;
   i: Integer;
+  ProcessHandle: THandle;
   Success: Boolean;
 begin
   Success := True;
@@ -122,10 +129,18 @@ begin
     ProcessList := WbemScriptor.ExecQuery(
       Format('SELECT * FROM Win32_Process WHERE Name="%s"', [ExeName])
     );
+    
     for i := 0 to ProcessList.Count - 1 do
     begin
       Process := ProcessList.ItemIndex(i);
-      if not TerminateProcessByID(Process.ProcessID) then
+      ProcessHandle := OpenProcess(PROCESS_TERMINATE, False, Process.ProcessID);
+      if ProcessHandle <> 0 then
+      begin
+        if not TerminateProcess(ProcessHandle, 0) then
+          Success := False;
+        CloseHandle(ProcessHandle);
+      end
+      else
         Success := False;
     end;
   except
@@ -133,19 +148,46 @@ begin
   end;
 
   if not Success then
-    MsgBox(Format('æ— æ³•ç»ˆæ­¢è¿›ç¨‹ %sï¼Œè¯·æ‰‹åŠ¨å…³é—­åé‡è¯•ã€‚', [ExeName]), mbError, MB_OK);
+    MsgBox(Format('ÎŞ·¨ÖÕÖ¹½ø³Ì %s£¬ÇëÊÖ¶¯¹Ø±ÕºóÖØÊÔ¡£', [ExeName]), mbError, MB_OK);
 end;
 
-// å¸è½½æ—¶é™é»˜å¤„ç†
+// °²×°Ç°¼ì²é
+function InitializeSetup(): Boolean;
+begin
+  // ¼ì²é³ÌĞòÊÇ·ñÕıÔÚÔËĞĞ£¬Èç¹ûÊÇÔò³¢ÊÔÖÕÖ¹
+  if IsProcessRunning('{#MyAppExeName}') then
+  begin
+    if MsgBox('MastercardHost ÕıÔÚÔËĞĞ£¬ĞèÒª¹Ø±Õºó²ÅÄÜ¼ÌĞø°²×°¡£ÊÇ·ñÁ¢¼´¹Ø±Õ£¿', mbConfirmation, MB_YESNO) = IDYES then
+    begin
+      KillProcessSilently('{#MyAppExeName}');
+      // µÈ´ı½ø³Ì½áÊø
+      Sleep(1000);
+    end
+    else
+    begin
+      MsgBox('°²×°ÎŞ·¨¼ÌĞø£¬ÇëÊÖ¶¯¹Ø±Õ MastercardHost ºóÖØĞÂÔËĞĞ°²×°³ÌĞò¡£', mbError, MB_OK);
+      Result := False;
+      Exit;
+    end;
+  end;
+  
+  Result := True;
+end;
+
+// Ğ¶ÔØÊ±¾²Ä¬´¦Àí
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usUninstall then
   begin
-    // ä»…åœ¨è¿›ç¨‹è¿è¡Œæ—¶å°è¯•ç»ˆæ­¢ï¼ˆæ— æ—¥å¿—ã€æ— æˆåŠŸæç¤ºï¼‰
+    // ¾²Ä¬ÖÕÖ¹½ø³Ì£¨ÎŞÈ·ÈÏ¶Ô»°¿ò£©
     if IsProcessRunning('{#MyAppExeName}') then
+    begin
       KillProcessSilently('{#MyAppExeName}');
+      // µÈ´ı½ø³Ì½áÊø
+      Sleep(1000);
+    end;
 
-    // å¼ºåˆ¶åˆ é™¤ç›®å½•
+    // Ç¿ÖÆÉ¾³ıÄ¿Â¼
     DelTree(ExpandConstant('{app}'), True, True, True);
   end;
 end;
