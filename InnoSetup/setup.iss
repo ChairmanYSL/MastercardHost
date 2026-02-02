@@ -21,7 +21,11 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={autopf}\MasercardHost
+DefaultDirName={autopf}\{#MyAppName}
+; 修改这里：允许用户更改安装目录
+DisableDirPage=no
+; 修改这里：不在安装时自动删除旧目录
+; 删除这行：DefaultDirName={autopf}\MasercardHost
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
@@ -51,10 +55,10 @@ Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\MvvmHelpers.dll"; Des
 Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\nlog.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\NLog.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -78,11 +82,12 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [InstallDelete]
-; 瀹夎鍓嶆竻鐞嗘棫鐗堟湰
-Type: filesandordirs; Name: "{app}"
+; 删除这行，这样不会自动删除旧目录
+; Type: filesandordirs; Name: "{app}"
 
 [UninstallDelete]
-; 鍗歌浇鏃跺交搴曞垹闄ゆ暣涓洰褰?Type: filesandordirs; Name: "{app}"
+; 卸载时彻底删除整个目录
+Type: filesandordirs; Name: "{app}"
 
 [Code]
 // 声明 Windows API
@@ -174,6 +179,41 @@ begin
   Result := True;
 end;
 
+// 检测是否已安装过
+function GetPreviousInstallPath(): String;
+begin
+  // 从注册表获取之前的安装路径
+  if RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1',
+    'InstallLocation', Result) then
+  begin
+    // 找到了之前的安装路径
+  end
+  else if RegQueryStringValue(HKCU, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppId")}_is1',
+    'InstallLocation', Result) then
+  begin
+    // 在HKCU中找到了
+  end
+  else
+  begin
+    Result := '';
+  end;
+end;
+
+// 初始化向导页时设置默认目录
+procedure InitializeWizard();
+var
+  PreviousPath: String;
+begin
+  // 获取之前的安装路径
+  PreviousPath := GetPreviousInstallPath();
+  
+  // 如果有之前的安装路径，将其设为默认
+  if PreviousPath <> '' then
+  begin
+    WizardForm.DirEdit.Text := PreviousPath;
+  end;
+end;
+
 // 卸载时静默处理
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
@@ -191,4 +231,3 @@ begin
     DelTree(ExpandConstant('{app}'), True, True, True);
   end;
 end;
-

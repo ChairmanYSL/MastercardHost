@@ -1,7 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using TcpSharp;
@@ -15,23 +19,112 @@ namespace MastercardHost
         private TcpSharpSocketClient _tcpClient;
         private string _connectID;
         private int _port;
+        private MainViewModel mainViewModel;
+        private bool _dwnldConfigFlag=false;
+        private bool _loopACTFlag = false;
 
         public TestForm(MainForm mainForm)
         {
             InitializeComponent();
-            Size = new Size(1000, 700);
+            Size = new System.Drawing.Size(1000, 700);
             SetupLayout();
 
-            _tcpClient = new TcpSharpSocketClient("localhost", 6908);
-            _tcpClient.OnConnected += (sender, e) =>
+            try
             {
-                MyLogManager.Log("Client connected to server");
-            };
-            _tcpClient.OnError += (sender, e) =>
+                _tcpClient = new TcpSharpSocketClient("localhost", 6908);
+                _tcpClient.OnConnected += (sender, e) =>
+                {
+                    MyLogManager.Log("Client connected to server");
+                };
+                _tcpClient.OnError += (sender, e) =>
+                {
+                    MyLogManager.Log($"Client error: {e.ToString()}");
+                };
+                _tcpClient.OnDataReceived += OnDataReceived;
+                _tcpClient.Connect();
+                mainViewModel = mainForm.MainViewModel;
+            }
+            catch (Exception ex) 
             {
-                MyLogManager.Log($"Client error: {e.ToString()}");
-            };
-            _tcpClient.Connect();
+                MyLogManager.Log($"_tcpClient in TestForm Exception:{ex.Message}");
+            }
+        }
+
+        private void OnDataReceived(object sender, OnClientDataReceivedEventArgs e)
+        {
+            if (e.Data != null)
+            {
+                string receiveData = Encoding.UTF8.GetString(e.Data);
+                //mainViewModel.UpdateLogText($"Client receive data:{receiveData}");
+
+                Signal signal = JsonConvert.DeserializeObject<Signal>(receiveData);
+                if (signal != null)
+                {
+                    //mainViewModel.UpdateLogText($"tcp client Received {signal.signalType} signal");
+                    MyLogManager.Log($"_connectionIDTestTool Received {signal.signalType} signal");
+                    MyLogManager.Log($"Received Data: {Environment.NewLine}{receiveData}");
+                    switch (signal.signalType)
+                    {
+                        case "ACT_ACK":
+                            break;
+
+                        case "CONFIG_ACK":
+                            //string test_info_data = @"{
+                            //        ""signalType"":""TEST_INFO"", 
+                            //        ""signalData"":[
+                            //            {""id"":""interfaceVersion"",""value"":""1""},
+                            //            {""id"":""sessionId"",""value"":""20260109161852077""},
+                            //            {""id"":""testId"",""value"":""3C01-0105 |  | ""},
+                            //            {""id"":""dekDetId"",""value"":""No DATA EXCHANGE for this test""}
+                            //        ]
+                            //    }";
+                            ////mainViewModel.UpdateLogText("tcp client send test_info signal");
+                            //MyLogManager.Log($"tcp client send test_info signal");
+
+                            //long ret = _tcpClient.SendString(test_info_data);
+
+                            ////mainViewModel.UpdateLogText($"tcp client send ret = {ret}");
+                            //MyLogManager.Log($"tcp client send ret = {ret}");
+                            break;
+
+                        case "TEST_INFO_ACK":
+                            //string act_data = @"{
+                            //        ""signalType"":""ACT"", 
+                            //        ""signalData"":[
+                            //            {""id"":""5F57"",""value"":null},
+                            //            {""id"":""9F02"",""value"":""000000000001""},
+                            //            {""id"":""9F03"",""value"":null},
+                            //            {""id"":""DF8104"",""value"":null},
+                            //            {""id"":""DF8105"",""value"":null},
+                            //            {""id"":""9F7C"",""value"":""1122334455667788990011223344556677889900""},
+                            //            {""id"":""9F53"",""value"":""46""},
+                            //            {""id"":""5F2A"",""value"":""0978""},
+                            //            {""id"":""5F36"",""value"":""02""},
+                            //            {""id"":""9A"",""value"":""260109""},
+                            //            {""id"":""9F21"",""value"":""161852""}
+                            //        ]
+                            //    }";
+
+                            //_tcpClient.SendString(act_data);
+                            break;
+                        case "OUT":
+                            if(_loopACTFlag == true)
+                            {
+                                SendACTSignal();
+                            }
+                            break;
+                        default:
+                            MyLogManager.Log("无法识别的Signal类型");
+                            //mainViewModel.UpdateLogText("无法识别的Signal类型");
+                            break;
+                    }
+                }
+                else
+                {
+                    MyLogManager.Log("Client parse json data error");
+                    //mainViewModel.UpdateLogText("Client parse json data error");
+                }
+            }
         }
 
         private void SetupLayout()
@@ -362,7 +455,7 @@ namespace MastercardHost
             btnWidth = Math.Max(btnWidth, 50);
             btnHeight = Math.Max(btnHeight, 30);
 
-            button.Size = new Size(btnWidth, btnHeight);
+            button.Size = new System.Drawing.Size(btnWidth, btnHeight);
 
             // 计算居中位置
             button.Left = (panel.ClientSize.Width - button.Width) / 2;
@@ -442,7 +535,7 @@ namespace MastercardHost
             checkBox.CheckAlign = ContentAlignment.MiddleLeft;
 
             // 确保有足够的空间显示文本
-            checkBox.MinimumSize = new Size(100, 20);
+            checkBox.MinimumSize = new System.Drawing.Size(100, 20);
         }
 
         private void SetupTextBox(System.Windows.Forms.TextBox textBox, int rowIndex)
@@ -486,7 +579,8 @@ namespace MastercardHost
                                        { ""id"": ""9F53"", ""value"": ""46"" },  
                                        { ""id"": ""5F2A"", ""value"": ""0978"" },  
                                        { ""id"": ""5F36"", ""value"": ""02"" },                                     
-                                       { ""id"": ""9F21"", ""value"": ""195212"" }  
+                                       { ""id"": ""9F21"", ""value"": ""195212"" },
+                                       { ""id"": ""ManualTestFlag"", ""value"": ""true"" },
                                    ]  
                                }";
                 JObject jsonObject = new JObject
@@ -649,6 +743,8 @@ namespace MastercardHost
                 if (checkBox_TACOnline.Checked)
                     signalData.Add(new JObject(new JProperty("id", "DF8122"), new JProperty("value", tacOnline)));
 
+
+                signalData.Add(new JObject(new JProperty("id", "ManualTestFlag"), new JProperty("value", "true")));
                 jsonObject["signalData"] = signalData;
 
                 // 发送数据  
@@ -705,14 +801,21 @@ namespace MastercardHost
         {
             try
             {
+                _dwnldConfigFlag = true;
+                //string data = @"{
+                //                    ""signalType"":""DET"", 
+                //                    ""signalData"":[
+                //                        {""id"":""DET"",""value"":""DF81120182""}
+                //                    ]
+                //                }";
                 string data = @"{
-                                    ""signalType"":""DET"", 
+                                    ""signalType"":""CONFIG"", 
                                     ""signalData"":[
-                                        {""id"":""DET"",""value"":""DF81120182""}
+                                        {""id"":""CONF_NAME"",""value"":""PPS_MCnoDefault_1""}
                                     ]
                                 }";
 
-                _tcpServer.SendString(_connectID, data);
+                _tcpClient.SendString(data);
             }
             catch (Exception ex) 
             {
@@ -741,11 +844,6 @@ namespace MastercardHost
             {
                 MyLogManager.Log($"Exception: {ex.Message}");
             }
-        }
-
-        private void button_STOP_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void button_TEST_INFO_Click(object sender, EventArgs e)
@@ -786,7 +884,7 @@ namespace MastercardHost
                     MyLogManager.Log($"Parse Port to INT error");
 
                     // Replace the problematic line with the following:
-                    MessageBox.Show("Parse Port to INT error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    System.Windows.Forms.MessageBox.Show("Parse Port to INT error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 _tcpServer.Port = _port;
@@ -829,7 +927,15 @@ namespace MastercardHost
 
         private void TestForm_Resize(object sender, EventArgs e)
         {
-            mainSplitContainer.SplitterDistance = (int)(this.ClientSize.Width * 0.3);
+            int desiredDistance = (int)(this.ClientSize.Width * 0.3);
+            int minDistance = mainSplitContainer.Panel1MinSize;
+            int maxDistance = mainSplitContainer.Width - mainSplitContainer.Panel2MinSize;
+
+            if (desiredDistance >= minDistance && desiredDistance <= maxDistance)
+            {
+                mainSplitContainer.SplitterDistance = desiredDistance;
+            }
+
             // 更新左侧按钮位置和大小
             ButtonPosition(panel_ACT, button_ACT);
             ButtonPosition(panel_LoopACT, button_LoopACT);
@@ -856,9 +962,219 @@ namespace MastercardHost
             }
         }
 
+        public void HandleLoopACTActionRequest(string actionName)
+        {
+            MyLogManager.Log("receive loop act send action request");
+            switch (actionName)
+            {
+                case "Send":
+                    SendACTSignal();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void SendACTSignal()
+        {
+            try
+            {
+                string data = @"{
+                                   ""signalType"": ""ACT"",  
+                                   ""signalData"": [ 
+                                       { ""id"": ""5F57"", ""value"": null },                                       
+                                       { ""id"": ""DF8104"", ""value"": null },  
+                                       { ""id"": ""DF8105"", ""value"": null },  
+                                       { ""id"": ""9F7C"", ""value"": ""1122334455667788990011223344556677889900"" },  
+                                       { ""id"": ""9F53"", ""value"": ""46"" },  
+                                       { ""id"": ""5F2A"", ""value"": ""0978"" },  
+                                       { ""id"": ""5F36"", ""value"": ""02"" },                                     
+                                       { ""id"": ""9F21"", ""value"": ""195212"" },
+                                       { ""id"": ""ManualTestFlag"", ""value"": ""loop"" },
+                                   ]  
+                               }";
+                JObject jsonObject = new JObject
+                {
+                    ["signalType"] = "ACT"
+                };
+
+                JArray signalData = new JArray();
+
+                string amount = textBox_Amt.Text.Trim();
+                MyLogManager.Log($"amount:{amount}");
+
+                if (string.IsNullOrEmpty(amount))
+                {
+                    amount = "000000000001";
+                }
+                else
+                {
+                    amount = new string(amount.Where(char.IsDigit).ToArray());
+
+                    // 如果输入超过12位，截取最后12位
+                    if (amount.Length > 12)
+                    {
+                        amount = amount.Substring(amount.Length - 12);
+                    }
+                    // 填充到12位
+                    amount = amount.PadLeft(12, '0');
+                }
+
+                if (checkBox_Amt.Checked)
+                {
+                    signalData.Add(new JObject(new JProperty("id", "9F02"), new JProperty("value", amount)));
+                }
+
+                string amountOther = this.textBox_AmtOth.Text.Trim();
+                if (amountOther.Length > 12)
+                {
+                    amountOther = amountOther.Substring(amountOther.Length - 12);
+                }
+                amountOther = amountOther.PadLeft(12, '0');
+                if (checkBox_AmtOth.Checked)
+                {
+                    signalData.Add(new JObject(new JProperty("id", "9F03"), new JProperty("value", string.IsNullOrEmpty(amountOther) ? null : amountOther)));
+                }
+
+                string transType = this.textBox_TransType.Text.Trim();
+                if (string.IsNullOrEmpty(transType))
+                {
+                    transType = "00"; // 默认值
+                }
+                else if (transType.Length > 2)
+                {
+                    transType = transType.Substring(transType.Length - 2);
+                }
+                signalData.Add(new JObject(new JProperty("id", "9C"), new JProperty("value", transType)));
+
+                string transDate = this.textBox_TransDate.Text.Trim();
+                if (string.IsNullOrEmpty(transDate))
+                {
+                    transDate = DateTime.Now.ToString("yyMMdd"); // 默认值为当前日期
+                }
+                else if (transDate.Length > 6)
+                {
+                    transDate = transDate.Substring(transDate.Length - 6);
+                }
+                if (checkBox_TransDate.Checked)
+                {
+                    signalData.Add(new JObject(new JProperty("id", "9A"), new JProperty("value", transDate)));
+                }
+
+                string transTime = this.textBox_TransTime.Text.Trim();
+                if (string.IsNullOrEmpty(transTime))
+                {
+                    transTime = DateTime.Now.ToString("HHmmss"); // 默认值为当前时间
+                }
+                else if (transTime.Length > 6)
+                {
+                    transTime = transTime.Substring(transTime.Length - 6);
+                }
+                if (checkBox_TransTime.Checked)
+                {
+                    signalData.Add(new JObject(new JProperty("id", "9F21"), new JProperty("value", transTime)));
+                }
+
+                string accountType = this.textBox_AccountType.Text.Trim();
+                if (string.IsNullOrEmpty(accountType))
+                {
+                    accountType = "00"; // 默认值
+                }
+                else if (accountType.Length > 2)
+                {
+                    accountType = accountType.Substring(accountType.Length - 2);
+                }
+                if (checkBox_AccountType.Checked)
+                {
+                    signalData.Add(new JObject(new JProperty("id", "5F57"), new JProperty("value", accountType)));
+                }
+
+                string merchCustomData = this.textBox_MerchCustomData.Text.Trim();
+                if (string.IsNullOrEmpty(merchCustomData))
+                {
+                    merchCustomData = "1122334455667788990011223344556677889900"; // 默认值
+                }
+                else if (merchCustomData.Length > 40)
+                {
+                    merchCustomData = merchCustomData.Substring(merchCustomData.Length - 40);
+                }
+                if (checkBox_MerchCustomData.Checked)
+                {
+                    signalData.Add(new JObject(new JProperty("id", "9F7C"), new JProperty("value", merchCustomData)));
+                }
+
+                string transCateCode = this.textBox_TransCateCode.Text.Trim();
+                if (string.IsNullOrEmpty(transCateCode))
+                {
+                    transCateCode = "46";
+                }
+                else if (transCateCode.Length > 2)
+                {
+                    transCateCode = transCateCode.Substring(transCateCode.Length - 2);
+                }
+                if (checkBox_TransCateCode.Checked)
+                {
+                    signalData.Add(new JObject(new JProperty("id", "9F53"), new JProperty("value", transCateCode)));
+                }
+
+                string transCurrCode = this.textBox_TransCurrCode.Text.Trim();
+                if (string.IsNullOrEmpty(transCurrCode))
+                {
+                    transCurrCode = "0978"; // 默认值
+                }
+                else if (transCurrCode.Length > 4)
+                {
+                    transCurrCode = transCurrCode.Substring(transCurrCode.Length - 4);
+                }
+                if (checkBox_TransCurrCode.Checked)
+                    signalData.Add(new JObject(new JProperty("id", "5F2A"), new JProperty("value", transCurrCode)));
+
+                string transCurrExp = this.textBox_TransCurrExp.Text.Trim();
+                if (string.IsNullOrEmpty(transCurrExp))
+                {
+                    transCurrExp = "02"; // 默认值
+                }
+                else if (transCurrExp.Length > 2)
+                {
+                    transCurrExp = transCurrExp.Substring(transCurrExp.Length - 2);
+                }
+                if (checkBox_TransCurrExp.Checked)
+                    signalData.Add(new JObject(new JProperty("id", "5F36"), new JProperty("value", transCurrExp)));
+
+                string tacOnline = this.textBox_TACOnline.Text.Trim();
+                if (string.IsNullOrEmpty(tacOnline))
+                {
+                    tacOnline = "0000000000"; // 默认值
+                }
+                else if (tacOnline.Length > 6)
+                {
+                    tacOnline = tacOnline.Substring(tacOnline.Length - 6);
+                }
+                if (checkBox_TACOnline.Checked)
+                    signalData.Add(new JObject(new JProperty("id", "DF8122"), new JProperty("value", tacOnline)));
+                signalData.Add(new JObject(new JProperty("id", "ManualTestFlag"), new JProperty("value", "loop")));
+
+                jsonObject["signalData"] = signalData;
+
+                // 发送数据  
+                string finalData = jsonObject.ToString();
+                _tcpClient.SendString(finalData);
+                MyLogManager.Log($"client send data:{finalData}");
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"Exception: {ex.Message}");
+            }
+        }
+
         private void button_LoopACT_Click(object sender, EventArgs e)
         {
-
+            if(mainViewModel.GetWorkerThreadStatus() == false)
+            {
+                mainViewModel.StartWorkerThread();
+            }
+            _loopACTFlag = true;
+            SendACTSignal();
         }
 
         private void panel_ACT_SizeChanged(object sender, EventArgs e)
@@ -893,6 +1209,42 @@ namespace MastercardHost
             // 设置TextBox大小（占满整个列宽，高度适应行高）  
             textBox.Width = colWidth - textBox.Margin.Horizontal;
             textBox.Height = Math.Max(20, rowHeight - textBox.Margin.Vertical);
+        }
+
+        private void TestForm_SizeChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                // 确保 SplitterDistance 始终有效
+                int minDistance = mainSplitContainer.Panel1MinSize;
+                int maxDistance = mainSplitContainer.Width - mainSplitContainer.Panel2MinSize;
+
+                // 当前距离
+                int currentDistance = mainSplitContainer.SplitterDistance;
+
+                // 如果当前距离无效，调整到有效范围
+                if (currentDistance < minDistance)
+                {
+                    mainSplitContainer.SplitterDistance = minDistance;
+                }
+                else if (currentDistance > maxDistance)
+                {
+                    mainSplitContainer.SplitterDistance = maxDistance;
+                }
+                // 否则保持当前值
+            }
+            catch (Exception ex) 
+            {
+                MyLogManager.Log($"TestForm_SizeChanged exception:{ex.Message}");
+            }
+
+        }
+
+        private void button_Stop_Click_1(object sender, EventArgs e)
+        {
+            _loopACTFlag = false;
+            mainViewModel.StopWorkerThread();
+            mainViewModel.ClearQueue();
         }
     }
 }
