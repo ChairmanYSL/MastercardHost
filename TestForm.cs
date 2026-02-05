@@ -108,10 +108,10 @@ namespace MastercardHost
                             //_tcpClient.SendString(act_data);
                             break;
                         case "OUT":
-                            if(_loopACTFlag == true)
-                            {
-                                SendACTSignal();
-                            }
+                            //if(_loopACTFlag == true)
+                            //{
+                            //    SendACTSignal();
+                            //}
                             break;
                         default:
                             MyLogManager.Log("无法识别的Signal类型");
@@ -968,7 +968,7 @@ namespace MastercardHost
             switch (actionName)
             {
                 case "Send":
-                    SendACTSignal();
+                    //SendACTSignal();
                     break;
                 default:
                     break;
@@ -1173,7 +1173,7 @@ namespace MastercardHost
             {
                 mainViewModel.StartWorkerThread();
             }
-            _loopACTFlag = true;
+            //_loopACTFlag = true;
             SendACTSignal();
         }
 

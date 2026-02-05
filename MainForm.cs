@@ -102,11 +102,13 @@ namespace MastercardHost
                         richTextBox1.Invoke(new Action(() =>
                         {
                             richTextBox1.Text = string.Join(Environment.NewLine, snapshot);
+                            richTextBox1.ScrollToCaret();
                         }));
                     }
                     else
                     {
                         richTextBox1.Text = string.Join(Environment.NewLine, snapshot);
+                        richTextBox1.ScrollToCaret();
                     }
                 };
 

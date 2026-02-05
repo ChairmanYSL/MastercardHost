@@ -173,13 +173,13 @@
     <value>Log Type</value>
   </data>
   <data name="toolStripMenuItem1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>105, 26</value>
+    <value>105, 24</value>
   </data>
   <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
   <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1067, 30</value>
+    <value>1067, 28</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
@@ -205,7 +205,7 @@
     <value>Fill</value>
   </data>
   <data name="splitContainer1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 30</value>
+    <value>0, 28</value>
   </data>
   <data name="splitContainer1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
@@ -586,7 +586,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="tabPage_Client_Setting.Size" type="System.Drawing.Size, System.Drawing">
-    <value>354, 146</value>
+    <value>354, 145</value>
   </data>
   <data name="tabPage_Client_Setting.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -739,7 +739,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="tabPage_CommSet.Size" type="System.Drawing.Size, System.Drawing">
-    <value>354, 146</value>
+    <value>354, 145</value>
   </data>
   <data name="tabPage_CommSet.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -1195,7 +1195,7 @@
     <value>1</value>
   </data>
   <data name="splitContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>362, 532</value>
+    <value>362, 534</value>
   </data>
   <data name="splitContainer2.SplitterDistance" type="System.Int32, mscorlib">
     <value>174</value>
@@ -1240,7 +1240,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="richTextBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>700, 532</value>
+    <value>700, 534</value>
   </data>
   <data name="richTextBox1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1273,7 +1273,7 @@
     <value>1</value>
   </data>
   <data name="splitContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1067, 532</value>
+    <value>1067, 534</value>
   </data>
   <data name="splitContainer1.SplitterDistance" type="System.Int32, mscorlib">
     <value>362</value>
@@ -1298,6 +1298,9 @@
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>25</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
     <value>8, 15</value>
