@@ -5,7 +5,6 @@ using MvvmHelpers.Commands;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,11 +14,8 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using TcpSharp;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 
 namespace MastercardHost
@@ -116,17 +112,17 @@ namespace MastercardHost
         private System.Timers.Timer _timer;
         private System.Timers.Timer _configTimer;
         //private Signal _actSignal;
-        private int _actResendCounter = 0;
-        private int _configResendCounter = 0;
-        //private object _downloadLock = new object();
-        private bool _isConfigSent = false;
-        private bool _isConfigAckReceived = false;
-        private bool _isTestInfoReceived = false;
         private ConcurrentQueue<SerialOperation> _queue;
         private Thread _backGround;
         private CancellationTokenSource _cts;  // 用信号量停止线程
         private ManualResetEventSlim _threadStartedEvent = new ManualResetEventSlim(false);
-        private List<byte> _serialBuffer = new List<byte>();
+        // 串口接收缓冲区
+        private readonly object _bufferLock = new object();
+        private byte[] _receiveBuffer = new byte[8192]; // 预分配
+        private int _bufferIndex = 0; // 指向缓冲区中有效数据的末尾
+        private const int MAX_BUFFER_SIZE = 1024 * 64; // 例如，设置最大缓冲区为64KB
+        private int _consecutiveParseFailures = 0; // 连续解析失败次数
+        private const int MAX_PARSE_FAILURES = 5; // 最大连续失败次数阈值
 
         public MainViewModel()
         {
@@ -669,17 +665,47 @@ namespace MastercardHost
                     IsOpenSerialEnabled = true;
                 };
 
+                //_serialPort.DataReceived += (sender, e) =>
+                //{
+                //    MyLogManager.Log($"收到串口数据:{_serialPort.BytesToRead}字节");
+                //    if (_serialPort.BytesToRead > 0 && _serialPort.IsOpen)
+                //    {
+                //        byte[] buffer = new byte[_serialPort.BytesToRead];
+                //        int bytesRead = _serialPort.Read(buffer, 0, buffer.Length);
+                //        MyLogManager.Log($"数据内容：{buffer.ToString()}");
+                //        MyLogManager.Log($"十六进制数据: {BitConverter.ToString(buffer)}");
+
+                //        ProcessFromPOS(buffer);
+                //    }
+                //};
+
                 _serialPort.DataReceived += (sender, e) =>
                 {
-                    MyLogManager.Log($"收到串口数据:{_serialPort.BytesToRead}字节");
-                    if (_serialPort.BytesToRead > 0 && _serialPort.IsOpen)
+                    lock (_bufferLock) // 保护共享的缓冲区
                     {
-                        byte[] buffer = new byte[_serialPort.BytesToRead];
-                        int bytesRead = _serialPort.Read(buffer, 0, buffer.Length);
-                        MyLogManager.Log($"数据内容：{buffer.ToString()}");
-                        MyLogManager.Log($"十六进制数据: {BitConverter.ToString(buffer)}");
+                        MyLogManager.Log($"收到串口数据:{_serialPort.BytesToRead}字节");
 
-                        ProcessFromPOS(buffer);
+                        if (_serialPort.BytesToRead > 0 && _serialPort.IsOpen)
+                        {
+                            var readBuffer = new byte[_serialPort.BytesToRead];
+                            int bytesRead = _serialPort.Read(readBuffer, 0, readBuffer.Length);
+
+                            // 将新数据追加到我们的累积缓冲区
+                            if (_bufferIndex + bytesRead > _receiveBuffer.Length)
+                            {
+                                // 缓冲区不够大，进行扩容或处理（这里选择扩容）
+                                Array.Resize(ref _receiveBuffer, (_bufferIndex + bytesRead) * 2);
+                                MyLogManager.Log($"缓冲区已扩容至 {_receiveBuffer.Length} 字节");
+                            }
+
+                            Buffer.BlockCopy(readBuffer, 0, _receiveBuffer, _bufferIndex, bytesRead);
+                            _bufferIndex += bytesRead;
+
+                            MyLogManager.Log($"十六进制数据追加后: {BitConverter.ToString(_receiveBuffer, 0, _bufferIndex)}");
+
+                            // 尝试从累积的数据中解析出完整的protobuf消息
+                            ProcessBufferedData();
+                        }
                     }
                 };
 
@@ -757,6 +783,393 @@ namespace MastercardHost
         private void StopBind()
         { 
        
+        }
+
+        /// <summary>
+        /// 寻找下一个可能的合法VarInt的起始位置。
+        /// 这是一个启发式方法，寻找一个不以连续8个1的最高位开始的字节。
+        /// </summary>
+        private int FindNextValidVarintStart(int startPosition)
+        {
+            for (int i = startPosition; i < _bufferIndex; i++)
+            {
+                byte b = _receiveBuffer[i];
+                // 一个合法的VarInt最多5个字节 (对于int32)。
+                // 如果一个字节的最高位是0，它可能是一个1字节VarInt的结尾或单字节值。
+                // 如果一个字节不是 0xFF (即不是 11111111)，它有可能是某个VarInt的开始或中间部分。
+                // 最简单的启发式方法是寻找一个连续5个字节中，至少有一个字节的最高位是0。
+                // 但一个更简单的办法是，寻找一个看起来像合理大小的VarInt开头的字节。
+                // 例如，跳过那些看起来像垃圾数据的高值字节。
+                // 这里简化为：寻找一个值较小的字节，它更可能是一个合理的size。
+                if (b <= 0x7F) // 一个字节的VarInt，且值不大于127，通常是合法的
+                {
+                    // 验证从这个位置开始能否读出一个合理的VarInt和消息
+                    var sizeInfo = ReadVarint32FromBuffer(_receiveBuffer, i, _bufferIndex);
+                    if (sizeInfo.HasValue && sizeInfo.Value.size > 0 && sizeInfo.Value.size < 1024 * 10) // 例如，小于10KB
+                    {
+                        int nextMessageBodyStart = i + sizeInfo.Value.wire_size;
+                        if (nextMessageBodyStart + sizeInfo.Value.size <= _bufferIndex)
+                        {
+                            MyLogManager.Log($"在位置 {i} 找到潜在的有效VarInt起点。");
+                            return i;
+                        }
+                    }
+                    // 如果验证失败，继续循环
+                }
+            }
+            // 没有找到
+            return -1;
+        }
+
+        /// <summary>
+        /// 从指定位置开始读取一个VarInt32。
+        /// 返回一个元组 (value, wire_size)，如果VarInt不完整则返回null。
+        /// </summary>
+        private static (int size, int wire_size)? ReadVarint32FromBuffer(byte[] buffer, int startIndex, int endIndex)
+        {
+            uint result = 0;
+            int shift = 0;
+            int currentPos = startIndex;
+
+            while (currentPos < endIndex && shift < 32)
+            {
+                byte b = buffer[currentPos];
+                currentPos++;
+
+                // 检查是否还有后续字节 (最高位为1)
+                if ((b & 0x80) != 0)
+                {
+                    result |= (uint)(b & 0x7F) << shift;
+                    shift += 7;
+                }
+                else
+                {
+                    // 最后一个字节
+                    result |= (uint)(b & 0x7F) << shift;
+                    // 检查是否有符号扩展错误
+                    if (result > int.MaxValue)
+                    {
+                        return null; // VarInt 超出了 int32 的范围
+                    }
+                    return (size: (int)result, wire_size: currentPos - startIndex);
+                }
+            }
+
+            // 循环结束是因为到达了缓冲区末尾，但VarInt还没结束，说明不完整
+            return null;
+        }
+
+        /// <summary>
+        /// 处理单个解包后的Envelope对象
+        /// </summary>
+        /// <param name="envelope"></param>
+        private void ProcessSingleEnvelope(Envelope envelope)
+        {
+            bool transFlag = false, disconnectFlag = false;
+
+            try
+            {
+                if (envelope != null)
+                {
+                    MyLogManager.Log($"ProcessFromPOS receive:{envelope.ToString()}\n ");
+                    LogFormattedProtobuf(envelope);
+                }
+                else
+                {
+                    MyLogManager.Log("ProtocolBuf parse error");
+                    return;
+                }
+
+                MyLogManager.Log($"envelope.PayloadCase: {envelope.PayloadCase}");
+
+                if (envelope.PayloadCase == Envelope.PayloadOneofCase.Signal)
+                {
+                    SignalProtocol signalProtocol = envelope.Signal;
+                    MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
+                    //UpdateLogText($"ProcessFromPOS receive signal: {signalProtocol.Type}");
+                    if (signalProtocol.Type == "OUT")
+                    {
+                        ParseOutSignal(signalProtocol.Data);
+                        transFlag = true;
+                        disconnectFlag = true;
+                        while (_queue.Count != 0)
+                        {
+                            _queue.TryDequeue(out SerialOperation op);
+                        }
+                    }
+                    else if (signalProtocol.Type == "MSG")
+                    {
+                        ParseOutSignal(signalProtocol.Data);
+                        transFlag = true;
+                    }
+                    else if (signalProtocol.Type == "CONFIG")
+                    {
+                        foreach (var item in signalProtocol.Data)
+                        {
+                            if (item.Id == "CONF_NAME")
+                            {
+                                if (SelectConfig != null && SelectConfig != "")
+                                {
+                                    string fileName = SelectConfig + ".json";
+                                    string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                                    string configDir = runDir + "Config\\Config\\";
+                                    if (Directory.Exists(configDir))
+                                    {
+                                        if (!File.Exists(configDir + fileName))
+                                        {
+                                            System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
+                                        }
+                                        else
+                                        {
+                                            DownloadConfig(configDir + fileName, true);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
+                                }
+                                else
+                                {
+                                    System.Windows.MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                            }
+                        }
+                    }
+                    else if (signalProtocol.Type == "CAPK")
+                    {
+                        string fileName = "PAYPASS_CAPK.json";
+                        string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                        string configDir = runDir + "Config\\CAPK\\";
+                        MyLogManager.Log($"CAPK Dir:{configDir}");
+
+                        if (Directory.Exists(configDir))
+                        {
+                            MyLogManager.Log($"Target CAPK:{configDir + fileName}");
+                            if (!File.Exists(configDir + fileName))
+                            {
+                                System.Windows.MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                            else
+                            {
+                                DownloadCAPK(configDir + fileName);
+                            }
+                        }
+                        else
+                        {
+                            System.Windows.MessageBox.Show("No CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    else if (signalProtocol.Type == "REVOCATION_PK")
+                    {
+                        string fileName = "PAYPASS_Revokey.json";
+                        string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                        string configDir = runDir + "Config\\Revocation_CAPK\\";
+                        MyLogManager.Log($"Revocation_CAPK Dir:{configDir}");
+
+                        if (Directory.Exists(configDir))
+                        {
+                            MyLogManager.Log($"Target Revocation_CAPK:{configDir + fileName}");
+                            if (!File.Exists(configDir + fileName))
+                            {
+                                System.Windows.MessageBox.Show("Target Revocation_CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                            else
+                            {
+                                DownloadRevokey(configDir + fileName);
+                            }
+                        }
+                        else
+                        {
+                            System.Windows.MessageBox.Show("No Revocation_CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    else if (signalProtocol.Type == "ACT_ACK")
+                    {
+                        transFlag = false;
+                        MyLogManager.Log("ACT_ACK");
+                        if (_queue.TryPeek(out SerialOperation operation) &&
+                            operation.OperationType.Equals("ACT"))
+                        {
+                            if (_queue.TryDequeue(out SerialOperation removed))
+                            {
+                                MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
+                            }
+                        }
+                    }
+                    else if (signalProtocol.Type == "CONFIG_ACK")
+                    {
+                        transFlag = false;
+                        MyLogManager.Log("收到CONFIG_ACK");
+                        if (_queue.TryPeek(out SerialOperation operation) &&
+                            operation.OperationType.Equals("CONFIG"))
+                        {
+                            if (_queue.TryDequeue(out SerialOperation removed))
+                            {
+                                MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
+                            }
+                        }
+                    }
+                    else if (signalProtocol.Type == "TEST_INFO_ACK")
+                    {
+                        transFlag = false;
+                        MyLogManager.Log("TEST_INFO_ACK");
+                        if (_queue.TryPeek(out SerialOperation operation) &&
+                            operation.OperationType.Equals("TEST_INFO"))
+                        {
+                            if (_queue.TryDequeue(out SerialOperation removed))
+                            {
+                                MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
+                            }
+                        }
+                    }
+                    else if (signalProtocol.Type == "DEK")
+                    {
+                        transFlag = true;
+                    }
+                    else
+                    {
+                        MyLogManager.Log("Unrecognized Signal Type");
+                    }
+
+                    if (transFlag)
+                    {
+                        TransformSignalToTestTool(signalProtocol, disconnectFlag);
+                    }
+                }
+                else
+                {
+                    MyLogManager.Log("Unrecognized Protocol Type");
+                }
+            }
+            catch(Exception ex)
+            {
+                MyLogManager.Log($"ProcessSingleEnvelope Exception:{ex.Message}");
+            }
+        }
+
+        private void ProcessBufferedData()
+        {
+            int parsedBytes = 0;
+
+            while (true)
+            {
+                // --- 1. 安全检查 ---
+                if (_bufferIndex - parsedBytes < 1)
+                {
+                    // 没有更多数据可解析
+                    break;
+                }
+
+                // --- 2. 尝试读取长度前缀 (VarInt) ---
+                int currentReadPosition = parsedBytes;
+                int messageSize = 0;
+                int varIntSizeInBytes = 0;
+
+                // 我们需要手动解析 VarInt，因为不能直接用 ParseDelimitedFrom 整个缓冲区
+                var varIntResult = ReadVarint32FromBuffer(_receiveBuffer, currentReadPosition, _bufferIndex);
+
+                if (varIntResult.HasValue)
+                {
+                    messageSize = varIntResult.Value.size;
+                    varIntSizeInBytes = varIntResult.Value.wire_size;
+                }
+                else
+                {
+                    // VarInt 不完整，等待更多数据
+                    MyLogManager.Log("Protobuf消息长度前缀(VarInt)不完整，等待更多数据。");
+                    break;
+                }
+
+                // 更新读取指针，跳过已经读取的长度前缀
+                int messageBodyStart = currentReadPosition + varIntSizeInBytes;
+
+                // --- 3. 检查消息体大小是否合理 ---
+                if (messageSize <= 0 || messageSize > 10 * 1024) // 假设单条消息最大10KB
+                {
+                    MyLogManager.Log($"检测到无效的消息大小: {messageSize}，可能数据损坏。尝试恢复...");
+                    // 跳过这个错误的长度，从下一个字节开始寻找
+                    int recoveryPosition = FindNextValidVarintStart(currentReadPosition + 1);
+                    if (recoveryPosition > currentReadPosition)
+                    {
+                        int badDataSize = recoveryPosition - parsedBytes;
+                        MyLogManager.Log($"丢弃 {badDataSize} 个字节以恢复同步。");
+                        int remainingGoodData = _bufferIndex - recoveryPosition;
+                        if (remainingGoodData > 0)
+                        {
+                            Buffer.BlockCopy(_receiveBuffer, recoveryPosition, _receiveBuffer, parsedBytes, remainingGoodData);
+                        }
+                        _bufferIndex -= badDataSize;
+                        continue; // 从新位置继续解析
+                    }
+                    else
+                    {
+                        _bufferIndex = 0;
+                        return;
+                    }
+                }
+
+                // --- 4. 检查消息体是否完整 ---
+                if (_bufferIndex - messageBodyStart < messageSize)
+                {
+                    // 消息体不完整，等待更多数据
+                    MyLogManager.Log($"Protobuf消息体不完整，已接收 {_bufferIndex - messageBodyStart}/{messageSize} 字节。等待更多数据。");
+                    break;
+                }
+
+                // --- 5. 提取消息体并解析 ---
+                try
+                {
+                    byte[] messageBody = new byte[messageSize];
+                    Buffer.BlockCopy(_receiveBuffer, messageBodyStart, messageBody, 0, messageSize);
+                    var envelope = Envelope.Parser.ParseFrom(messageBody);
+
+                    MyLogManager.Log($"成功解析一条完整Protobuf消息，大小: {messageSize} 字节");
+                    ProcessSingleEnvelope(envelope); // 处理单条消息
+
+                    // --- 6. 更新已解析的总字节数 ---
+                    parsedBytes = messageBodyStart + messageSize;
+                    _consecutiveParseFailures = 0; // 解析成功，重置失败计数
+                }
+                catch (InvalidProtocolBufferException ex)
+                {
+                    // --- 7. 解析消息体失败 -> 数据可能损坏 ---
+                    MyLogManager.Log($"解析Protobuf消息体失败: {ex.Message}, 消息大小: {messageSize}。尝试恢复...");
+
+                    // 和上面类似的恢复逻辑
+                    int recoveryPosition = FindNextValidVarintStart(currentReadPosition + 1);
+                    if (recoveryPosition > currentReadPosition)
+                    {
+                        int badDataSize = recoveryPosition - parsedBytes;
+                        MyLogManager.Log($"丢弃 {badDataSize} 个字节以恢复同步。");
+                        int remainingGoodData = _bufferIndex - recoveryPosition;
+                        if (remainingGoodData > 0)
+                        {
+                            Buffer.BlockCopy(_receiveBuffer, recoveryPosition, _receiveBuffer, parsedBytes, remainingGoodData);
+                        }
+                        _bufferIndex -= badDataSize;
+                        continue;
+                    }
+                    else
+                    {
+                        _bufferIndex = 0;
+                        return;
+                    }
+                }
+            }
+
+            // --- 8. 清理缓冲区 ---
+            if (parsedBytes > 0)
+            {
+                int remainingBytes = _bufferIndex - parsedBytes;
+                if (remainingBytes > 0)
+                {
+                    Buffer.BlockCopy(_receiveBuffer, parsedBytes, _receiveBuffer, 0, remainingBytes);
+                }
+                _bufferIndex = remainingBytes;
+                MyLogManager.Log($"剩余未处理数据 {_bufferIndex} 字节，已移至缓冲区头部。");
+            }
         }
 
         private void OnACKSignalTimeout(bool isTimeout)
