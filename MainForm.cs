@@ -282,7 +282,7 @@ namespace MastercardHost
             try
             {
                 _viewModel.SelectedPortName = comboBox_SerialPort.SelectedItem.ToString();
-                richTextBox1.Text += richTextBox1.Text + _viewModel.SelectedPortName + "已选中" + Environment.NewLine;
+                richTextBox1.Text += richTextBox1.Text + _viewModel.SelectedPortName + " selected" + Environment.NewLine;
                 MyLogManager.Log(_viewModel.SelectedPortName + "已选中");
             }
             catch (Exception ex) 
@@ -371,7 +371,7 @@ namespace MastercardHost
         private void comboBox_Config_SelectedIndexChanged(object sender, EventArgs e)
         {
             _viewModel.SelectConfig = comboBox_Config.SelectedItem.ToString();
-            richTextBox1.Text += richTextBox1.Text + "下载配置" + _viewModel.SelectConfig + Environment.NewLine;
+            richTextBox1.Text += richTextBox1.Text + "Download config " + _viewModel.SelectConfig + Environment.NewLine;
             MyLogManager.Log("下载配置" + _viewModel.ServerIPAddr);
         }
 

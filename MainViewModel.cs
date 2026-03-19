@@ -637,7 +637,7 @@ namespace MastercardHost
             {
                 if (string.IsNullOrEmpty(SelectedPortName))
                 {
-                    System.Windows.MessageBox.Show("请先选择一个串口号！");
+                    System.Windows.MessageBox.Show("Please select a COM port first!");
                     return;
                 }
 
@@ -659,7 +659,7 @@ namespace MastercardHost
 
                 _serialPort.ErrorReceived += (sender, e) =>
                 {
-                    System.Windows.MessageBox.Show($"串口 {SelectedPortName} 发生错误：{e.EventType}");
+                    System.Windows.MessageBox.Show($"COM port {SelectedPortName} error: {e.EventType}");
                     _serialPort?.Close();
                     IsCloseSerialEnabled = false;
                     IsOpenSerialEnabled = true;
@@ -716,13 +716,13 @@ namespace MastercardHost
                 StartWorkerThread();
 
                 // 初始化串口工作线程
-                System.Windows.MessageBox.Show($"串口 {SelectedPortName} 已打开！");
+                System.Windows.MessageBox.Show($"{SelectedPortName} opened successfully");
                 IsOpenSerialEnabled = false;
                 IsCloseSerialEnabled = true;
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"打开串口失败 {SelectedPortName}：{ex.Message}");
+                System.Windows.MessageBox.Show($"Failed to open COM {SelectedPortName}：{ex.Message}");
             }
         }
 
@@ -752,7 +752,7 @@ namespace MastercardHost
                 }
 
                 // 4. 更新UI状态
-                System.Windows.MessageBox.Show("串口已关闭！");
+                System.Windows.MessageBox.Show("COM port is closed!");
                 IsOpenSerialEnabled = true;
                 IsCloseSerialEnabled = false;
 
@@ -761,7 +761,7 @@ namespace MastercardHost
             catch (Exception ex)
             {
                 MyLogManager.Log($"关闭串口失败: {ex.Message}");
-                System.Windows.MessageBox.Show($"无法关闭串口 {SelectedPortName}：{ex.Message}");
+                System.Windows.MessageBox.Show($"Failed to close COM port {SelectedPortName}：{ex.Message}");
             }
         }
         private void StartBind()
@@ -776,7 +776,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"无法绑定到 {SelectedPortName}：{ex.Message}");
+                System.Windows.MessageBox.Show($"Failed to bind to {SelectedPortName}: {ex.Message}");
             }
         }
 
@@ -1557,7 +1557,7 @@ namespace MastercardHost
             catch (Exception ex)
             {
                 MyLogManager.Log($"DownloadConfig Exception: {ex.Message}");
-                System.Windows.MessageBox.Show($"下载配置时发生错误: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show($"Error downloading configuration: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -2590,7 +2590,7 @@ namespace MastercardHost
                     {
                         // 20XX 年（标准信用卡有效期通常为2000-2099）
                         int fullYear = 2000 + year;
-                        UpdateLogText($"  Expiry Date (解析): {fullYear:D4}-{month:D2}");
+                        UpdateLogText($"  Expiry Date (YYYY-MM): {fullYear:D4}-{month:D2}");
                     }
 
                     if (remainingData.Length >= 7)
