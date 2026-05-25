@@ -28,6 +28,7 @@ namespace MastercardHost
             InitializeComponent();
             Size = new System.Drawing.Size(1000, 700);
             SetupLayout();
+            RightTableLayoutPanel.SizeChanged += RightTableLayoutPanel_SizeChanged;
 
             try
             {
@@ -127,6 +128,18 @@ namespace MastercardHost
             }
         }
 
+        private void RightTableLayoutPanel_SizeChanged(object sender, EventArgs e)
+        {
+            // 当表格面板大小改变时，重新调整 CheckBox 字体
+            foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
+            {
+                if (control is System.Windows.Forms.CheckBox checkBox)
+                {
+                    AdjustCheckBoxFontSize(checkBox);
+                }
+            }
+        }
+
         private void SetupLayout()
         {
             mainSplitContainer.SplitterDistance = (int)(ClientSize.Width * 0.3);
@@ -200,11 +213,13 @@ namespace MastercardHost
             }
 
             checkBox_Amt.Dock = DockStyle.Fill;
-            checkBox_Amt.Margin = new Padding(5,5,0,5);
-            checkBox_Amt.Anchor = AnchorStyles.Left;
+            //checkBox_Amt.Margin = new Padding(5,5,0,5);
+            //checkBox_Amt.Anchor = AnchorStyles.Left;
+            checkBox_Amt.Margin =  new Padding(3);
             checkBox_Amt.AutoSize = false;
             SetupCheckBox(checkBox_Amt); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_Amt, 0, 0);
+            checkBox_Amt.Dock = DockStyle.Fill;
 
             label_Amt.Dock = DockStyle.Fill;
             label_Amt.TextAlign = ContentAlignment.MiddleLeft;
@@ -217,11 +232,14 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_Amt, 2, 0);
 
             checkBox_AmtOth.Dock = DockStyle.Fill;
-            checkBox_AmtOth.Margin = new Padding(5, 5, 0, 5);
-            checkBox_AmtOth.Anchor = AnchorStyles.Left;
+            //checkBox_AmtOth.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_AmtOth.Anchor = AnchorStyles.Left;
+            checkBox_AmtOth.Margin = new Padding(3);
+
             checkBox_AmtOth.AutoSize = false;
             SetupCheckBox(checkBox_AmtOth); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_AmtOth, 0, 1);
+            checkBox_AmtOth.Dock = DockStyle.Fill;
 
             label_AmtOth.Dock = DockStyle.Fill;
             label_AmtOth.TextAlign = ContentAlignment.MiddleLeft;
@@ -234,11 +252,13 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_AmtOth, 2, 1);
 
             checkBox_TransType.Dock = DockStyle.Fill;
-            checkBox_TransType.Margin = new Padding(5, 5, 0, 5);
-            checkBox_TransType.Anchor = AnchorStyles.Left;
+            //checkBox_TransType.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_TransType.Anchor = AnchorStyles.Left;
+            checkBox_TransType.Margin = new Padding(3);
             checkBox_TransType.AutoSize = false;
             SetupCheckBox(checkBox_TransType); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_TransType, 0, 2);
+            checkBox_TransType.Dock = DockStyle.Fill;
 
             label_TransType.Dock = DockStyle.Fill;
             label_TransType.TextAlign = ContentAlignment.MiddleLeft;
@@ -251,11 +271,13 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_TransType, 2, 2);
 
             checkBox_TransDate.Dock = DockStyle.Fill;
-            checkBox_TransDate.Margin = new Padding(5, 5, 0, 5);
-            checkBox_TransDate.Anchor = AnchorStyles.Left;
+            //checkBox_TransDate.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_TransDate.Anchor = AnchorStyles.Left;
+            checkBox_TransDate.Margin = new Padding(3);
             checkBox_TransDate.AutoSize = false;
             SetupCheckBox(checkBox_TransDate); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_TransDate, 0, 3);
+            checkBox_TransDate.Dock = DockStyle.Fill;
 
             label_TransDate.Dock = DockStyle.Fill;
             label_TransDate.TextAlign = ContentAlignment.MiddleLeft;
@@ -268,11 +290,13 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_TransDate, 2, 3);
 
             checkBox_TransTime.Dock = DockStyle.Fill;
-            checkBox_TransTime.Margin = new Padding(5, 5, 0, 5);
-            checkBox_TransTime.Anchor = AnchorStyles.Left;
+            //checkBox_TransTime.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_TransTime.Anchor = AnchorStyles.Left;
+            checkBox_TransTime.Margin = new Padding(3);
             checkBox_TransTime.AutoSize = false;
             SetupCheckBox(checkBox_TransTime); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_TransTime, 0, 4);
+            checkBox_TransTime.Dock = DockStyle.Fill;
 
             label_TransTime.Dock = DockStyle.Fill;
             label_TransTime.TextAlign = ContentAlignment.MiddleLeft;
@@ -285,11 +309,13 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_TransTime, 2, 4);
 
             checkBox_AccountType.Dock = DockStyle.Fill;
-            checkBox_AccountType.Margin = new Padding(5, 5, 0, 5);
-            checkBox_AccountType.Anchor = AnchorStyles.Left;
+            //checkBox_AccountType.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_AccountType.Anchor = AnchorStyles.Left;
+            checkBox_AccountType.Margin = new Padding(3);
             checkBox_AccountType.AutoSize = false;
             SetupCheckBox(checkBox_AccountType); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_AccountType, 0, 5);
+            checkBox_AccountType.Dock = DockStyle.Fill;
 
             label_AccountType.Dock = DockStyle.Fill;
             label_AccountType.TextAlign = ContentAlignment.MiddleLeft;
@@ -302,11 +328,13 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_AccountType, 2, 5);
 
             checkBox_MerchCustomData.Dock = DockStyle.Fill;
-            checkBox_MerchCustomData.Margin = new Padding(5, 5, 0, 5);
-            checkBox_MerchCustomData.Anchor = AnchorStyles.Left;
+            //checkBox_MerchCustomData.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_MerchCustomData.Anchor = AnchorStyles.Left;
+            checkBox_MerchCustomData.Margin = new Padding(3);
             checkBox_MerchCustomData.AutoSize = false;
             SetupCheckBox(checkBox_MerchCustomData); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_MerchCustomData, 0, 6);
+            checkBox_MerchCustomData.Dock = DockStyle.Fill;
 
             label_MerchCustomData.Dock = DockStyle.Fill;
             label_MerchCustomData.TextAlign = ContentAlignment.MiddleLeft;
@@ -319,11 +347,13 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_MerchCustomData, 2, 6);
 
             checkBox_TransCateCode.Dock = DockStyle.Fill;
-            checkBox_TransCateCode.Margin = new Padding(5, 5, 0, 5);
-            checkBox_TransCateCode.Anchor = AnchorStyles.Left;
+            //checkBox_TransCateCode.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_TransCateCode.Anchor = AnchorStyles.Left;
+            checkBox_TransCateCode.Margin = new Padding(3);
             checkBox_TransCateCode.AutoSize = false;
             SetupCheckBox(checkBox_TransCateCode); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_TransCateCode, 0, 7);
+            checkBox_TransCateCode.Dock = DockStyle.Fill;
 
             label_TransCateCode.Dock = DockStyle.Fill;
             label_TransCateCode.TextAlign = ContentAlignment.MiddleLeft;
@@ -336,11 +366,13 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_TransCateCode, 2, 7);
 
             checkBox_TransCurrCode.Dock = DockStyle.Fill;
-            checkBox_TransCurrCode.Margin = new Padding(5, 5, 0, 5);
-            checkBox_TransCurrCode.Anchor = AnchorStyles.Left;
+            //checkBox_TransCurrCode.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_TransCurrCode.Anchor = AnchorStyles.Left;
+            checkBox_TransCurrCode.Margin = new Padding(3);
             checkBox_TransCurrCode.AutoSize = false;
             SetupCheckBox(checkBox_TransCurrCode); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_TransCurrCode, 0, 8);
+            checkBox_TransCurrCode.Dock = DockStyle.Fill;
 
             label_TransCurrCode.Dock = DockStyle.Fill;
             label_TransCurrCode.TextAlign = ContentAlignment.MiddleLeft;
@@ -353,11 +385,13 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_TransCurrCode, 2, 8);
 
             checkBox_TransCurrExp.Dock = DockStyle.Fill;
-            checkBox_TransCurrExp.Margin = new Padding(5, 5, 0, 5);
-            checkBox_TransCurrExp.Anchor = AnchorStyles.Left;
+            //checkBox_TransCurrExp.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_TransCurrExp.Anchor = AnchorStyles.Left;
+            checkBox_TransCurrExp.Margin = new Padding(3);
             checkBox_TransCurrExp.AutoSize = false;
             SetupCheckBox(checkBox_TransCurrExp); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_TransCurrExp, 0, 9);
+            checkBox_TransCurrExp.Dock = DockStyle.Fill;
 
             label_TransCurrExp.Dock = DockStyle.Fill;
             label_TransCurrExp.TextAlign = ContentAlignment.MiddleLeft;
@@ -370,11 +404,13 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_TransCurrExp, 2, 9);
 
             checkBox_TACOnline.Dock = DockStyle.Fill;
-            checkBox_TACOnline.Margin = new Padding(5, 5, 0, 5);
+            //checkBox_TACOnline.Margin = new Padding(5, 5, 0, 5);
             checkBox_TACOnline.Anchor = AnchorStyles.Left;
+            checkBox_TACOnline.Margin = new Padding(3);
             checkBox_TACOnline.AutoSize = false;
             SetupCheckBox(checkBox_TACOnline); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_TACOnline, 0, 10);
+            checkBox_TACOnline.Dock = DockStyle.Fill;
 
             label_TACOnline.Dock = DockStyle.Fill;
             label_TACOnline.TextAlign = ContentAlignment.MiddleLeft;
@@ -387,11 +423,12 @@ namespace MastercardHost
             RightTableLayoutPanel.Controls.Add(textBox_TACOnline, 2, 10);
 
             checkBox_ProperTag.Dock = DockStyle.Fill;
-            checkBox_ProperTag.Margin = new Padding(5, 5, 0, 5);
-            checkBox_ProperTag.Anchor = AnchorStyles.Left;
+            checkBox_ProperTag.Margin = new Padding(3);
+            //checkBox_ProperTag.Anchor = AnchorStyles.Left;
             checkBox_ProperTag.AutoSize = false;
             SetupCheckBox(checkBox_ProperTag); // 调整字体大小以适应CheckBox
             RightTableLayoutPanel.Controls.Add(checkBox_ProperTag, 0, 11);
+            checkBox_ProperTag.Dock = DockStyle.Fill;
 
             label_ProperTag.Dock = DockStyle.Fill;
             label_ProperTag.TextAlign = ContentAlignment.MiddleLeft;
@@ -470,6 +507,18 @@ namespace MastercardHost
                 return;
             }
 
+            // TextBox 需要额外减去内边距
+            int availableWidth = control.ClientSize.Width;
+            if (control is System.Windows.Forms.TextBox)
+            {
+                availableWidth -= 8; // 减去左右内边距
+            }
+
+            if (availableWidth <= 0)
+            {
+                return;
+            }
+
             SizeF textSize;
             float fontSize = maxSize;
             Font font;
@@ -535,7 +584,7 @@ namespace MastercardHost
             checkBox.CheckAlign = ContentAlignment.MiddleLeft;
 
             // 确保有足够的空间显示文本
-            checkBox.MinimumSize = new System.Drawing.Size(100, 20);
+            //checkBox.MinimumSize = new System.Drawing.Size(100, 20);
         }
 
         private void SetupTextBox(System.Windows.Forms.TextBox textBox, int rowIndex)
@@ -635,7 +684,10 @@ namespace MastercardHost
                 {
                     transType = transType.Substring(transType.Length - 2);
                 }
-                signalData.Add(new JObject(new JProperty("id", "9C"), new JProperty("value", transType)));
+                if (checkBox_TransType.Checked)
+                {
+                    signalData.Add(new JObject(new JProperty("id", "9C"), new JProperty("value", transType)));
+                }
 
                 string transDate = this.textBox_TransDate.Text.Trim();
                 if (string.IsNullOrEmpty(transDate))
@@ -925,6 +977,43 @@ namespace MastercardHost
             private set => _port = value;
         }
 
+        //private void TestForm_Resize(object sender, EventArgs e)
+        //{
+        //    int desiredDistance = (int)(this.ClientSize.Width * 0.3);
+        //    int minDistance = mainSplitContainer.Panel1MinSize;
+        //    int maxDistance = mainSplitContainer.Width - mainSplitContainer.Panel2MinSize;
+
+        //    if (desiredDistance >= minDistance && desiredDistance <= maxDistance)
+        //    {
+        //        mainSplitContainer.SplitterDistance = desiredDistance;
+        //    }
+
+        //    // 更新左侧按钮位置和大小
+        //    ButtonPosition(panel_ACT, button_ACT);
+        //    ButtonPosition(panel_LoopACT, button_LoopACT);
+        //    ButtonPosition(panel_Stop, button_Stop);
+        //    ButtonPosition(panel_DET, button_DET);
+
+        //    // 更新右侧控件字体大小
+        //    AdjustLabelFontSize();
+        //    foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
+        //    {
+        //        if (control is System.Windows.Forms.Button || control is System.Windows.Forms.TextBox || control is System.Windows.Forms.CheckBox checkbox)
+        //        {
+        //            AdjustFontSizeToFit(control);
+        //        }
+        //    }
+
+        //    // 更新右侧TextBox大小
+        //    for (int i = 0; i < RightTableLayoutPanel.RowCount; i++)
+        //    {
+        //        if (RightTableLayoutPanel.GetControlFromPosition(2, i) is System.Windows.Forms.TextBox textBox)
+        //        {
+        //            UpdateTextBoxSize(textBox, i);
+        //        }
+        //    }
+        //}
+
         private void TestForm_Resize(object sender, EventArgs e)
         {
             int desiredDistance = (int)(this.ClientSize.Width * 0.3);
@@ -936,30 +1025,87 @@ namespace MastercardHost
                 mainSplitContainer.SplitterDistance = desiredDistance;
             }
 
-            // 更新左侧按钮位置和大小
-            ButtonPosition(panel_ACT, button_ACT);
-            ButtonPosition(panel_LoopACT, button_LoopACT);
-            ButtonPosition(panel_Stop, button_Stop);
-            ButtonPosition(panel_DET, button_DET);
+            // 暂停布局更新以提高性能
+            this.SuspendLayout();
 
-            // 更新右侧控件字体大小
-            AdjustLabelFontSize();
-            foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
+            try
             {
-                if (control is System.Windows.Forms.Button || control is System.Windows.Forms.TextBox || control is System.Windows.Forms.CheckBox checkbox)
+                // 更新左侧按钮位置和大小
+                ButtonPosition(panel_ACT, button_ACT);
+                ButtonPosition(panel_LoopACT, button_LoopACT);
+                ButtonPosition(panel_Stop, button_Stop);
+                ButtonPosition(panel_DET, button_DET);
+
+                // 先更新右侧控件大小，确保有正确的 ClientSize
+                for (int i = 0; i < RightTableLayoutPanel.RowCount; i++)
                 {
-                    AdjustFontSizeToFit(control);
+                    if (RightTableLayoutPanel.GetControlFromPosition(2, i) is System.Windows.Forms.TextBox textBox)
+                    {
+                        UpdateTextBoxSize(textBox, i);
+                    }
+                }
+
+                // 强制立即应用布局更改
+                RightTableLayoutPanel.PerformLayout();
+
+                // 然后调整字体大小
+                AdjustLabelFontSize();
+
+                foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
+                {
+                    if (control is System.Windows.Forms.CheckBox checkBox)
+                    {
+                        // CheckBox 特殊处理
+                        AdjustCheckBoxFontSize(checkBox);
+                    }
+                    else if (control is System.Windows.Forms.TextBox textBox)
+                    {
+                        AdjustFontSizeToFit(textBox);
+                    }
+                    else if (control is System.Windows.Forms.Button button)
+                    {
+                        AdjustFontSizeToFit(button);
+                    }
                 }
             }
-
-            // 更新右侧TextBox大小
-            for (int i = 0; i < RightTableLayoutPanel.RowCount; i++)
+            finally
             {
-                if (RightTableLayoutPanel.GetControlFromPosition(2, i) is System.Windows.Forms.TextBox textBox)
-                {
-                    UpdateTextBoxSize(textBox, i);
-                }
+                this.ResumeLayout(true);
             }
+        }
+
+        private void AdjustCheckBoxFontSize(System.Windows.Forms.CheckBox checkBox, float minSize = 8, float maxSize = 12)
+        {
+            if (string.IsNullOrEmpty(checkBox.Text))
+            {
+                return;
+            }
+
+            // 计算 CheckBox 可用于显示文本的实际宽度
+            // 减去复选框图标占用的空间（约20像素）
+            int availableWidth = checkBox.ClientSize.Width - 25;
+
+            if (availableWidth <= 0)
+            {
+                return;
+            }
+
+            SizeF textSize;
+            float fontSize = maxSize;
+            Font font;
+
+            using (var graphics = checkBox.CreateGraphics())
+            {
+                do
+                {
+                    font = new Font(checkBox.Font.FontFamily, fontSize, checkBox.Font.Style);
+                    textSize = graphics.MeasureString(checkBox.Text, font);
+                    fontSize -= 0.5f;
+                } while (textSize.Width > availableWidth && fontSize > minSize);
+            }
+
+            // 应用新字体大小
+            checkBox.Font = new Font(checkBox.Font.FontFamily, fontSize, checkBox.Font.Style);
         }
 
         public void HandleLoopACTActionRequest(string actionName)
@@ -968,7 +1114,7 @@ namespace MastercardHost
             switch (actionName)
             {
                 case "Send":
-                    //SendACTSignal();
+                    SendACTSignal();
                     break;
                 default:
                     break;

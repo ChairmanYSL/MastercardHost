@@ -205,7 +205,7 @@ namespace MastercardHost
             _iad = "";
             _script = "";          
 
-            _baudRate = 115200;
+            _baudRate = 921600;
             _parity = Parity.None;
             _stopBits = StopBits.One;
             _dataBits = 8;
@@ -995,6 +995,7 @@ namespace MastercardHost
                             if (_queue.TryDequeue(out SerialOperation removed))
                             {
                                 MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
+                                TrySendNextFromQueue();
                             }
                         }
                     }
@@ -1008,6 +1009,7 @@ namespace MastercardHost
                             if (_queue.TryDequeue(out SerialOperation removed))
                             {
                                 MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
+                                TrySendNextFromQueue();
                             }
                         }
                     }
@@ -1021,6 +1023,7 @@ namespace MastercardHost
                             if (_queue.TryDequeue(out SerialOperation removed))
                             {
                                 MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
+                                TrySendNextFromQueue();
                             }
                         }
                     }
@@ -1035,7 +1038,16 @@ namespace MastercardHost
 
                     if (transFlag)
                     {
-                        TransformSignalToTestTool(signalProtocol, disconnectFlag);
+                        if (LoopACTFlag)
+                        {
+                            // Loop ACT 模式：收到 OUT/MSG 后触发下一次 ACT 发送
+                            MyLogManager.Log("LoopACTFlag is true, triggering next ACT...");
+                            OnLoopACTSend?.Invoke("Send");
+                        }
+                        else
+                        {
+                            TransformSignalToTestTool(signalProtocol, disconnectFlag);
+                        }
                     }
                 }
                 else
@@ -1227,16 +1239,19 @@ namespace MastercardHost
                     serialOperation.Callback = OnACKSignalTimeout;
                     serialOperation.EnqueueTime = DateTime.Now;
                     // 发送到串口队列
+                    bool wasEmptyBeforeEnqueue = _queue.IsEmpty;
                     _queue.Enqueue(serialOperation);
-                    MyLogManager.Log($"已将 {type} 加入串口队列\n当前队列数量:{_queue.Count}");
-                    //如果需要ACK的前一个信号还没收到，就先加入队列
-                    if(_queue.Count > 0)
-                    {
+                    MyLogManager.Log($"已将 {type} 加入串口队列, 当前队列数量:{_queue.Count}");
 
+                    if (wasEmptyBeforeEnqueue)
+                    {
+                        // 队列原本为空，这是首个操作，立即发送
+                        _serialPort.Write(data, 0, data.Length);
+                        MyLogManager.Log($"{type} 立即串口发送（队列首个操作）");
                     }
                     else
                     {
-                        _serialPort.Write(data, 0, data.Length);
+                        MyLogManager.Log($"{type} 排队等待，前面还有 {_queue.Count - 1} 个操作");
                     }
                 }
                 else 
@@ -1248,6 +1263,37 @@ namespace MastercardHost
             catch (Exception ex)
             {
                 MyLogManager.Log($"发送到串口队列失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 从队列中取出并发送下一个等待的操作（由 ACK 到达后调用）
+        /// </summary>
+        private void TrySendNextFromQueue()
+        {
+            try
+            {
+                if (_queue.TryPeek(out SerialOperation nextOp))
+                {
+                    if (_serialPort != null && _serialPort.IsOpen)
+                    {
+                        _serialPort.Write(nextOp.Data, 0, nextOp.Data.Length);
+                        nextOp.EnqueueTime = DateTime.Now;
+                        MyLogManager.Log($"发送队列中下一个操作: {nextOp.OperationType}（当前队列长度: {_queue.Count}）");
+                    }
+                    else
+                    {
+                        MyLogManager.Log("串口未打开，无法发送队列中下一个操作");
+                    }
+                }
+                else
+                {
+                    MyLogManager.Log("队列为空，无需发送");
+                }
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"发送队列中下一个操作失败: {ex.Message}");
             }
         }
 
@@ -3294,6 +3340,7 @@ namespace MastercardHost
                             if (_queue.TryDequeue(out SerialOperation removed))
                             {
                                 MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
+                                TrySendNextFromQueue();
                             }
                         }
                     }
@@ -3307,6 +3354,7 @@ namespace MastercardHost
                             if (_queue.TryDequeue(out SerialOperation removed))
                             {
                                 MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
+                                TrySendNextFromQueue();
                             }
                         }
                     }
@@ -3320,6 +3368,7 @@ namespace MastercardHost
                             if (_queue.TryDequeue(out SerialOperation removed))
                             {
                                 MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
+                                TrySendNextFromQueue();
                             }
                         }
                     }
@@ -3334,7 +3383,16 @@ namespace MastercardHost
 
                     if (transFlag)
                     {
-                        TransformSignalToTestTool(signalProtocol, disconnectFlag);
+                        if (LoopACTFlag)
+                        {
+                            // Loop ACT 模式：收到 OUT/MSG 后触发下一次 ACT 发送
+                            MyLogManager.Log("LoopACTFlag is true, triggering next ACT...");
+                            OnLoopACTSend?.Invoke("Send");
+                        }
+                        else
+                        {
+                            TransformSignalToTestTool(signalProtocol, disconnectFlag);
+                        }
                     }
                 }
                 else
@@ -3550,7 +3608,7 @@ namespace MastercardHost
             }
         }
 
-        private void DecodeAllBinaryFields(JToken token)
+        private void DecodeAllBinaryFields(JToken token, string parentPropertyName = null)
         {
             switch (token)
             {
@@ -3559,12 +3617,12 @@ namespace MastercardHost
                     {
                         if (property.Value.Type == JTokenType.String)
                         {
-                            // 尝试解码Base64
-                            property.Value = DecodeBase64String(property.Value.ToString());
+                            // 解码Base64，传入字段名
+                            property.Value = DecodeBase64String(property.Value.ToString(), property.Name);
                         }
                         else
                         {
-                            DecodeAllBinaryFields(property.Value);
+                            DecodeAllBinaryFields(property.Value, property.Name);
                         }
                     }
                     break;
@@ -3572,13 +3630,13 @@ namespace MastercardHost
                 case JArray array:
                     foreach (var item in array)
                     {
-                        DecodeAllBinaryFields(item);
+                        DecodeAllBinaryFields(item, parentPropertyName);
                     }
                     break;
             }
         }
 
-        private JToken DecodeBase64String(string base64Str)
+        private JToken DecodeBase64String(string base64Str, string fieldName)
         {
             try
             {
@@ -3586,18 +3644,24 @@ namespace MastercardHost
 
                 byte[] bytes = Convert.FromBase64String(base64Str);
 
-                // 如果是纯 ASCII 可打印字符
-                if (bytes.All(b => b >= 32 && b <= 126))
+                // 定义哪些字段按ASCII打印
+                string[] asciiFields = { "id", "uid", "guid", "uuid", "name", "key" };
+                // 定义哪些字段按十六进制打印
+                string[] hexFields = { "value", "data", "content", "binary", "payload" };
+
+                // 检查是否为ASCII字段
+                if (asciiFields.Any(f => fieldName.Equals(f, StringComparison.OrdinalIgnoreCase)))
                 {
-                    return $"ASCII: {Encoding.ASCII.GetString(bytes)}";
+                    string asciiStr = new string(bytes.Select(b => (b >= 32 && b <= 126) ? (char)b : '.').ToArray());
+                    return $"ASCII: {asciiStr}";
                 }
 
-                // 默认情况：转换为十六进制字符串
+                // 默认按十六进制打印
                 return JToken.FromObject($"HEX: {BitConverter.ToString(bytes).Replace("-", "")}");
             }
             catch
             {
-                return JToken.FromObject(base64Str); // 不是有效的Base64则保持原样
+                return JToken.FromObject(base64Str);
             }
         }
 
