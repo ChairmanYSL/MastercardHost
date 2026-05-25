@@ -31,7 +31,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=E:\Work\VS_Project\MastercardHost\InnoSetup
+OutputDir=.
 OutputBaseFilename=zt_mastercard_tei
 Password=123456
 Encryption=yes
@@ -46,25 +46,25 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\Config\*"; DestDir: "{app}\Config"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\Google.Protobuf.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\MastercardHost.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\MastercardHost.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\MvvmHelpers.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\nlog.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\NLog.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\protobuf-net.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\TcpSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "E:\Work\VS_Project\MastercardHost\bin\Debug\net48\zh-CN\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Debug\net48\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\Config\*"; DestDir: "{app}\Config"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\Debug\net48\Google.Protobuf.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\MastercardHost.exe.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\MastercardHost.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\MvvmHelpers.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\nlog.config"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\NLog.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\Debug\net48\protobuf-net.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\Debug\net48\protobuf-net.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\System.Buffers.dll"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "..\bin\Debug\net48\System.Collections.Immutable.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\System.Memory.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\System.Numerics.Vectors.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\TcpSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Debug\net48\zh-CN\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
