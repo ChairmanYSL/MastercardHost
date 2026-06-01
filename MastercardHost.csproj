@@ -79,6 +79,19 @@
       <DependentUpon>TestForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
+  <!-- 资源文件（SDK 自动包含 *.resx，此处仅声明元数据供 IDE 导航） -->
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Resources.zh-CN.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.zh-CN.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
   <!-- 应用程序清单和设置 -->
   <ItemGroup>
     <None Include="Properties\app.manifest" />
