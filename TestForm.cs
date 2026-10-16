@@ -1108,18 +1108,18 @@ namespace MastercardHost
             checkBox.Font = new Font(checkBox.Font.FontFamily, fontSize, checkBox.Font.Style);
         }
 
-        public void HandleLoopACTActionRequest(string actionName)
-        {
-            MyLogManager.Log("receive loop act send action request");
-            switch (actionName)
-            {
-                case "Send":
-                    SendACTSignal();
-                    break;
-                default:
-                    break;
-            }
-        }
+        // public void HandleLoopACTActionRequest(string actionName)
+        // {
+        //     MyLogManager.Log("receive loop act send action request");
+        //     switch (actionName)
+        //     {
+        //         case "Send":
+        //             SendACTSignal();
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        // }
 
         public void SendACTSignal()
         {

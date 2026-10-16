@@ -64,6 +64,7 @@ Source: "..\bin\Release\net48\System.Numerics.Vectors.dll"; DestDir: "{app}"; Fl
 Source: "..\bin\Release\net48\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\Release\net48\System.ValueTuple.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\Release\net48\TcpSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\Release\net48\System.Resources.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\Release\net48\zh-CN\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 

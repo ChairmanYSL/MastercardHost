@@ -107,8 +107,8 @@ namespace MastercardHost
         private List<string> _connections;
         private object _lock = new object();
         List<string> connectionsToDisconnect = new List<string>();
-        private bool _loopACTFlag = false;
-        public event Action<string> OnLoopACTSend;
+        // private bool _loopACTFlag = false;
+        // public event Action<string> OnLoopACTSend;
         private System.Timers.Timer _timer;
         private System.Timers.Timer _configTimer;
         //private Signal _actSignal;
@@ -431,11 +431,11 @@ namespace MastercardHost
             set => SetProperty(ref _selectConfig, value);
         }
 
-        public bool LoopACTFlag
-        {
-            get => _loopACTFlag;
-            set => SetProperty(ref _loopACTFlag, value);
-        }
+        // public bool LoopACTFlag
+        // {
+        //     get => _loopACTFlag;
+        //     set => SetProperty(ref _loopACTFlag, value);
+        // }
 
         public static ByteString HexStringToByteString(string hex)
         {
@@ -1038,16 +1038,16 @@ namespace MastercardHost
 
                     if (transFlag)
                     {
-                        if (LoopACTFlag)
-                        {
-                            // Loop ACT 模式：收到 OUT/MSG 后触发下一次 ACT 发送
-                            MyLogManager.Log("LoopACTFlag is true, triggering next ACT...");
-                            OnLoopACTSend?.Invoke("Send");
-                        }
-                        else
-                        {
+                        // if (LoopACTFlag)
+                        // {
+                        //     // Loop ACT 模式：收到 OUT/MSG 后触发下一次 ACT 发送
+                        //     MyLogManager.Log("LoopACTFlag is true, triggering next ACT...");
+                        //     OnLoopACTSend?.Invoke("Send");
+                        // }
+                        // else
+                        // {
                             TransformSignalToTestTool(signalProtocol, disconnectFlag);
-                        }
+                        // }
                     }
                 }
                 else
@@ -1329,7 +1329,7 @@ namespace MastercardHost
                         else if (tag.value.Equals("loop"))
                         {
                             needAck = true;
-                            LoopACTFlag = true;
+                            // LoopACTFlag = true;
                         }
                     }
                     signalProtocol.Data.Add(dataProtocol);
@@ -3383,16 +3383,16 @@ namespace MastercardHost
 
                     if (transFlag)
                     {
-                        if (LoopACTFlag)
-                        {
-                            // Loop ACT 模式：收到 OUT/MSG 后触发下一次 ACT 发送
-                            MyLogManager.Log("LoopACTFlag is true, triggering next ACT...");
-                            OnLoopACTSend?.Invoke("Send");
-                        }
-                        else
-                        {
+                        // if (LoopACTFlag)
+                        // {
+                        //     // Loop ACT 模式：收到 OUT/MSG 后触发下一次 ACT 发送
+                        //     MyLogManager.Log("LoopACTFlag is true, triggering next ACT...");
+                        //     OnLoopACTSend?.Invoke("Send");
+                        // }
+                        // else
+                        // {
                             TransformSignalToTestTool(signalProtocol, disconnectFlag);
-                        }
+                        // }
                     }
                 }
                 else

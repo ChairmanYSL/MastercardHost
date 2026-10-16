@@ -265,10 +265,10 @@ namespace MastercardHost
                 _testForm = new TestForm(this);
                 _testForm.Closed += (s, args) => _testForm = null; // 确保引用被清除
                 _testForm.Show();
-                _viewModel.OnLoopACTSend += (acitonName) =>
-                {
-                    _testForm.HandleLoopACTActionRequest(acitonName);
-                };
+                // _viewModel.OnLoopACTSend += (acitonName) =>
+                // {
+                //     _testForm.HandleLoopACTActionRequest(acitonName);
+                // };
             }
             else
             {
