@@ -25,7 +25,6 @@ namespace MastercardHost
             InitializeComponent();
             Size = new System.Drawing.Size(1000, 700);
             SetupLayout();
-            RightTableLayoutPanel.SizeChanged += RightTableLayoutPanel_SizeChanged;
 
             try
             {
@@ -96,21 +95,16 @@ namespace MastercardHost
             }
         }
 
-        private void RightTableLayoutPanel_SizeChanged(object sender, EventArgs e)
-        {
-            // 当表格面板大小改变时，重新调整 CheckBox 字体
-            foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
-            {
-                if (control is System.Windows.Forms.CheckBox checkBox)
-                {
-                    AdjustCheckBoxFontSize(checkBox);
-                }
-            }
-        }
-
         private void SetupLayout()
         {
-            mainSplitContainer.SplitterDistance = (int)(ClientSize.Width * 0.3);
+            // 容器尺寸尚未确定时不要直接赋值 SplitterDistance，否则会抛出越界异常
+            int desiredSplitterDistance = (int)(ClientSize.Width * 0.3);
+            int minSplitterDistance = mainSplitContainer.Panel1MinSize;
+            int maxSplitterDistance = mainSplitContainer.Width - mainSplitContainer.Panel2MinSize;
+            if (maxSplitterDistance >= minSplitterDistance)
+            {
+                mainSplitContainer.SplitterDistance = Math.Max(minSplitterDistance, Math.Min(maxSplitterDistance, desiredSplitterDistance));
+            }
 
             // 配置左侧TableLayoutPanel为4等分行
             LeftTableLayoutPanel.ColumnCount = 1;
@@ -409,7 +403,6 @@ namespace MastercardHost
 
             // Update all calls to the renamed method.  
             UpdateTextBoxSizeForRow(textBox_ProperTag, 11); // 设置初始大小  
-            AdjustLabelFontSize();
         }
 
         private void SetCenteredTextBoxMargin(System.Windows.Forms.TextBox textBox, int rowIndex, int minMargin = 5)
@@ -417,6 +410,12 @@ namespace MastercardHost
             // 获取当前行和列的尺寸
             int[] rowHeights = RightTableLayoutPanel.GetRowHeights();
             int[] colWidths = RightTableLayoutPanel.GetColumnWidths();
+
+            // 布局尚未完成或索引越界时直接返回，避免在缩放/DPI 变化过程中抛异常
+            if (rowIndex < 0 || rowIndex >= rowHeights.Length || colWidths.Length < 3)
+            {
+                return;
+            }
 
             // 计算可用空间（减去TextBox自身大小）
             int availableHeight = rowHeights[rowIndex] - textBox.Height;
@@ -442,8 +441,16 @@ namespace MastercardHost
 
         private void UpdateTextBoxSize(System.Windows.Forms.TextBox textBox, int rowIndex)
         {
-            int rowHeight = RightTableLayoutPanel.GetRowHeights()[rowIndex];
-            int colWidth = RightTableLayoutPanel.GetColumnWidths()[2];
+            int[] rowHeights = RightTableLayoutPanel.GetRowHeights();
+            int[] colWidths = RightTableLayoutPanel.GetColumnWidths();
+
+            if (rowIndex < 0 || rowIndex >= rowHeights.Length || colWidths.Length < 3)
+            {
+                return;
+            }
+
+            int rowHeight = rowHeights[rowIndex];
+            int colWidth = colWidths[2];
 
             // 设置TextBox大小（占满整个列宽，高度适应行高）
             textBox.Width = colWidth - textBox.Margin.Horizontal;
@@ -465,82 +472,6 @@ namespace MastercardHost
             // 计算居中位置
             button.Left = (panel.ClientSize.Width - button.Width) / 2;
             button.Top = (panel.ClientSize.Height - button.Height) / 2;
-            AdjustFontSizeToFit(button);
-        }
-
-        private void AdjustFontSizeToFit(System.Windows.Forms.Control control, float minSize = 8, float maxSize = 20)
-        {
-            if (string.IsNullOrEmpty(control.Text)) 
-            {
-                return;
-            }
-
-            // TextBox 需要额外减去内边距
-            int availableWidth = control.ClientSize.Width;
-            if (control is System.Windows.Forms.TextBox)
-            {
-                availableWidth -= 8; // 减去左右内边距
-            }
-
-            if (availableWidth <= 0)
-            {
-                return;
-            }
-
-            SizeF textSize;
-            float fontSize = maxSize;
-            Font font;
-
-            using (Graphics graphics = control.CreateGraphics())
-            {
-                do
-                {
-                    font = new Font(control.Font.FontFamily, fontSize, control.Font.Style);
-                    textSize = graphics.MeasureString(control.Text, font);
-                    fontSize -= 0.5f;
-                } while ((textSize.Width > control.ClientSize.Width ||
-                         textSize.Height > control.ClientSize.Height) &&
-                         fontSize > minSize);
-            }
-
-            // 应用新字体大小
-            control.Font = new Font(control.Font.FontFamily, fontSize, control.Font.Style);
-        }
-
-        private void AdjustLabelFontSize()
-        {
-            // 找出所有Label中最小的合适字号
-            float minFontSize = 12f; // 初始值
-
-            using (Graphics graphics = RightTableLayoutPanel.CreateGraphics())
-            {
-                foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
-                {
-                    if (control is System.Windows.Forms.Label label && !string.IsNullOrEmpty(label.Text))
-                    {
-                        float fontSize = 12f;
-                        SizeF textSize;
-
-                        do
-                        {
-                            Font font = new Font(label.Font.FontFamily, fontSize, label.Font.Style);
-                            textSize = graphics.MeasureString(label.Text, font);
-                            fontSize -= 0.5f;
-                        } while (textSize.Width > label.Width && fontSize > 8f);
-
-                        minFontSize = Math.Min(minFontSize, fontSize);
-                    }
-                }
-            }
-
-            // 应用统一字号
-            foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
-            {
-                if (control is System.Windows.Forms.Label label)
-                {
-                    label.Font = new Font(label.Font.FontFamily, minFontSize, label.Font.Style);
-                }
-            }
         }
 
         private void SetupCheckBox(System.Windows.Forms.CheckBox checkBox)
@@ -560,7 +491,6 @@ namespace MastercardHost
             textBox.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             SetCenteredTextBoxMargin(textBox, rowIndex);
             UpdateTextBoxSize(textBox, rowIndex);
-            AdjustFontSizeToFit(textBox);
         }
 
         private void TestForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -910,64 +840,11 @@ namespace MastercardHost
                 // 强制立即应用布局更改
                 RightTableLayoutPanel.PerformLayout();
 
-                // 然后调整字体大小
-                AdjustLabelFontSize();
-
-                foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
-                {
-                    if (control is System.Windows.Forms.CheckBox checkBox)
-                    {
-                        // CheckBox 特殊处理
-                        AdjustCheckBoxFontSize(checkBox);
-                    }
-                    else if (control is System.Windows.Forms.TextBox textBox)
-                    {
-                        AdjustFontSizeToFit(textBox);
-                    }
-                    else if (control is System.Windows.Forms.Button button)
-                    {
-                        AdjustFontSizeToFit(button);
-                    }
-                }
             }
             finally
             {
                 this.ResumeLayout(true);
             }
-        }
-
-        private void AdjustCheckBoxFontSize(System.Windows.Forms.CheckBox checkBox, float minSize = 8, float maxSize = 12)
-        {
-            if (string.IsNullOrEmpty(checkBox.Text))
-            {
-                return;
-            }
-
-            // 计算 CheckBox 可用于显示文本的实际宽度
-            // 减去复选框图标占用的空间（约20像素）
-            int availableWidth = checkBox.ClientSize.Width - 25;
-
-            if (availableWidth <= 0)
-            {
-                return;
-            }
-
-            SizeF textSize;
-            float fontSize = maxSize;
-            Font font;
-
-            using (Graphics graphics = checkBox.CreateGraphics())
-            {
-                do
-                {
-                    font = new Font(checkBox.Font.FontFamily, fontSize, checkBox.Font.Style);
-                    textSize = graphics.MeasureString(checkBox.Text, font);
-                    fontSize -= 0.5f;
-                } while (textSize.Width > availableWidth && fontSize > minSize);
-            }
-
-            // 应用新字体大小
-            checkBox.Font = new Font(checkBox.Font.FontFamily, fontSize, checkBox.Font.Style);
         }
 
 
@@ -1199,8 +1076,16 @@ namespace MastercardHost
         // Rename the second `UpdateTextBoxSize` method to `UpdateTextBoxSizeForRow`.  
         private void UpdateTextBoxSizeForRow(System.Windows.Forms.TextBox textBox, int rowIndex)
         {
-            int rowHeight = RightTableLayoutPanel.GetRowHeights()[rowIndex];
-            int colWidth = RightTableLayoutPanel.GetColumnWidths()[2];
+            int[] rowHeights = RightTableLayoutPanel.GetRowHeights();
+            int[] colWidths = RightTableLayoutPanel.GetColumnWidths();
+
+            if (rowIndex < 0 || rowIndex >= rowHeights.Length || colWidths.Length < 3)
+            {
+                return;
+            }
+
+            int rowHeight = rowHeights[rowIndex];
+            int colWidth = colWidths[2];
 
             // 设置TextBox大小（占满整个列宽，高度适应行高）  
             textBox.Width = colWidth - textBox.Margin.Horizontal;
@@ -1217,6 +1102,12 @@ namespace MastercardHost
 
                 // 当前距离
                 int currentDistance = mainSplitContainer.SplitterDistance;
+
+                // 容器过窄时不存在合法的 SplitterDistance，直接跳过（否则赋值会抛异常）
+                if (maxDistance < minDistance)
+                {
+                    return;
+                }
 
                 // 如果当前距离无效，调整到有效范围
                 if (currentDistance < minDistance)

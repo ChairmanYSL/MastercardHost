@@ -32,6 +32,10 @@ namespace MastercardHost
             BindViewModel();
             TranslateLanguage();
             InitLogLimitStatus();
+
+            // 底部两个按钮锚定到面板底部：面板高度变化或 DPI 缩放时不会被裁出可视区
+            button_Test.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            button_ClearScreen.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         }
 
         public MainViewModel MainViewModel
