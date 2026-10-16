@@ -46,20 +46,14 @@ namespace MastercardHost
         public Command clearScreenCommand { get; }
         public Command OpenSerialPortCommand { get; }
         public Command CloseSerialPortCommand { get; }
-        public Command startBindCommand {  get; }
-        public Command stopBindCommand { get; }
 
         private TcpSharpSocketServer _tcpServer;
-        private TcpSharpSocketClient _tcpClient;
 
         private bool _isListenEnabled;
         private bool _isStopListenEnabled;
-        private bool _isBindEnabled;
-        private bool _isStopBindEnabled;
 
         private int _server_port;
         private string _server_ipAddr;
-        private string _client_ipAddr;
 
         private string _respCode;
         private string _iad;
@@ -126,7 +120,6 @@ namespace MastercardHost
         {
             _uiContext = SynchronizationContext.Current ?? throw new InvalidOperationException("必须在UI线程创建ViewModel");
             _tcpServer = new TcpSharpSocketServer();
-            _tcpClient = new TcpSharpSocketClient();
             _serialPort = new SerialPort();
 
             _connections = new List<string>();
@@ -177,24 +170,14 @@ namespace MastercardHost
                 UpdateLogText($"Server Stop Listen");
             };
 
-            _tcpClient.OnDataReceived += (sender, e) =>
-            {
-                string message = Encoding.UTF8.GetString(e.Data);
-                ProcessFromPOS(e.Data);
-            };
-
             startListenCommand = new Command(StartListen);
             stopListenCommand = new Command(StopListen);
             clearScreenCommand = new Command(CleanScreen);
             OpenSerialPortCommand = new Command(OpenSerialPort);
             CloseSerialPortCommand = new Command(CloseSerialPort);
-            startBindCommand = new Command(StartBind);
-            stopBindCommand = new Command(StopBind);
 
             _isListenEnabled = true;
-            _isBindEnabled = true;
             _isStopListenEnabled = false;
-            _isStopBindEnabled = false;
 
             _server_port = 6908;
             _server_ipAddr = "127.0.0.1";
@@ -323,18 +306,6 @@ namespace MastercardHost
             set => SetProperty(ref _isStopListenEnabled, value);
         }
 
-        public bool IsBindEnabled
-        {
-            get => _isBindEnabled;
-            set => SetProperty(ref _isBindEnabled, value);
-        }
-
-        public bool IsStopBindEnabled
-        {
-            get => _isStopBindEnabled;
-            set => SetProperty(ref _isStopBindEnabled, value);
-        }
-
         public int ServerPort
         {
             get => _server_port;
@@ -345,12 +316,6 @@ namespace MastercardHost
         {
             get => _server_ipAddr;
             set => SetProperty(ref _server_ipAddr, value);
-        }
-
-        public string ClientIPAddr
-        {
-            get => _client_ipAddr;
-            set => SetProperty(ref _client_ipAddr, value);
         }
 
         public string RespCode
@@ -803,26 +768,6 @@ namespace MastercardHost
                 System.Windows.MessageBox.Show($"Failed to close COM port {SelectedPortName}：{ex.Message}");
             }
         }
-        private void StartBind()
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(_client_ipAddr))
-                {
-                    _tcpClient.Host = _client_ipAddr;
-
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show($"Failed to bind to {SelectedPortName}: {ex.Message}");
-            }
-        }
-
-        private void StopBind()
-        { 
-       
-        }
 
         /// <summary>
         /// 在解析线程私有的挂起缓冲区中寻找下一个可信的消息起始位置。
@@ -918,7 +863,7 @@ namespace MastercardHost
             {
                 if (envelope != null)
                 {
-                    MyLogManager.Log($"ProcessFromPOS receive:{envelope.ToString()}\n ");
+                    MyLogManager.Log($"ProcessSingleEnvelope receive:{envelope.ToString()}\n ");
                     LogFormattedProtobuf(envelope);
                 }
                 else
@@ -933,7 +878,6 @@ namespace MastercardHost
                 {
                     SignalProtocol signalProtocol = envelope.Signal;
                     MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
-                    //UpdateLogText($"ProcessFromPOS receive signal: {signalProtocol.Type}");
                     if (signalProtocol.Type == "OUT")
                     {
                         ParseOutSignal(signalProtocol.Data);
@@ -2727,235 +2671,6 @@ namespace MastercardHost
             }
         }
 
-
-        private void ProcessFromPOS(byte[] data)
-        {
-            try
-            {
-                Envelope envelope;
-
-                // 方法1：先尝试使用 ParseDelimitedFrom（带长度前缀）
-                using (MemoryStream ms = new MemoryStream(data))
-                {
-                    try
-                    {
-                        envelope = Envelope.Parser.ParseDelimitedFrom(ms);
-                        MyLogManager.Log($"使用带长度前缀解析成功，读取字节: {ms.Position}/{data.Length}");
-                    }
-                    catch (InvalidProtocolBufferException ex1)
-                    {
-                        MyLogManager.Log($"ParseDelimitedFrom 失败: {ex1}");
-
-                        // 方法2：如果失败，回退到 ParseFrom（不带长度前缀）
-                        try
-                        {
-                            envelope = Envelope.Parser.ParseFrom(data);
-                            MyLogManager.Log("使用标准解析成功");
-                        }
-                        catch (Exception ex2)
-                        {
-                            MyLogManager.Log($"所有解析方法都失败: {ex2}");
-                            return;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MyLogManager.Log($"解析异常: {ex}");
-                        return;
-                    }
-                }
-
-                bool transFlag = false, disconnectFlag = false;
-
-                if (envelope != null)
-                {
-                    MyLogManager.Log($"ProcessFromPOS receive:{envelope.ToString()}\n ");
-                    LogFormattedProtobuf(envelope);
-                }
-                else
-                {
-                    MyLogManager.Log("ProtocolBuf parse error");
-                    return;
-                }
-
-                MyLogManager.Log($"envelope.PayloadCase: {envelope.PayloadCase}");
-
-                if (envelope.PayloadCase == Envelope.PayloadOneofCase.Signal)
-                {
-                    SignalProtocol signalProtocol = envelope.Signal;
-                    MyLogManager.Log($"signalProtocol.Type: {signalProtocol.Type}");
-                    //UpdateLogText($"ProcessFromPOS receive signal: {signalProtocol.Type}");
-                    if (signalProtocol.Type == "OUT")
-                    {
-                        ParseOutSignal(signalProtocol.Data);
-                        transFlag = true;
-                        disconnectFlag = true;
-                        ClearQueue();
-                    }
-                    else if (signalProtocol.Type == "MSG")
-                    {
-                        ParseOutSignal(signalProtocol.Data);
-                        transFlag = true;
-                    }
-                    else if (signalProtocol.Type == "CONFIG")
-                    {
-                        foreach (var item in signalProtocol.Data)
-                        {
-                            if (item.Id == "CONF_NAME")
-                            {
-                                if (SelectConfig != null && SelectConfig != "")
-                                {
-                                    string fileName = SelectConfig + ".json";
-                                    string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                                    string configDir = runDir + "Config\\Config\\";
-                                    if (Directory.Exists(configDir))
-                                    {
-                                        if (!File.Exists(configDir + fileName))
-                                        {
-                                            UpdateLogText("Target Config doesn't exist");
-                                            MyLogManager.Log("Target Config doesn't exist");
-                                            MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
-                                        }
-                                        else
-                                        {
-                                            DownloadConfig(configDir + fileName, true);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        UpdateLogText("No Config Dir to load,Please Check");
-                                        MyLogManager.Log("No Config Dir to load,Please Check");
-                                    }
-                                }
-                                else
-                                {
-                                    UpdateLogText("No Config Selected");
-                                    MyLogManager.Log("No Config Selected");
-                                }
-                            }
-                        }
-                    }
-                    else if (signalProtocol.Type == "CAPK")
-                    {
-                        string fileName = "PAYPASS_CAPK.json";
-                        string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                        string configDir = runDir + "Config\\CAPK\\";
-                        MyLogManager.Log($"CAPK Dir:{configDir}");
-
-                        if (Directory.Exists(configDir))
-                        {
-                            MyLogManager.Log($"Target CAPK:{configDir + fileName}");
-                            if (!File.Exists(configDir + fileName))
-                            {
-                                UpdateLogText("Target CAPK doesn't exist");
-                                MyLogManager.Log("Target CAPK doesn't exist");
-                            }
-                            else
-                            {
-                                DownloadCAPK(configDir + fileName);
-                            }
-                        }
-                        else
-                        {
-                            UpdateLogText("No CAPK Dir to load,Please Check");
-                            MyLogManager.Log("No CAPK Dir to load,Please Check");
-                        }
-                    }
-                    else if (signalProtocol.Type == "REVOCATION_PK")
-                    {
-                        string fileName = "PAYPASS_Revokey.json";
-                        string runDir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                        string configDir = runDir + "Config\\Revocation_CAPK\\";
-                        MyLogManager.Log($"Revocation_CAPK Dir:{configDir}");
-
-                        if (Directory.Exists(configDir))
-                        {
-                            MyLogManager.Log($"Target Revocation_CAPK:{configDir + fileName}");
-                            if (!File.Exists(configDir + fileName))
-                            {
-                                UpdateLogText("Target Revocation_CAPK doesn't exist");
-                                MyLogManager.Log("Target Revocation_CAPK doesn't exist");
-                            }
-                            else
-                            {
-                                DownloadRevokey(configDir + fileName);
-                            }
-                        }
-                        else
-                        {
-                            UpdateLogText("No Revocation_CAPK Dir to load,Please Check");
-                            MyLogManager.Log("No Revocation_CAPK Dir to load,Please Check");
-                        }
-                    }
-                    else if (signalProtocol.Type == "ACT_ACK")
-                    {
-                        transFlag = false;
-                        MyLogManager.Log("ACT_ACK");
-                        if (_queue.TryPeek(out SerialOperation operation) &&
-                            operation.OperationType.Equals("ACT"))
-                        {
-                            if (_queue.TryDequeue(out SerialOperation removed))
-                            {
-                                MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
-                                TrySendNextFromQueue();
-                            }
-                        }
-                    }
-                    else if (signalProtocol.Type == "CONFIG_ACK")
-                    {
-                        transFlag = false;
-                        MyLogManager.Log("收到CONFIG_ACK");
-                        if (_queue.TryPeek(out SerialOperation operation) &&
-                            operation.OperationType.Equals("CONFIG"))
-                        {
-                            if (_queue.TryDequeue(out SerialOperation removed))
-                            {
-                                MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
-                                TrySendNextFromQueue();
-                            }
-                        }
-                    }
-                    else if (signalProtocol.Type == "TEST_INFO_ACK")
-                    {
-                        transFlag = false;
-                        MyLogManager.Log("TEST_INFO_ACK");
-                        if (_queue.TryPeek(out SerialOperation operation) &&
-                            operation.OperationType.Equals("TEST_INFO"))
-                        {
-                            if (_queue.TryDequeue(out SerialOperation removed))
-                            {
-                                MyLogManager.Log($"移除队首{operation.OperationType}操作成功");
-                                TrySendNextFromQueue();
-                            }
-                        }
-                    }
-                    else if (signalProtocol.Type == "DEK")
-                    {
-                        transFlag = true;
-                    }
-                    else
-                    {
-                        MyLogManager.Log("Unrecognized Signal Type");
-                    }
-
-                    if (transFlag)
-                    {
-                            TransformSignalToTestTool(signalProtocol, disconnectFlag);
-                        // }
-                    }
-                }
-                else
-                {
-                    MyLogManager.Log("Unrecognized Protocol Type");
-                }
-            }
-            catch (Exception ex)
-            {
-                MyLogManager.Log($"ProcessFromPOS Exception: {ex}");
-            }
-        }
-
-
         private void LogFormattedProtobuf(IMessage message)
         {
             try
@@ -3291,9 +3006,6 @@ namespace MastercardHost
 
             try { _tcpServer?.StopListening(); }
             catch (Exception ex) { MyLogManager.Log($"Dispose 停止TCP监听失败: {ex}"); }
-
-            try { _tcpClient?.Disconnect(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 断开TCP客户端失败: {ex}"); }
 
             try { _threadStartedEvent?.Dispose(); }
             catch (Exception ex) { MyLogManager.Log($"Dispose 释放线程启动事件失败: {ex}"); }
