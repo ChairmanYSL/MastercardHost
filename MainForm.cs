@@ -282,7 +282,7 @@ namespace MastercardHost
             try
             {
                 _viewModel.SelectedPortName = comboBox_SerialPort.SelectedItem.ToString();
-                richTextBox1.Text += richTextBox1.Text + _viewModel.SelectedPortName + " selected" + Environment.NewLine;
+                _viewModel.UpdateLogText(_viewModel.SelectedPortName + " selected");
                 MyLogManager.Log(_viewModel.SelectedPortName + "已选中");
             }
             catch (Exception ex) 
@@ -332,7 +332,7 @@ namespace MastercardHost
         {
             //获取当前选中的IP地址，设置到ViewModel中
             _viewModel.ServerIPAddr = comboBox_IPAddr.SelectedItem.ToString();
-            richTextBox1.Text += richTextBox1.Text + _viewModel.ServerIPAddr + "已选中" + Environment.NewLine;
+            _viewModel.UpdateLogText(_viewModel.ServerIPAddr + "已选中");
             MyLogManager.Log(_viewModel.ServerIPAddr + "已选中");
         }
 
@@ -371,13 +371,27 @@ namespace MastercardHost
         private void comboBox_Config_SelectedIndexChanged(object sender, EventArgs e)
         {
             _viewModel.SelectConfig = comboBox_Config.SelectedItem.ToString();
-            richTextBox1.Text += richTextBox1.Text + "Download config " + _viewModel.SelectConfig + Environment.NewLine;
+            _viewModel.UpdateLogText("Download config " + _viewModel.SelectConfig);
             MyLogManager.Log("下载配置" + _viewModel.ServerIPAddr);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            try
+            {
+                _viewModel?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"释放 ViewModel 失败: {ex.Message}");
+            }
+
+            base.OnFormClosed(e);
         }
     }
 }

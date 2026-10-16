@@ -15,10 +15,7 @@ namespace MastercardHost
 {
     public partial class TestForm : Form
     {
-        private TcpSharpSocketServer _tcpServer;
         private TcpSharpSocketClient _tcpClient;
-        private string _connectID;
-        private int _port;
         private MainViewModel mainViewModel;
         private bool _dwnldConfigFlag=false;
         private bool _loopACTFlag = false;
@@ -599,10 +596,6 @@ namespace MastercardHost
         {
             try
             {
-                if (_tcpServer != null && _tcpServer.Listening)
-                {
-                    _tcpServer.StopListening();
-                }
                 if (_tcpClient != null && _tcpClient.Connected)
                 { 
                     _tcpClient.Disconnect();
@@ -822,7 +815,7 @@ namespace MastercardHost
                                         ]
                                 }";
 
-                _tcpServer.SendString( _connectID, data);
+                _tcpClient.SendString(data);
             }
             catch (Exception ex) 
             {
@@ -841,7 +834,7 @@ namespace MastercardHost
                                     ]
                                 }";
 
-                _tcpServer.SendString(_connectID, data);
+                _tcpClient.SendString(data);
             }
             catch (Exception ex)
             {
@@ -880,7 +873,7 @@ namespace MastercardHost
             try
             {
                 string data = @"{
-                                    ""signalType"":""RUNTEST_ RESULT"",
+                                    ""signalType"":""RUNTEST_RESULT"",
                                     ""signalData"":[
                                         {
                                             ""id"":""TestResult"", 
@@ -889,7 +882,7 @@ namespace MastercardHost
                                     ]
                                 }";
 
-                _tcpServer.SendString (_connectID, data);
+                _tcpClient.SendString(data);
 
             }
             catch(Exception ex)
@@ -909,72 +902,12 @@ namespace MastercardHost
                                      {""id"":""DekDetId"", ""value"":""3MX2-2500""}
                                     ]}";
 
-                _tcpServer.SendString ( _connectID, data);
+                _tcpClient.SendString(data);
             }
             catch (Exception ex) 
             {
                 MyLogManager.Log($"Exception: {ex.Message}");
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if(_tcpServer.Listening)
-                {
-                    _tcpServer.StopListening();
-                }
-
-                //if (int.TryParse(this.textBox_TranType.Text, out _port))
-                if(false)
-                {
-
-                }
-                else
-                {
-                    MyLogManager.Log($"Parse Port to INT error");
-
-                    // Replace the problematic line with the following:
-                    System.Windows.Forms.MessageBox.Show("Parse Port to INT error", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
-                _tcpServer.Port = _port;
-                _tcpServer.OnStarted += (s, ev) =>
-                {
-                    MyLogManager.Log($"IN TestForm Server Started Listen on {_tcpServer.Port}");
-                };
-                _tcpServer.OnError += (s, ev) =>
-                {
-                    MyLogManager.Log($"IN TestForm Server Error: {ev.Exception.Message}");
-                };
-                _tcpServer.OnStopped += (s, ev) =>
-                {
-                    MyLogManager.Log($"IN TestForm Server Stop Listen: {ev.IsStopped}");
-                };
-                _tcpServer.OnConnected += (s, ev) =>
-                {
-                    _connectID = ev.ConnectionId;
-                    MyLogManager.Log($"IN TestForm Server Connect on {ev.IPAddress}:{ev.Port}, Connect ID is: {ev.ConnectionId}");
-                };
-                _tcpServer.OnDataReceived += (s, ev) =>
-                {
-                    MyLogManager.Log($"Server Receive Data: {ev.Data.ToString()}");
-                };
-
-
-                _tcpServer.StartListening();
-            }
-            catch(Exception ex)
-            {
-                MyLogManager.Log($"Exception: {ex.Message}");
-            }
-        }
-
-        public int Port 
-        { 
-            get => _port;
-            private set => _port = value;
         }
 
         //private void TestForm_Resize(object sender, EventArgs e)

@@ -51,10 +51,9 @@ namespace MastercardHost
         public byte[] Data { get; set; }
         public int RetryCount { get; set; } = 0;
         public DateTime EnqueueTime { get; set; }= DateTime.Now;
-        public Action<bool> Callback { get; set; }
     }
 
-    public class MainViewModel : BaseViewModel
+    public class MainViewModel : BaseViewModel, IDisposable
     {
         private readonly SynchronizationContext _uiContext;
         public Command startListenCommand { get; }
@@ -116,13 +115,30 @@ namespace MastercardHost
         private Thread _backGround;
         private CancellationTokenSource _cts;  // 用信号量停止线程
         private ManualResetEventSlim _threadStartedEvent = new ManualResetEventSlim(false);
-        // 串口接收缓冲区
+        // 串口写入与串口操作队列的统一保护锁。
+        // 保护范围：_queue 的状态判断与变更、所有 _serialPort 的写入与关闭。
+        private readonly object _serialGate = new object();
+
+        // 串口接收缓冲区（生产者：串口 DataReceived 线程；消费者：解析线程取走并清空）
+        // 仅由 _bufferLock 保护
         private readonly object _bufferLock = new object();
         private byte[] _receiveBuffer = new byte[8192]; // 预分配
         private int _bufferIndex = 0; // 指向缓冲区中有效数据的末尾
-        private const int MAX_BUFFER_SIZE = 1024 * 64; // 例如，设置最大缓冲区为64KB
+        private const int MAX_BUFFER_SIZE = 1024 * 64; // 共享接收缓冲区上限，超出则丢弃待处理数据
         private int _consecutiveParseFailures = 0; // 连续解析失败次数
         private const int MAX_PARSE_FAILURES = 5; // 最大连续失败次数阈值
+
+        // 独立解析线程：独占 _pendingBuffer / _pendingIndex，解析过程不持 _bufferLock
+        private Thread _parseThread;
+        private CancellationTokenSource _parseCts;
+        private readonly SemaphoreSlim _parseSignal = new SemaphoreSlim(0);
+        private byte[] _pendingBuffer = new byte[8192]; // 跨批次保留的不完整消息
+        private int _pendingIndex = 0;
+
+        // ACK 操作最大重传次数
+        private const int MAX_RETRY_COUNT = 5;
+
+        private bool _disposed;
 
         public MainViewModel()
         {
@@ -239,10 +255,11 @@ namespace MastercardHost
                         {
                             if (_queue.TryPeek(out SerialOperation serialOperation) && serialOperation != null)
                             {
-                                // 检查是否已经处理
-                                if (serialOperation.RetryCount >= 5)
+                                // 重传次数耗尽：放弃该操作并明确记录，避免静默丢弃
+                                if (serialOperation.RetryCount >= MAX_RETRY_COUNT)
                                 {
                                     _queue.TryDequeue(out _);
+                                    MyLogManager.Log($"[重试耗尽] {serialOperation.OperationType} 连续 {MAX_RETRY_COUNT} 次未收到 ACK，已放弃该操作");
                                     continue;
                                 }
 
@@ -253,10 +270,8 @@ namespace MastercardHost
                                 if (elapsed.TotalSeconds > timeoutSeconds)
                                 {
                                     MyLogManager.Log($"{serialOperation.OperationType} 超时 {elapsed.TotalSeconds:F1}秒，重传");
-
-                                    if (_serialPort != null && _serialPort.IsOpen)
+                                    if (TryWriteSerial(serialOperation.Data))
                                     {
-                                        _serialPort.Write(serialOperation.Data, 0, serialOperation.Data.Length);
                                         serialOperation.RetryCount++;
                                         serialOperation.EnqueueTime = DateTime.Now;
                                     }
@@ -281,8 +296,11 @@ namespace MastercardHost
                     catch (Exception ex)
                     {
                         MyLogManager.Log($"工作线程处理异常: {ex.Message}");
-                        // 短暂休眠避免错误循环
-                        Thread.Sleep(1000);
+                        // 取消后应立即退出，不做退避等待
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -641,7 +659,13 @@ namespace MastercardHost
                     return;
                 }
 
-                if (_serialPort != null && _serialPort.IsOpen)
+                SerialPort existingPort;
+                lock (_serialGate)
+                {
+                    existingPort = _serialPort;
+                }
+
+                if (existingPort != null && existingPort.IsOpen)
                 {
                     CloseSerialPort();
                 }
@@ -657,12 +681,37 @@ namespace MastercardHost
                     RtsEnable = true
                 };
 
+                // 串口错误回调：不再从后台线程弹出模态窗口（会阻塞接收链路），
+                // 并加异常保护，避免未处理异常终止进程。
                 _serialPort.ErrorReceived += (sender, e) =>
                 {
-                    System.Windows.MessageBox.Show($"COM port {SelectedPortName} error: {e.EventType}");
-                    _serialPort?.Close();
-                    IsCloseSerialEnabled = false;
-                    IsOpenSerialEnabled = true;
+                    try
+                    {
+                        MyLogManager.Log($"串口错误: {SelectedPortName} ErrorReceived: {e.EventType}");
+                        UpdateLogText($"COM port {SelectedPortName} error: {e.EventType}");
+
+                        SerialPort port;
+                        lock (_serialGate)
+                        {
+                            port = _serialPort;
+                        }
+
+                        if (port != null && port.IsOpen)
+                        {
+                            port.Close();
+                        }
+
+                        // UI 状态更新回到 UI 线程执行
+                        _uiContext.Post(_ =>
+                        {
+                            IsCloseSerialEnabled = false;
+                            IsOpenSerialEnabled = true;
+                        }, null);
+                    }
+                    catch (Exception ex)
+                    {
+                        MyLogManager.Log($"串口错误处理异常: {ex.Message}");
+                    }
                 };
 
                 //_serialPort.DataReceived += (sender, e) =>
@@ -679,33 +728,57 @@ namespace MastercardHost
                 //    }
                 //};
 
+                // 串口接收回调：只做"读取 + 追加到共享缓冲区"，然后唤醒解析线程。
+                // 解析（可能包含网络 IO、日志、弹窗）不再在持锁状态下进行。
                 _serialPort.DataReceived += (sender, e) =>
                 {
-                    lock (_bufferLock) // 保护共享的缓冲区
+                    try
                     {
-                        MyLogManager.Log($"收到串口数据:{_serialPort.BytesToRead}字节");
-
-                        if (_serialPort.BytesToRead > 0 && _serialPort.IsOpen)
+                        lock (_bufferLock) // 只保护共享接收缓冲区
                         {
-                            var readBuffer = new byte[_serialPort.BytesToRead];
-                            int bytesRead = _serialPort.Read(readBuffer, 0, readBuffer.Length);
+                            SerialPort port = _serialPort;
+                            MyLogManager.Log($"收到串口数据:{port?.BytesToRead ?? 0}字节");
 
-                            // 将新数据追加到我们的累积缓冲区
+                            if (port == null || !port.IsOpen || port.BytesToRead <= 0)
+                            {
+                                return;
+                            }
+
+                            byte[] readBuffer = new byte[port.BytesToRead];
+                            int bytesRead = port.Read(readBuffer, 0, readBuffer.Length);
+                            if (bytesRead <= 0)
+                            {
+                                return;
+                            }
+
+                            // 未解析数据积压超过上限，说明解析跟不上或数据损坏，丢弃以恢复同步
+                            if (_bufferIndex + bytesRead > MAX_BUFFER_SIZE)
+                            {
+                                MyLogManager.Log($"串口接收缓冲已达上限 {MAX_BUFFER_SIZE} 字节，丢弃 {_bufferIndex} 字节待处理数据");
+                                _bufferIndex = 0;
+                            }
+
                             if (_bufferIndex + bytesRead > _receiveBuffer.Length)
                             {
-                                // 缓冲区不够大，进行扩容或处理（这里选择扩容）
-                                Array.Resize(ref _receiveBuffer, (_bufferIndex + bytesRead) * 2);
+                                int newSize = _receiveBuffer.Length * 2;
+                                while (newSize < _bufferIndex + bytesRead)
+                                {
+                                    newSize *= 2;
+                                }
+                                Array.Resize(ref _receiveBuffer, newSize);
                                 MyLogManager.Log($"缓冲区已扩容至 {_receiveBuffer.Length} 字节");
                             }
 
                             Buffer.BlockCopy(readBuffer, 0, _receiveBuffer, _bufferIndex, bytesRead);
                             _bufferIndex += bytesRead;
-
-                            MyLogManager.Log($"十六进制数据追加后: {BitConverter.ToString(_receiveBuffer, 0, _bufferIndex)}");
-
-                            // 尝试从累积的数据中解析出完整的protobuf消息
-                            ProcessBufferedData();
                         }
+
+                        // 唤醒解析线程（信号量可累积，连续多次收到数据不会丢唤醒）
+                        _parseSignal.Release();
+                    }
+                    catch (Exception ex)
+                    {
+                        MyLogManager.Log($"串口数据接收异常: {ex.Message}");
                     }
                 };
 
@@ -714,6 +787,7 @@ namespace MastercardHost
                 ClearQueue();
 
                 StartWorkerThread();
+                StartParseThread();
 
                 // 初始化串口工作线程
                 System.Windows.MessageBox.Show($"{SelectedPortName} opened successfully");
@@ -733,22 +807,29 @@ namespace MastercardHost
             {
                 MyLogManager.Log("开始关闭串口");
 
-                // 1. 先停止工作线程
+                // 1. 先停止解析线程与工作线程，避免它们继续操作串口
+                StopParseThread();
                 StopWorkerThread();
 
                 // 2. 清空队列
                 ClearQueue();
 
-                // 3. 关闭串口
-                if (_serialPort != null)
+                // 3. 关闭串口（在 _serialGate 内摘除引用，防止与并发写入竞争）
+                SerialPort port;
+                lock (_serialGate)
                 {
-                    if (_serialPort.IsOpen)
+                    port = _serialPort;
+                    _serialPort = null;
+                }
+
+                if (port != null)
+                {
+                    if (port.IsOpen)
                     {
-                        _serialPort.Close();
+                        port.Close();
                         MyLogManager.Log("串口已关闭");
                     }
-                    _serialPort.Dispose();
-                    _serialPort = null;
+                    port.Dispose();
                 }
 
                 // 4. 更新UI状态
@@ -786,14 +867,15 @@ namespace MastercardHost
         }
 
         /// <summary>
-        /// 寻找下一个可能的合法VarInt的起始位置。
+        /// 在解析线程私有的挂起缓冲区中寻找下一个可能的合法VarInt的起始位置。
         /// 这是一个启发式方法，寻找一个不以连续8个1的最高位开始的字节。
+        /// 只由解析线程调用，操作 _pendingBuffer / _pendingIndex，无需加锁。
         /// </summary>
         private int FindNextValidVarintStart(int startPosition)
         {
-            for (int i = startPosition; i < _bufferIndex; i++)
+            for (int i = startPosition; i < _pendingIndex; i++)
             {
-                byte b = _receiveBuffer[i];
+                byte b = _pendingBuffer[i];
                 // 一个合法的VarInt最多5个字节 (对于int32)。
                 // 如果一个字节的最高位是0，它可能是一个1字节VarInt的结尾或单字节值。
                 // 如果一个字节不是 0xFF (即不是 11111111)，它有可能是某个VarInt的开始或中间部分。
@@ -804,11 +886,11 @@ namespace MastercardHost
                 if (b <= 0x7F) // 一个字节的VarInt，且值不大于127，通常是合法的
                 {
                     // 验证从这个位置开始能否读出一个合理的VarInt和消息
-                    var sizeInfo = ReadVarint32FromBuffer(_receiveBuffer, i, _bufferIndex);
+                    var sizeInfo = ReadVarint32FromBuffer(_pendingBuffer, i, _pendingIndex);
                     if (sizeInfo.HasValue && sizeInfo.Value.size > 0 && sizeInfo.Value.size < 1024 * 10) // 例如，小于10KB
                     {
                         int nextMessageBodyStart = i + sizeInfo.Value.wire_size;
-                        if (nextMessageBodyStart + sizeInfo.Value.size <= _bufferIndex)
+                        if (nextMessageBodyStart + sizeInfo.Value.size <= _pendingIndex)
                         {
                             MyLogManager.Log($"在位置 {i} 找到潜在的有效VarInt起点。");
                             return i;
@@ -892,10 +974,8 @@ namespace MastercardHost
                         ParseOutSignal(signalProtocol.Data);
                         transFlag = true;
                         disconnectFlag = true;
-                        while (_queue.Count != 0)
-                        {
-                            _queue.TryDequeue(out SerialOperation op);
-                        }
+                        // 统一走加锁的清队列入口，避免与并发入队竞争
+                        ClearQueue();
                     }
                     else if (signalProtocol.Type == "MSG")
                     {
@@ -1061,14 +1141,60 @@ namespace MastercardHost
             }
         }
 
+        /// <summary>
+        /// 解析挂起缓冲区中的数据。
+        /// 只由解析线程调用，独占 _pendingBuffer / _pendingIndex，因此不需要 _bufferLock：
+        /// 解析过程中的网络 IO、日志输出、弹窗都不会再阻塞串口接收线程。
+        /// </summary>
         private void ProcessBufferedData()
         {
+            // --- 0. 把串口线程新收到的数据并入私有挂起缓冲区 ---
+            byte[] incoming = null;
+            int incomingLength = 0;
+            lock (_bufferLock)
+            {
+                if (_bufferIndex > 0)
+                {
+                    incomingLength = _bufferIndex;
+                    incoming = new byte[incomingLength];
+                    Buffer.BlockCopy(_receiveBuffer, 0, incoming, 0, incomingLength);
+                    _bufferIndex = 0;
+                }
+            }
+
+            if (incoming != null)
+            {
+                // 挂起数据超过上限（对端持续发送不完整或损坏的帧）：丢弃以恢复同步
+                if (_pendingIndex + incomingLength > MAX_BUFFER_SIZE)
+                {
+                    MyLogManager.Log($"解析挂起缓冲已达上限 {MAX_BUFFER_SIZE} 字节，丢弃 {_pendingIndex} 字节未完成数据");
+                    _pendingIndex = 0;
+                }
+
+                int required = _pendingIndex + incomingLength;
+                if (_pendingBuffer.Length < required)
+                {
+                    int newSize = _pendingBuffer.Length;
+                    while (newSize < required)
+                    {
+                        newSize *= 2;
+                    }
+                    Array.Resize(ref _pendingBuffer, newSize);
+                    MyLogManager.Log($"解析挂起缓冲区已扩容至 {_pendingBuffer.Length} 字节");
+                }
+
+                Buffer.BlockCopy(incoming, 0, _pendingBuffer, _pendingIndex, incomingLength);
+                _pendingIndex += incomingLength;
+
+                MyLogManager.Log($"十六进制数据追加后: {BitConverter.ToString(_pendingBuffer, 0, _pendingIndex)}");
+            }
+
             int parsedBytes = 0;
 
             while (true)
             {
                 // --- 1. 安全检查 ---
-                if (_bufferIndex - parsedBytes < 1)
+                if (_pendingIndex - parsedBytes < 1)
                 {
                     // 没有更多数据可解析
                     break;
@@ -1080,7 +1206,7 @@ namespace MastercardHost
                 int varIntSizeInBytes = 0;
 
                 // 我们需要手动解析 VarInt，因为不能直接用 ParseDelimitedFrom 整个缓冲区
-                var varIntResult = ReadVarint32FromBuffer(_receiveBuffer, currentReadPosition, _bufferIndex);
+                var varIntResult = ReadVarint32FromBuffer(_pendingBuffer, currentReadPosition, _pendingIndex);
 
                 if (varIntResult.HasValue)
                 {
@@ -1107,26 +1233,26 @@ namespace MastercardHost
                     {
                         int badDataSize = recoveryPosition - parsedBytes;
                         MyLogManager.Log($"丢弃 {badDataSize} 个字节以恢复同步。");
-                        int remainingGoodData = _bufferIndex - recoveryPosition;
+                        int remainingGoodData = _pendingIndex - recoveryPosition;
                         if (remainingGoodData > 0)
                         {
-                            Buffer.BlockCopy(_receiveBuffer, recoveryPosition, _receiveBuffer, parsedBytes, remainingGoodData);
+                            Buffer.BlockCopy(_pendingBuffer, recoveryPosition, _pendingBuffer, parsedBytes, remainingGoodData);
                         }
-                        _bufferIndex -= badDataSize;
+                        _pendingIndex -= badDataSize;
                         continue; // 从新位置继续解析
                     }
                     else
                     {
-                        _bufferIndex = 0;
+                        _pendingIndex = 0;
                         return;
                     }
                 }
 
                 // --- 4. 检查消息体是否完整 ---
-                if (_bufferIndex - messageBodyStart < messageSize)
+                if (_pendingIndex - messageBodyStart < messageSize)
                 {
                     // 消息体不完整，等待更多数据
-                    MyLogManager.Log($"Protobuf消息体不完整，已接收 {_bufferIndex - messageBodyStart}/{messageSize} 字节。等待更多数据。");
+                    MyLogManager.Log($"Protobuf消息体不完整，已接收 {_pendingIndex - messageBodyStart}/{messageSize} 字节。等待更多数据。");
                     break;
                 }
 
@@ -1134,7 +1260,7 @@ namespace MastercardHost
                 try
                 {
                     byte[] messageBody = new byte[messageSize];
-                    Buffer.BlockCopy(_receiveBuffer, messageBodyStart, messageBody, 0, messageSize);
+                    Buffer.BlockCopy(_pendingBuffer, messageBodyStart, messageBody, 0, messageSize);
                     var envelope = Envelope.Parser.ParseFrom(messageBody);
 
                     MyLogManager.Log($"成功解析一条完整Protobuf消息，大小: {messageSize} 字节");
@@ -1155,109 +1281,112 @@ namespace MastercardHost
                     {
                         int badDataSize = recoveryPosition - parsedBytes;
                         MyLogManager.Log($"丢弃 {badDataSize} 个字节以恢复同步。");
-                        int remainingGoodData = _bufferIndex - recoveryPosition;
+                        int remainingGoodData = _pendingIndex - recoveryPosition;
                         if (remainingGoodData > 0)
                         {
-                            Buffer.BlockCopy(_receiveBuffer, recoveryPosition, _receiveBuffer, parsedBytes, remainingGoodData);
+                            Buffer.BlockCopy(_pendingBuffer, recoveryPosition, _pendingBuffer, parsedBytes, remainingGoodData);
                         }
-                        _bufferIndex -= badDataSize;
+                        _pendingIndex -= badDataSize;
                         continue;
                     }
                     else
                     {
-                        _bufferIndex = 0;
+                        _pendingIndex = 0;
                         return;
                     }
                 }
             }
 
-            // --- 8. 清理缓冲区 ---
+            // --- 8. 清理缓冲区：保留尚未解析完的尾部数据，供下一批数据拼接 ---
             if (parsedBytes > 0)
             {
-                int remainingBytes = _bufferIndex - parsedBytes;
+                int remainingBytes = _pendingIndex - parsedBytes;
                 if (remainingBytes > 0)
                 {
-                    Buffer.BlockCopy(_receiveBuffer, parsedBytes, _receiveBuffer, 0, remainingBytes);
+                    Buffer.BlockCopy(_pendingBuffer, parsedBytes, _pendingBuffer, 0, remainingBytes);
                 }
-                _bufferIndex = remainingBytes;
-                MyLogManager.Log($"剩余未处理数据 {_bufferIndex} 字节，已移至缓冲区头部。");
+                _pendingIndex = remainingBytes;
+                MyLogManager.Log($"剩余未处理数据 {_pendingIndex} 字节，已移至缓冲区头部。");
             }
         }
 
-        private void OnACKSignalTimeout(bool isTimeout)
+        /// <summary>
+        /// 唯一写串口入口。所有线程的串口写入都必须经过这里，由 _serialGate 串行化，
+        /// 避免并发 Write 造成帧字节交错，以及与串口关闭动作竞争。
+        /// </summary>
+        private bool TryWriteSerial(byte[] data)
         {
-            try
+            if (data == null || data.Length == 0)
             {
-                if (_queue.IsEmpty)
-                    return;
-
-                // 只处理队首操作
-                if (_queue.TryPeek(out SerialOperation serialOperation))
-                {
-                    if (serialOperation != null && isTimeout)
-                    {
-                        MyLogManager.Log($"{serialOperation.OperationType} 超时重传，当前重试次数: {serialOperation.RetryCount + 1}");
-
-                        // 重传数据
-                        _serialPort.Write(serialOperation.Data, 0, serialOperation.Data.Length);
-
-                        // 更新操作状态
-                        serialOperation.RetryCount++;
-                        serialOperation.EnqueueTime = DateTime.Now;
-
-                        MyLogManager.Log($"重传完成，更新入队时间: {serialOperation.EnqueueTime:HH:mm:ss}");
-                    }
-                }
+                return false;
             }
-            catch (Exception ex)
+
+            lock (_serialGate)
             {
-                MyLogManager.Log($"OnACKSignalTimeout异常: {ex.Message}");
+                SerialPort port = _serialPort;
+                if (port == null || !port.IsOpen)
+                {
+                    MyLogManager.Log("串口未打开，无法发送");
+                    return false;
+                }
+
+                port.Write(data, 0, data.Length);
+                return true;
             }
         }
+
         // 修改发送方法
         private void SendToSerialPort(string type, byte[] data, bool needAck = false)
         {
-            MyLogManager.Log($"调用SendToSerialPort: input type{type}\ninput data:{ByteArrayToHexString(data, 0, data.Length)}\n needAck:{needAck}");
-
-            if (_serialPort == null && !_serialPort.IsOpen)
-            {
-                MyLogManager.Log($"串口未打开，无法发送: {type}");
-                return;
-            }
-
             try
             {
-                // 决定是否需要ACK
-                //bool needsAck = type == "CONFIG" || type == "ACT";
-                MyLogManager.Log("needsAck = {need}");
+                if (data == null || data.Length == 0)
+                {
+                    MyLogManager.Log($"待发送数据为空，无法发送: {type}");
+                    return;
+                }
+
+                MyLogManager.Log($"调用SendToSerialPort: input type{type}\ninput data:{ByteArrayToHexString(data, 0, data.Length)}\n needAck:{needAck}");
 
                 if (needAck)
                 {
                     SerialOperation serialOperation = new SerialOperation();
                     serialOperation.Data = data;
                     serialOperation.OperationType = type;
-                    serialOperation.Callback = OnACKSignalTimeout;
                     serialOperation.EnqueueTime = DateTime.Now;
-                    // 发送到串口队列
-                    bool wasEmptyBeforeEnqueue = _queue.IsEmpty;
-                    _queue.Enqueue(serialOperation);
-                    MyLogManager.Log($"已将 {type} 加入串口队列, 当前队列数量:{_queue.Count}");
 
-                    if (wasEmptyBeforeEnqueue)
+                    // 入队与"是否首个操作"的判断必须原子完成：否则并发入队时可能两个线程
+                    // 都判定队列为空而重复发送，或都判定非空导致该操作滞留队列数秒。
+                    bool shouldSendNow;
+                    int queueCount;
+                    lock (_serialGate)
                     {
-                        // 队列原本为空，这是首个操作，立即发送
-                        _serialPort.Write(data, 0, data.Length);
+                        shouldSendNow = _queue.IsEmpty;
+                        _queue.Enqueue(serialOperation);
+                        queueCount = _queue.Count;
+
+                        if (shouldSendNow)
+                        {
+                            // TryWriteSerial 内部会再次 lock(_serialGate)，Monitor 可重入，安全
+                            shouldSendNow = TryWriteSerial(data);
+                        }
+                    }
+
+                    MyLogManager.Log($"已将 {type} 加入串口队列, 当前队列数量:{queueCount}");
+
+                    if (shouldSendNow)
+                    {
                         MyLogManager.Log($"{type} 立即串口发送（队列首个操作）");
                     }
                     else
                     {
-                        MyLogManager.Log($"{type} 排队等待，前面还有 {_queue.Count - 1} 个操作");
+                        MyLogManager.Log($"{type} 排队等待，前面还有 {queueCount - 1} 个操作");
                     }
                 }
-                else 
+                else
                 {
                     MyLogManager.Log($"直接串口发送 {type}");
-                    _serialPort.Write(data, 0, data.Length);
+                    TryWriteSerial(data);
                 }
             }
             catch (Exception ex)
@@ -1273,22 +1402,24 @@ namespace MastercardHost
         {
             try
             {
-                if (_queue.TryPeek(out SerialOperation nextOp))
+                lock (_serialGate)
                 {
-                    if (_serialPort != null && _serialPort.IsOpen)
+                    if (_queue.TryPeek(out SerialOperation nextOp))
                     {
-                        _serialPort.Write(nextOp.Data, 0, nextOp.Data.Length);
-                        nextOp.EnqueueTime = DateTime.Now;
-                        MyLogManager.Log($"发送队列中下一个操作: {nextOp.OperationType}（当前队列长度: {_queue.Count}）");
+                        if (TryWriteSerial(nextOp.Data))
+                        {
+                            nextOp.EnqueueTime = DateTime.Now;
+                            MyLogManager.Log($"发送队列中下一个操作: {nextOp.OperationType}（当前队列长度: {_queue.Count}）");
+                        }
+                        else
+                        {
+                            MyLogManager.Log("串口未打开，无法发送队列中下一个操作");
+                        }
                     }
                     else
                     {
-                        MyLogManager.Log("串口未打开，无法发送队列中下一个操作");
+                        MyLogManager.Log("队列为空，无需发送");
                     }
-                }
-                else
-                {
-                    MyLogManager.Log("队列为空，无需发送");
                 }
             }
             catch (Exception ex)
@@ -1982,6 +2113,7 @@ namespace MastercardHost
                             break;
 
                         case "RUNTEST_RESULT":
+                        case "RUNTEST_ RESULT": // 兼容历史报文中的多余空格写法
                             var testResult = signal.signalData.FirstOrDefault(s => s.id == "TestResult");
                             if (testResult != null && testResult.value != null)
                             {
@@ -2230,7 +2362,8 @@ namespace MastercardHost
                         TransFormSiganlToPOS(signal);
                         break;
 
-                    case "RUNTEST_ RESULT":
+                    case "RUNTEST_RESULT":
+                    case "RUNTEST_ RESULT": // 兼容历史报文中的多余空格写法
                         var testResult = signal.signalData.FirstOrDefault(s => s.id == "TestResult");
                         if (testResult != null && testResult.value != null)
                         {
@@ -2340,6 +2473,8 @@ namespace MastercardHost
                         MyLogManager.Log($"Error disconnecting {connectionId}: {ex.Message}");
                     }
                 }
+                // 待断开列表必须清空：否则同一连接会被反复断开，且列表随消息数无限增长
+                connectionsToDisconnect.Clear();
             }
             catch (Exception ex)
             {
@@ -2353,6 +2488,12 @@ namespace MastercardHost
 
             if(bytes != null)
             {
+                if (bytes.Length < 8)
+                {
+                    MyLogManager.Log($"ShowOutcome: Outcome 数据长度不足（{bytes.Length} 字节 < 8），跳过解析。原始值:'{outcome}'");
+                    return;
+                }
+
                 UpdateLogText("Outcome:");
                 //Display Status
                 switch(bytes[0])
@@ -2689,6 +2830,13 @@ namespace MastercardHost
                         {
                             UpdateLogText("Error Indication:" + item.Value);
                             byte[] bytes = HexStringToByteArray(item.Value);
+                            // Error Indication 至少需要 6 字节（L1/L2/L3 各 1 字节 + ...），
+                            // 且 SW12 需从原始字符串第 7 个字符起取 4 个字符
+                            if (bytes == null || bytes.Length < 6 || item.Value.Length < 10)
+                            {
+                                MyLogManager.Log($"ShowDiscData: DF8115 数据长度不足（原值 {item.Value.Length} 个字符），跳过解析。原始值:'{item.Value}'");
+                                continue;
+                            }
                             switch (bytes[0])
                             {
                                 case 0x00:
@@ -2840,6 +2988,12 @@ namespace MastercardHost
 
             if (bytes != null)
             {
+                if (bytes.Length < 2)
+                {
+                    MyLogManager.Log($"ShowUIReq: UI Request 数据长度不足（{bytes.Length} 字节 < 2），跳过解析。原始值:'{uiReq}'");
+                    return;
+                }
+
                 UpdateLogText("User Interface Request Data:");
                 //Display Message Identifier
                 switch (bytes[0])
@@ -2910,10 +3064,23 @@ namespace MastercardHost
                         break;
                 }
                 //Display Hold Time
-                byte[] hold_time = bytes.Skip(2).Take(3).ToArray();
-                UpdateLogText("Hold Time: " + ByteArrayToHexString(hold_time, 0, 3));
-                byte[] language_prefer = bytes.Skip(5).Take(8).ToArray();
-                UpdateLogText("Language Preference: " + ByteArrayToHexString(language_prefer, 0, 8));
+                if (bytes.Length >= 5)
+                {
+                    UpdateLogText("Hold Time: " + ByteArrayToHexString(bytes, 2, 3));
+                }
+                else
+                {
+                    UpdateLogText("Hold Time: N/A (数据长度不足)");
+                }
+                //Display Language Preference
+                if (bytes.Length >= 13)
+                {
+                    UpdateLogText("Language Preference: " + ByteArrayToHexString(bytes, 5, 8));
+                }
+                else
+                {
+                    UpdateLogText("Language Preference: N/A (数据长度不足)");
+                }
                 UpdateLogText("_____________________________________");
             }
         }
@@ -2933,27 +3100,36 @@ namespace MastercardHost
         }
         private void ParseOutSignal(IList<SignalDataProtocol> signalData)
         {
-            foreach (var data in signalData) 
+            foreach (var data in signalData)
             {
-                switch(data.Id)
+                // 单个数据项解析失败不应影响同一条消息中的其他数据项，
+                // 也不应中断调用方后续的信号回传（TransformSignalToTestTool）。
+                try
                 {
-                    case "OPS":
-                        ShowOutcome(data.Value);
-                        break;
-                    case "DataRecord":
-                        ShowDataRecord(data.Value);
-                        break;
-                    case "DiscData":
-                        ShowDiscData(data.Value);
-                        break;
-                    case "UIRD":
-                        ShowUIReq(data.Value);
-                        break;
-                    case "KernelId":
-                        ShowKernelID(data.Value);
-                        break;
-                    default:
-                        break;
+                    switch (data.Id)
+                    {
+                        case "OPS":
+                            ShowOutcome(data.Value);
+                            break;
+                        case "DataRecord":
+                            ShowDataRecord(data.Value);
+                            break;
+                        case "DiscData":
+                            ShowDiscData(data.Value);
+                            break;
+                        case "UIRD":
+                            ShowUIReq(data.Value);
+                            break;
+                        case "KernelId":
+                            ShowKernelID(data.Value);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MyLogManager.Log($"ParseOutSignal 解析数据项 {data.Id} 异常: {ex.Message}");
                 }
             }
         }
@@ -3237,10 +3413,7 @@ namespace MastercardHost
                         ParseOutSignal(signalProtocol.Data);
                         transFlag = true;
                         disconnectFlag = true;
-                        while (_queue.Count != 0)
-                        {
-                            _queue.TryDequeue(out SerialOperation op);
-                        }
+                        ClearQueue();
                     }
                     else if (signalProtocol.Type == "MSG")
                     {
@@ -3671,9 +3844,12 @@ namespace MastercardHost
             try
             {
                 int count = 0;
-                while (_queue.TryDequeue(out _))
+                lock (_serialGate)
                 {
-                    count++;
+                    while (_queue.TryDequeue(out _))
+                    {
+                        count++;
+                    }
                 }
                 MyLogManager.Log($"清空队列，移除了 {count} 个操作");
             }
@@ -3699,6 +3875,110 @@ namespace MastercardHost
                 index++;
             }
             MyLogManager.Log("=================");
+        }
+
+        /// <summary>
+        /// 启动独立解析线程。解析线程负责从共享缓冲区取走数据并解析，
+        /// 使串口接收回调能够立即返回，不再被解析过程中的 IO / 弹窗阻塞。
+        /// </summary>
+        public void StartParseThread()
+        {
+            try
+            {
+                if (_parseThread?.IsAlive == true)
+                {
+                    return;
+                }
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+                _parseCts = cts;
+                _parseThread = new Thread(() => ParseLoop(cts.Token));
+                _parseThread.IsBackground = true;
+                _parseThread.Name = "SerialParseThread";
+                _parseThread.Start();
+                MyLogManager.Log("串口解析线程已启动");
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"启动解析线程失败: {ex.Message}");
+                UpdateLogText($"启动解析线程失败: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 停止解析线程。先取消并唤醒，等待线程退出后再释放 CancellationTokenSource，
+        /// 避免线程访问到已释放的 token.WaitHandle。
+        /// </summary>
+        public void StopParseThread()
+        {
+            try
+            {
+                CancellationTokenSource cts = _parseCts;
+                Thread thread = _parseThread;
+                _parseCts = null;
+                _parseThread = null;
+
+                if (cts != null)
+                {
+                    try { cts.Cancel(); } catch (ObjectDisposedException) { }
+                }
+
+                // 唤醒可能正在等待的解析线程，使其能观察到取消
+                try { _parseSignal.Release(); } catch (SemaphoreFullException) { }
+
+                if (thread != null && thread.IsAlive && !thread.Join(TimeSpan.FromSeconds(3)))
+                {
+                    MyLogManager.Log("解析线程未在3秒内结束，已放弃等待（后台线程，不阻塞进程退出）");
+                }
+
+                cts?.Dispose();
+                MyLogManager.Log("串口解析线程已停止");
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"停止解析线程失败: {ex.Message}");
+            }
+        }
+
+        private void ParseLoop(CancellationToken cancellationToken)
+        {
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        // 超时返回时回到循环开头检查取消，避免无限阻塞在 Wait 上
+                        if (!_parseSignal.Wait(2000, cancellationToken))
+                        {
+                            continue;
+                        }
+
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
+                        ProcessBufferedData();
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        MyLogManager.Log($"解析线程处理异常: {ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"解析线程异常: {ex.Message}");
+            }
+            finally
+            {
+                MyLogManager.Log($"串口解析线程结束，线程ID: {Thread.CurrentThread.ManagedThreadId}");
+            }
         }
 
         public void StartWorkerThread()
@@ -3742,32 +4022,31 @@ namespace MastercardHost
         {
             try
             {
-                // 请求取消
-                if (_cts != null)
+                CancellationTokenSource cts = _cts;
+                Thread thread = _backGround;
+                _cts = null;
+                _backGround = null;
+
+                // 先取消，最后再释放 CancellationTokenSource：
+                // 否则工作线程可能访问到已释放的 token.WaitHandle
+                if (cts != null)
                 {
-                    _cts.Cancel();
-                    _cts.Dispose();
-                    _cts = null;
+                    try { cts.Cancel(); } catch (ObjectDisposedException) { }
                 }
 
                 // 等待线程结束
-                if (_backGround != null && _backGround.IsAlive)
+                if (thread != null && thread.IsAlive && !thread.Join(TimeSpan.FromSeconds(3)))
                 {
-                    // 优雅地等待线程结束
-                    if (!_backGround.Join(TimeSpan.FromSeconds(3)))
-                    {
-                        MyLogManager.Log("线程未在3秒内结束，强制终止");
-                        _backGround.Abort();  // 作为最后手段
-                    }
-                    _backGround = null;
+                    // 该线程为后台线程，不会阻止进程退出。
+                    // 不再使用 Thread.Abort()：中断正在写串口或持有锁的线程会破坏串口状态。
+                    MyLogManager.Log("工作线程未在3秒内结束，已放弃等待（后台线程，不阻塞进程退出）");
                 }
+
+                // 线程确认结束后再释放
+                cts?.Dispose();
 
                 _threadStartedEvent.Reset();
                 MyLogManager.Log("工作线程已停止");
-            }
-            catch (ThreadAbortException)
-            {
-                MyLogManager.Log("线程被强制终止");
             }
             catch (Exception ex)
             {
@@ -3783,6 +4062,72 @@ namespace MastercardHost
                 return _backGround.IsAlive;
             }
             return false;
+        }
+
+        /// <summary>
+        /// 释放串口、后台线程与 TCP 监听资源，窗体关闭时应调用。
+        /// 注意：TcpSharp 1.3.6 的 Server/Client 未实现 IDisposable，
+        /// 只能通过 StopListening / Disconnect 释放，内部 socket 随进程回收。
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+            _disposed = true;
+
+            try { StopParseThread(); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 停止解析线程失败: {ex.Message}"); }
+
+            try { StopWorkerThread(); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 停止工作线程失败: {ex.Message}"); }
+
+            try { ClearQueue(); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 清空队列失败: {ex.Message}"); }
+
+            SerialPort port;
+            lock (_serialGate)
+            {
+                port = _serialPort;
+                _serialPort = null;
+            }
+
+            try
+            {
+                if (port != null)
+                {
+                    if (port.IsOpen)
+                    {
+                        port.Close();
+                    }
+                    port.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                MyLogManager.Log($"Dispose 关闭串口失败: {ex.Message}");
+            }
+
+            try { _tcpServer?.StopListening(); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 停止TCP监听失败: {ex.Message}"); }
+
+            try { _tcpClient?.Disconnect(); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 断开TCP客户端失败: {ex.Message}"); }
+
+            try { _threadStartedEvent?.Dispose(); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 释放线程启动事件失败: {ex.Message}"); }
+
+            try { _parseSignal?.Dispose(); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 释放解析信号量失败: {ex.Message}"); }
+
+            try { _timer?.Dispose(); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 释放定时器失败: {ex.Message}"); }
+
+            try { _configTimer?.Dispose(); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 释放定时器失败: {ex.Message}"); }
+
+            MyLogManager.Log("MainViewModel 已释放");
         }
     }
 }
