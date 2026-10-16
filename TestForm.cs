@@ -67,15 +67,6 @@ namespace MastercardHost
                             break;
 
                         case "CONFIG_ACK":
-                            //string test_info_data = @"{
-                            //        ""signalType"":""TEST_INFO"", 
-                            //        ""signalData"":[
-                            //            {""id"":""interfaceVersion"",""value"":""1""},
-                            //            {""id"":""sessionId"",""value"":""20260109161852077""},
-                            //            {""id"":""testId"",""value"":""3C01-0105 |  | ""},
-                            //            {""id"":""dekDetId"",""value"":""No DATA EXCHANGE for this test""}
-                            //        ]
-                            //    }";
                             ////mainViewModel.UpdateLogText("tcp client send test_info signal");
                             //MyLogManager.Log($"tcp client send test_info signal");
 
@@ -86,30 +77,10 @@ namespace MastercardHost
                             break;
 
                         case "TEST_INFO_ACK":
-                            //string act_data = @"{
-                            //        ""signalType"":""ACT"", 
-                            //        ""signalData"":[
-                            //            {""id"":""5F57"",""value"":null},
-                            //            {""id"":""9F02"",""value"":""000000000001""},
-                            //            {""id"":""9F03"",""value"":null},
-                            //            {""id"":""DF8104"",""value"":null},
-                            //            {""id"":""DF8105"",""value"":null},
-                            //            {""id"":""9F7C"",""value"":""1122334455667788990011223344556677889900""},
-                            //            {""id"":""9F53"",""value"":""46""},
-                            //            {""id"":""5F2A"",""value"":""0978""},
-                            //            {""id"":""5F36"",""value"":""02""},
-                            //            {""id"":""9A"",""value"":""260109""},
-                            //            {""id"":""9F21"",""value"":""161852""}
-                            //        ]
-                            //    }";
 
                             //_tcpClient.SendString(act_data);
                             break;
                         case "OUT":
-                            //if(_loopACTFlag == true)
-                            //{
-                            //    SendACTSignal();
-                            //}
                             break;
                         default:
                             MyLogManager.Log("无法识别的Signal类型");
@@ -520,7 +491,7 @@ namespace MastercardHost
             float fontSize = maxSize;
             Font font;
 
-            using (var graphics = control.CreateGraphics())
+            using (Graphics graphics = control.CreateGraphics())
             {
                 do
                 {
@@ -541,7 +512,7 @@ namespace MastercardHost
             // 找出所有Label中最小的合适字号
             float minFontSize = 12f; // 初始值
 
-            using (var graphics = RightTableLayoutPanel.CreateGraphics())
+            using (Graphics graphics = RightTableLayoutPanel.CreateGraphics())
             {
                 foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
                 {
@@ -847,12 +818,6 @@ namespace MastercardHost
             try
             {
                 _dwnldConfigFlag = true;
-                //string data = @"{
-                //                    ""signalType"":""DET"", 
-                //                    ""signalData"":[
-                //                        {""id"":""DET"",""value"":""DF81120182""}
-                //                    ]
-                //                }";
                 string data = @"{
                                     ""signalType"":""CONFIG"", 
                                     ""signalData"":[
@@ -910,42 +875,6 @@ namespace MastercardHost
             }
         }
 
-        //private void TestForm_Resize(object sender, EventArgs e)
-        //{
-        //    int desiredDistance = (int)(this.ClientSize.Width * 0.3);
-        //    int minDistance = mainSplitContainer.Panel1MinSize;
-        //    int maxDistance = mainSplitContainer.Width - mainSplitContainer.Panel2MinSize;
-
-        //    if (desiredDistance >= minDistance && desiredDistance <= maxDistance)
-        //    {
-        //        mainSplitContainer.SplitterDistance = desiredDistance;
-        //    }
-
-        //    // 更新左侧按钮位置和大小
-        //    ButtonPosition(panel_ACT, button_ACT);
-        //    ButtonPosition(panel_LoopACT, button_LoopACT);
-        //    ButtonPosition(panel_Stop, button_Stop);
-        //    ButtonPosition(panel_DET, button_DET);
-
-        //    // 更新右侧控件字体大小
-        //    AdjustLabelFontSize();
-        //    foreach (System.Windows.Forms.Control control in RightTableLayoutPanel.Controls)
-        //    {
-        //        if (control is System.Windows.Forms.Button || control is System.Windows.Forms.TextBox || control is System.Windows.Forms.CheckBox checkbox)
-        //        {
-        //            AdjustFontSizeToFit(control);
-        //        }
-        //    }
-
-        //    // 更新右侧TextBox大小
-        //    for (int i = 0; i < RightTableLayoutPanel.RowCount; i++)
-        //    {
-        //        if (RightTableLayoutPanel.GetControlFromPosition(2, i) is System.Windows.Forms.TextBox textBox)
-        //        {
-        //            UpdateTextBoxSize(textBox, i);
-        //        }
-        //    }
-        //}
 
         private void TestForm_Resize(object sender, EventArgs e)
         {
@@ -1027,7 +956,7 @@ namespace MastercardHost
             float fontSize = maxSize;
             Font font;
 
-            using (var graphics = checkBox.CreateGraphics())
+            using (Graphics graphics = checkBox.CreateGraphics())
             {
                 do
                 {
@@ -1041,18 +970,6 @@ namespace MastercardHost
             checkBox.Font = new Font(checkBox.Font.FontFamily, fontSize, checkBox.Font.Style);
         }
 
-        // public void HandleLoopACTActionRequest(string actionName)
-        // {
-        //     MyLogManager.Log("receive loop act send action request");
-        //     switch (actionName)
-        //     {
-        //         case "Send":
-        //             SendACTSignal();
-        //             break;
-        //         default:
-        //             break;
-        //     }
-        // }
 
         public void SendACTSignal()
         {

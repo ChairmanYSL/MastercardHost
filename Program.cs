@@ -70,11 +70,6 @@ namespace MastercardHost
                     MessageBox.Show("NLog configuration file path could not be determined.", "NLog Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                // 测试日志输出
-                Logger.Info("This is a test log to the console.");
-                Logger.Debug("This debug message might not appear if minlevel is Info.");
-                Logger.Error("This is a test error message.");
-
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new MainForm());
@@ -86,20 +81,9 @@ namespace MastercardHost
         }
         private static string GetNLogConfigFilePath()
         {
-            // 尝试获取 NLog 配置文件路径
-            if (LogManager.Configuration is XmlLoggingConfiguration xmlConfig)
-            {
-                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nlog.config"); // 假设使用默认配置文件名
-            }
-
-            // 如果使用其他加载方式，可以通过内部日志查看加载的路径
-            const string internalLogFile = "logs/nlog-internal.log";
-            if (File.Exists(internalLogFile))
-            {
-                return internalLogFile;
-            }
-
-            return null; // 如果未找到路径
+            // 检查可执行文件同目录下是否存在 nlog.config
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nlog.config");
+            return File.Exists(configPath) ? configPath : null;
         }
     }
 }

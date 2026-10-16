@@ -23,7 +23,7 @@ namespace MastercardHost
         private MainViewModel _viewModel;
         private int _logLimit;
         private TestForm _testForm;
-        private readonly object _collectionLock = new object();
+        private bool _logRefreshScheduled;
 
         public MainForm()
         {
@@ -58,7 +58,7 @@ namespace MastercardHost
             {
                 //绑定IP地址、端口输入框属性
                 comboBox_IPAddr.DataBindings.Add("Text", _viewModel, nameof(_viewModel.ServerIPAddr), true, DataSourceUpdateMode.OnPropertyChanged);
-                var portServerBinding = new Binding("Text", _viewModel, nameof(_viewModel.ServerPort), true, DataSourceUpdateMode.OnPropertyChanged);
+                Binding portServerBinding = new Binding("Text", _viewModel, nameof(_viewModel.ServerPort), true, DataSourceUpdateMode.OnPropertyChanged);
                 portServerBinding.Format += (sender, e) =>
                 {
                     if (e.DesiredType != typeof(string))
@@ -91,26 +91,9 @@ namespace MastercardHost
 
                 //禁用输入功能
                 richTextBox1.ReadOnly = true;
-                _viewModel.Logs.CollectionChanged += (sender, e) =>
-                {
-                    // 创建集合的快照副本以避免线程问题
-                    var snapshot = _viewModel.Logs.ToList();
-
-                    // 使用控件的Invoke方法
-                    if (richTextBox1.InvokeRequired)
-                    {
-                        richTextBox1.Invoke(new Action(() =>
-                        {
-                            richTextBox1.Text = string.Join(Environment.NewLine, snapshot);
-                            richTextBox1.ScrollToCaret();
-                        }));
-                    }
-                    else
-                    {
-                        richTextBox1.Text = string.Join(Environment.NewLine, snapshot);
-                        richTextBox1.ScrollToCaret();
-                    }
-                };
+                // 日志区刷新：把同一批次内的多次变更合并为一次重建，
+                // 避免每条日志都重建整个文本区（原实现在日志量大时是 O(n²)）
+                _viewModel.Logs.CollectionChanged += (sender, e) => ScheduleLogRefresh();
 
                 //绑定按钮Enabled属性
                 button_Listen_Server.Click += (sender, e) => _viewModel.startListenCommand.Execute(null);
@@ -141,11 +124,6 @@ namespace MastercardHost
             }
         }
 
-        private void Button_Close_Server_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void TranslateLanguage()
         {
             this.Text = Properties.Resources.Title;
@@ -164,91 +142,115 @@ namespace MastercardHost
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// 触发日志区刷新。同一批次内的多次变更只投递一次，避免重复重建文本。
+        /// </summary>
+        private void ScheduleLogRefresh()
+        {
+            if (_logRefreshScheduled)
+            {
+                return;
+            }
+
+            _logRefreshScheduled = true;
+
+            if (richTextBox1.IsHandleCreated)
+            {
+                richTextBox1.BeginInvoke(new Action(RefreshLogText));
+            }
+            else
+            {
+                RefreshLogText();
+            }
+        }
+
+        private void RefreshLogText()
+        {
+            _logRefreshScheduled = false;
+            richTextBox1.Text = string.Join(Environment.NewLine, _viewModel.Logs);
+            richTextBox1.ScrollToCaret();
+        }
+
+        /// <summary>
+        /// 按当前 LogLimit 同步"日志区行数"菜单的勾选状态。
+        /// </summary>
+        private void SyncLogLimitMenuChecks()
+        {
+            this.toolStripMenuItem3.Checked = (this.LogLimit == 20);
+            this.toolStripMenuItem4.Checked = (this.LogLimit == 50);
+            this.toolStripMenuItem5.Checked = (this.LogLimit == 100);
+            this.toolStripMenuItem6.Checked = (this.LogLimit == 200);
+            this.ToolStripMenuItem_SelfDefine.Checked = !this.toolStripMenuItem3.Checked
+                                                    && !this.toolStripMenuItem4.Checked
+                                                    && !this.toolStripMenuItem5.Checked
+                                                    && !this.toolStripMenuItem6.Checked;
+        }
+
+        /// <summary>
+        /// 设置日志区保留行数上限。LogLimit 经数据绑定同步到 ViewModel.MaxLogCount。
+        /// </summary>
+        private void SetLogLimit(int limit)
+        {
+            if (limit <= 0)
+            {
+                return;
+            }
+
+            this.LogLimit = limit;
+            SyncLogLimitMenuChecks();
+            MyLogManager.Log($"日志区行数上限设置为 {limit}");
+        }
+
         private void InitLogLimitStatus()
         {
-            this.toolStripMenuItem3.Checked = false;
-            this.toolStripMenuItem4.Checked = false;
-            this.toolStripMenuItem5.Checked = true;
-            this.toolStripMenuItem6.Checked = false;
-            this.ToolStripMenuItem_SelfDefine.Checked = false;
+            // 按 ViewModel 当前的 MaxLogCount 同步勾选状态（默认值 1000 不在预设项中）
+            SyncLogLimitMenuChecks();
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            this.toolStripMenuItem3.Checked = !this.toolStripMenuItem3.Checked;
-
-            this.toolStripMenuItem4.Checked = false;
-            this.toolStripMenuItem5.Checked = false;
-            this.toolStripMenuItem6.Checked = false;
-            this.ToolStripMenuItem_SelfDefine.Checked = false;
+            SetLogLimit(20);
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            this.toolStripMenuItem4.Checked = !this.toolStripMenuItem4.Checked;
-
-            this.toolStripMenuItem3.Checked = false;
-            this.toolStripMenuItem5.Checked = false;
-            this.toolStripMenuItem6.Checked = false;
-            this.ToolStripMenuItem_SelfDefine.Checked = false;
+            SetLogLimit(50);
         }
 
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
-            this.toolStripMenuItem5.Checked = !this.toolStripMenuItem5.Checked;
-
-            this.toolStripMenuItem3.Checked = false;
-            this.toolStripMenuItem4.Checked = false;
-            this.toolStripMenuItem6.Checked = false;
-            this.ToolStripMenuItem_SelfDefine.Checked = false;
+            SetLogLimit(100);
         }
 
         private void toolStripMenuItem6_Click(object sender, EventArgs e)
         {
-            this.toolStripMenuItem6.Checked = !this.toolStripMenuItem6.Checked;
-
-            this.toolStripMenuItem3.Checked = false;
-            this.toolStripMenuItem4.Checked = false;
-            this.toolStripMenuItem5.Checked = false;
-            this.ToolStripMenuItem_SelfDefine.Checked = false;
+            SetLogLimit(200);
         }
 
         private void ToolStripMenuItem_SelfDefine_Click(object sender, EventArgs e)
         {
             try
             {
-                this.ToolStripMenuItem_SelfDefine.Checked = !this.ToolStripMenuItem_SelfDefine.Checked;
-
-                //如果点击之后是选中状态再弹出输入框
-                if (this.ToolStripMenuItem_SelfDefine.Checked)
+                //弹出输入框
+                using (FormDialogBox dialogBox = new FormDialogBox())
                 {
-                    //弹出输入框
-                    using (FormDialogBox dialogBox = new FormDialogBox())
+                    if (dialogBox.ShowDialog() == DialogResult.OK)
                     {
-                        if (dialogBox.ShowDialog() == DialogResult.OK)
+                        string input = dialogBox.InputResult;
+                        if (int.TryParse(input, out int customLimit) && customLimit > 0)
                         {
-                            string input = dialogBox.InputResult;
-                            if (input == null || input.Length == 0)
-                            {
-                                this.ToolStripMenuItem_SelfDefine.Checked = false;
-                            }
-                            else
-                            {
-                                if (int.TryParse(input, out _logLimit))
-                                {
-
-                                }
-                                else
-                                {
-                                    // 显示弹窗提示用户
-                                    System.Windows.MessageBox.Show("Input not valid number", "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
-                                }
-                            }
+                            SetLogLimit(customLimit);
                         }
                         else
                         {
+                            // 显示弹窗提示用户
+                            System.Windows.MessageBox.Show("Input not valid number", "Error", (MessageBoxButton)MessageBoxButtons.OK, (MessageBoxImage)MessageBoxIcon.Error);
                             this.ToolStripMenuItem_SelfDefine.Checked = false;
                         }
+                    }
+                    else
+                    {
+                        this.ToolStripMenuItem_SelfDefine.Checked = false;
                     }
                 }
             }
