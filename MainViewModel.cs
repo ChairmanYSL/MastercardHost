@@ -138,6 +138,9 @@ namespace MastercardHost
         // ACK 操作最大重传次数
         private const int MAX_RETRY_COUNT = 5;
 
+        // 单条 Protobuf 消息允许的最大长度（用于长度前缀校验与重新同步判定）
+        private const int MAX_MESSAGE_SIZE = 1024 * 1024;
+
         private bool _disposed;
 
         public MainViewModel()
@@ -184,7 +187,7 @@ namespace MastercardHost
                 UpdateLogText($"{e.ConnectionId} Error occur");
                 UpdateLogText($"Error: {e.Exception.Message}");
                 MyLogManager.Log($"{e.ConnectionId} Error occur");
-                MyLogManager.Log($"Error: {e.Exception.Message}");
+                MyLogManager.Log($"Error: {e.Exception}");
             };
             _tcpServer.OnStarted += (sender, e) =>
             {
@@ -295,7 +298,7 @@ namespace MastercardHost
                     }
                     catch (Exception ex)
                     {
-                        MyLogManager.Log($"工作线程处理异常: {ex.Message}");
+                        MyLogManager.Log($"工作线程处理异常: {ex}");
                         // 取消后应立即退出，不做退避等待
                         if (cancellationToken.IsCancellationRequested)
                         {
@@ -478,7 +481,7 @@ namespace MastercardHost
             }
             catch(FormatException ex)
             {
-                MyLogManager.Log($"HexStringToByteString: 无效的十六进制字符串 '{hex}' - {ex.Message}");
+                MyLogManager.Log($"HexStringToByteString: 无效的十六进制字符串 '{hex}' - {ex}");
                 throw new FormatException($"无效的十六进制字符串: '{hex}'", ex);
             }
         }
@@ -710,7 +713,7 @@ namespace MastercardHost
                     }
                     catch (Exception ex)
                     {
-                        MyLogManager.Log($"串口错误处理异常: {ex.Message}");
+                        MyLogManager.Log($"串口错误处理异常: {ex}");
                     }
                 };
 
@@ -778,7 +781,7 @@ namespace MastercardHost
                     }
                     catch (Exception ex)
                     {
-                        MyLogManager.Log($"串口数据接收异常: {ex.Message}");
+                        MyLogManager.Log($"串口数据接收异常: {ex}");
                     }
                 };
 
@@ -841,7 +844,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"关闭串口失败: {ex.Message}");
+                MyLogManager.Log($"关闭串口失败: {ex}");
                 System.Windows.MessageBox.Show($"Failed to close COM port {SelectedPortName}：{ex.Message}");
             }
         }
@@ -867,40 +870,47 @@ namespace MastercardHost
         }
 
         /// <summary>
-        /// 在解析线程私有的挂起缓冲区中寻找下一个可能的合法VarInt的起始位置。
-        /// 这是一个启发式方法，寻找一个不以连续8个1的最高位开始的字节。
+        /// 在解析线程私有的挂起缓冲区中寻找下一个可信的消息起始位置。
+        /// 优先返回"消息体已收全"的候选；若只存在"合法开头但消息体尚未收全"的候选，
+        /// 返回其中最靠前的一个（调用方应保留该位置之后的数据，等待更多输入）。
+        /// 返回 -1 表示从 startPosition 起不存在任何可信起点。
         /// 只由解析线程调用，操作 _pendingBuffer / _pendingIndex，无需加锁。
         /// </summary>
-        private int FindNextValidVarintStart(int startPosition)
+        private int FindResyncPosition(int startPosition)
         {
+            int partialCandidate = -1;
+
             for (int i = startPosition; i < _pendingIndex; i++)
             {
                 byte b = _pendingBuffer[i];
-                // 一个合法的VarInt最多5个字节 (对于int32)。
-                // 如果一个字节的最高位是0，它可能是一个1字节VarInt的结尾或单字节值。
-                // 如果一个字节不是 0xFF (即不是 11111111)，它有可能是某个VarInt的开始或中间部分。
-                // 最简单的启发式方法是寻找一个连续5个字节中，至少有一个字节的最高位是0。
-                // 但一个更简单的办法是，寻找一个看起来像合理大小的VarInt开头的字节。
-                // 例如，跳过那些看起来像垃圾数据的高值字节。
-                // 这里简化为：寻找一个值较小的字节，它更可能是一个合理的size。
-                if (b <= 0x7F) // 一个字节的VarInt，且值不大于127，通常是合法的
+
+                // VarInt 起始字节的最高位必须为 0（值不大于 127），否则不可能是长度前缀
+                if (b > 0x7F)
                 {
-                    // 验证从这个位置开始能否读出一个合理的VarInt和消息
-                    var sizeInfo = ReadVarint32FromBuffer(_pendingBuffer, i, _pendingIndex);
-                    if (sizeInfo.HasValue && sizeInfo.Value.size > 0 && sizeInfo.Value.size < 1024 * 10) // 例如，小于10KB
-                    {
-                        int nextMessageBodyStart = i + sizeInfo.Value.wire_size;
-                        if (nextMessageBodyStart + sizeInfo.Value.size <= _pendingIndex)
-                        {
-                            MyLogManager.Log($"在位置 {i} 找到潜在的有效VarInt起点。");
-                            return i;
-                        }
-                    }
-                    // 如果验证失败，继续循环
+                    continue;
+                }
+
+                var sizeInfo = ReadVarint32FromBuffer(_pendingBuffer, i, _pendingIndex);
+                if (!sizeInfo.HasValue || sizeInfo.Value.size <= 0 || sizeInfo.Value.size > MAX_MESSAGE_SIZE)
+                {
+                    continue;
+                }
+
+                int nextMessageBodyStart = i + sizeInfo.Value.wire_size;
+                if (nextMessageBodyStart + sizeInfo.Value.size <= _pendingIndex)
+                {
+                    MyLogManager.Log($"在位置 {i} 找到潜在的有效VarInt起点。");
+                    return i;
+                }
+
+                // 合法开头但消息体尚未收全：记住最靠前的一个，供调用方保留后续数据
+                if (partialCandidate < 0)
+                {
+                    partialCandidate = i;
                 }
             }
-            // 没有找到
-            return -1;
+
+            return partialCandidate;
         }
 
         /// <summary>
@@ -997,7 +1007,8 @@ namespace MastercardHost
                                     {
                                         if (!File.Exists(configDir + fileName))
                                         {
-                                            System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            UpdateLogText("Target Config doesn't exist");
+                                            MyLogManager.Log("Target Config doesn't exist");
                                             MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
                                         }
                                         else
@@ -1007,12 +1018,14 @@ namespace MastercardHost
                                     }
                                     else
                                     {
-                                        System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        UpdateLogText("No Config Dir to load,Please Check");
+                                        MyLogManager.Log("No Config Dir to load,Please Check");
                                     }
                                 }
                                 else
                                 {
-                                    System.Windows.MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    UpdateLogText("No Config Selected");
+                                    MyLogManager.Log("No Config Selected");
                                 }
                             }
                         }
@@ -1029,7 +1042,8 @@ namespace MastercardHost
                             MyLogManager.Log($"Target CAPK:{configDir + fileName}");
                             if (!File.Exists(configDir + fileName))
                             {
-                                System.Windows.MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                UpdateLogText("Target CAPK doesn't exist");
+                                MyLogManager.Log("Target CAPK doesn't exist");
                             }
                             else
                             {
@@ -1038,7 +1052,8 @@ namespace MastercardHost
                         }
                         else
                         {
-                            System.Windows.MessageBox.Show("No CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            UpdateLogText("No CAPK Dir to load,Please Check");
+                            MyLogManager.Log("No CAPK Dir to load,Please Check");
                         }
                     }
                     else if (signalProtocol.Type == "REVOCATION_PK")
@@ -1053,7 +1068,8 @@ namespace MastercardHost
                             MyLogManager.Log($"Target Revocation_CAPK:{configDir + fileName}");
                             if (!File.Exists(configDir + fileName))
                             {
-                                System.Windows.MessageBox.Show("Target Revocation_CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                UpdateLogText("Target Revocation_CAPK doesn't exist");
+                                MyLogManager.Log("Target Revocation_CAPK doesn't exist");
                             }
                             else
                             {
@@ -1062,7 +1078,8 @@ namespace MastercardHost
                         }
                         else
                         {
-                            System.Windows.MessageBox.Show("No Revocation_CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            UpdateLogText("No Revocation_CAPK Dir to load,Please Check");
+                            MyLogManager.Log("No Revocation_CAPK Dir to load,Please Check");
                         }
                     }
                     else if (signalProtocol.Type == "ACT_ACK")
@@ -1137,7 +1154,7 @@ namespace MastercardHost
             }
             catch(Exception ex)
             {
-                MyLogManager.Log($"ProcessSingleEnvelope Exception:{ex.Message}");
+                MyLogManager.Log($"ProcessSingleEnvelope Exception:{ex}");
             }
         }
 
@@ -1224,11 +1241,11 @@ namespace MastercardHost
                 int messageBodyStart = currentReadPosition + varIntSizeInBytes;
 
                 // --- 3. 检查消息体大小是否合理 ---
-                if (messageSize <= 0 || messageSize > 10 * 1024) // 假设单条消息最大10KB
+                if (messageSize <= 0 || messageSize > MAX_MESSAGE_SIZE)
                 {
                     MyLogManager.Log($"检测到无效的消息大小: {messageSize}，可能数据损坏。尝试恢复...");
                     // 跳过这个错误的长度，从下一个字节开始寻找
-                    int recoveryPosition = FindNextValidVarintStart(currentReadPosition + 1);
+                    int recoveryPosition = FindResyncPosition(currentReadPosition + 1);
                     if (recoveryPosition > currentReadPosition)
                     {
                         int badDataSize = recoveryPosition - parsedBytes;
@@ -1243,8 +1260,21 @@ namespace MastercardHost
                     }
                     else
                     {
-                        _pendingIndex = 0;
-                        return;
+                        // 没有任何可信起点：丢弃未解析数据，保留已成功解析的部分，等待更多输入。
+                        // 不再一次性清空整段，避免把"已收到一半的合法消息"一并丢掉。
+                        int discardedBytes = _pendingIndex - parsedBytes;
+                        _consecutiveParseFailures++;
+                        if (_consecutiveParseFailures >= MAX_PARSE_FAILURES)
+                        {
+                            MyLogManager.Log($"[解析连续失败 {_consecutiveParseFailures} 次] 丢弃 {discardedBytes} 字节未解析数据并重置解析状态");
+                            _consecutiveParseFailures = 0;
+                        }
+                        else
+                        {
+                            MyLogManager.Log($"未找到可信的消息起点，丢弃 {discardedBytes} 字节未解析数据（连续失败 {_consecutiveParseFailures}/{MAX_PARSE_FAILURES}）");
+                        }
+                        _pendingIndex = parsedBytes;
+                        break;
                     }
                 }
 
@@ -1273,10 +1303,10 @@ namespace MastercardHost
                 catch (InvalidProtocolBufferException ex)
                 {
                     // --- 7. 解析消息体失败 -> 数据可能损坏 ---
-                    MyLogManager.Log($"解析Protobuf消息体失败: {ex.Message}, 消息大小: {messageSize}。尝试恢复...");
+                    MyLogManager.Log($"解析Protobuf消息体失败: {ex}, 消息大小: {messageSize}。尝试恢复...");
 
                     // 和上面类似的恢复逻辑
-                    int recoveryPosition = FindNextValidVarintStart(currentReadPosition + 1);
+                    int recoveryPosition = FindResyncPosition(currentReadPosition + 1);
                     if (recoveryPosition > currentReadPosition)
                     {
                         int badDataSize = recoveryPosition - parsedBytes;
@@ -1291,8 +1321,21 @@ namespace MastercardHost
                     }
                     else
                     {
-                        _pendingIndex = 0;
-                        return;
+                        // 没有任何可信起点：丢弃未解析数据，保留已成功解析的部分，等待更多输入。
+                        // 不再一次性清空整段，避免把"已收到一半的合法消息"一并丢掉。
+                        int discardedBytes = _pendingIndex - parsedBytes;
+                        _consecutiveParseFailures++;
+                        if (_consecutiveParseFailures >= MAX_PARSE_FAILURES)
+                        {
+                            MyLogManager.Log($"[解析连续失败 {_consecutiveParseFailures} 次] 丢弃 {discardedBytes} 字节未解析数据并重置解析状态");
+                            _consecutiveParseFailures = 0;
+                        }
+                        else
+                        {
+                            MyLogManager.Log($"未找到可信的消息起点，丢弃 {discardedBytes} 字节未解析数据（连续失败 {_consecutiveParseFailures}/{MAX_PARSE_FAILURES}）");
+                        }
+                        _pendingIndex = parsedBytes;
+                        break;
                     }
                 }
             }
@@ -1391,7 +1434,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"发送到串口队列失败: {ex.Message}");
+                MyLogManager.Log($"发送到串口队列失败: {ex}");
             }
         }
 
@@ -1424,7 +1467,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"发送队列中下一个操作失败: {ex.Message}");
+                MyLogManager.Log($"发送队列中下一个操作失败: {ex}");
             }
         }
 
@@ -1494,15 +1537,15 @@ namespace MastercardHost
             }
             catch (ArgumentNullException ex)
             {
-                MyLogManager.Log($"TransFormSiganlToPOS ArgumentNullException: {ex.Message}");
+                MyLogManager.Log($"TransFormSiganlToPOS ArgumentNullException: {ex}");
             }
             catch (InvalidProtocolBufferException ex)
             {
-                MyLogManager.Log($"TransFormSiganlToPOS InvalidProtocolBufferException: {ex.Message}");
+                MyLogManager.Log($"TransFormSiganlToPOS InvalidProtocolBufferException: {ex}");
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"TransFormSiganlToPOS Exception: {ex.Message}");
+                MyLogManager.Log($"TransFormSiganlToPOS Exception: {ex}");
             }
         }
 
@@ -1522,7 +1565,7 @@ namespace MastercardHost
                 }
                 catch (Exception ex)
                 {
-                    MyLogManager.Log($"✗ Envelope 创建失败: {ex.Message}");
+                    MyLogManager.Log($"✗ Envelope 创建失败: {ex}");
                 }
 
                 try
@@ -1538,7 +1581,7 @@ namespace MastercardHost
                 }
                 catch (Exception ex)
                 {
-                    MyLogManager.Log($"✗ ConfigProtocol 创建失败: {ex.Message}");
+                    MyLogManager.Log($"✗ ConfigProtocol 创建失败: {ex}");
                     MyLogManager.Log($"完整异常: {ex}");
                 }
 
@@ -1549,7 +1592,7 @@ namespace MastercardHost
                 }
                 catch (Exception ex)
                 {
-                    MyLogManager.Log($"✗ AID 创建失败: {ex.Message}");
+                    MyLogManager.Log($"✗ AID 创建失败: {ex}");
                 }
 
                 try
@@ -1559,14 +1602,14 @@ namespace MastercardHost
                 }
                 catch (Exception ex)
                 {
-                    MyLogManager.Log($"✗ TermParam 创建失败: {ex.Message}");
+                    MyLogManager.Log($"✗ TermParam 创建失败: {ex}");
                 }
 
                 MyLogManager.Log("=== 诊断完成 ===");
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"诊断过程异常: {ex.Message}");
+                MyLogManager.Log($"诊断过程异常: {ex}");
             }
         }
 
@@ -1733,8 +1776,8 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"DownloadConfig Exception: {ex.Message}");
-                System.Windows.MessageBox.Show($"Error downloading configuration: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MyLogManager.Log($"DownloadConfig Exception: {ex}");
+                UpdateLogText("Error downloading configuration, see log for details");
             }
         }
 
@@ -1795,7 +1838,7 @@ namespace MastercardHost
                             }
                             catch (Exception ex)
                             {
-                                MyLogManager.Log($"Error processing CAPK field {key} with value '{value}': {ex.Message}");
+                                MyLogManager.Log($"Error processing CAPK field {key} with value '{value}': {ex}");
                                 // 根据需要处理错误
                             }
                         }
@@ -2056,7 +2099,8 @@ namespace MastercardHost
 
                                     if (!File.Exists(configDir + fileName))
                                     {
-                                        System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        UpdateLogText("Target Config doesn't exist");
+                                        MyLogManager.Log("Target Config doesn't exist");
                                         MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
                                     }
                                     else
@@ -2072,7 +2116,8 @@ namespace MastercardHost
                                 }
                                 else
                                 {
-                                    System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    UpdateLogText("No Config Dir to load,Please Check");
+                                    MyLogManager.Log("No Config Dir to load,Please Check");
                                 }
                             }
 
@@ -2175,7 +2220,8 @@ namespace MastercardHost
                                         {
                                             if (!File.Exists(configDir + fileName))
                                             {
-                                                System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                                UpdateLogText("Target Config doesn't exist");
+                                                MyLogManager.Log("Target Config doesn't exist");
                                                 MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
                                             }
                                             else
@@ -2185,12 +2231,14 @@ namespace MastercardHost
                                         }
                                         else
                                         {
-                                            System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            UpdateLogText("No Config Dir to load,Please Check");
+                                            MyLogManager.Log("No Config Dir to load,Please Check");
                                         }
                                     }
                                     else
                                     {
-                                        System.Windows.MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        UpdateLogText("No Config Selected");
+                                        MyLogManager.Log("No Config Selected");
                                     }
                                 }
                             }
@@ -2207,7 +2255,8 @@ namespace MastercardHost
                                 MyLogManager.Log($"Target CAPK:{configDir + fileName}");
                                 if (!File.Exists(configDir + fileName))
                                 {
-                                    System.Windows.MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    UpdateLogText("Target CAPK doesn't exist");
+                                    MyLogManager.Log("Target CAPK doesn't exist");
                                 }
                                 else
                                 {
@@ -2216,7 +2265,8 @@ namespace MastercardHost
                             }
                             else
                             {
-                                System.Windows.MessageBox.Show("No CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                UpdateLogText("No CAPK Dir to load,Please Check");
+                                MyLogManager.Log("No CAPK Dir to load,Please Check");
                             }
                         }
                         else if (signalProtocol.Type == "REVOCATION_PK")
@@ -2231,7 +2281,8 @@ namespace MastercardHost
                                 MyLogManager.Log($"Target Revocation_CAPK:{configDir + fileName}");
                                 if (!File.Exists(configDir + fileName))
                                 {
-                                    System.Windows.MessageBox.Show("Target Revocation_CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    UpdateLogText("Target Revocation_CAPK doesn't exist");
+                                    MyLogManager.Log("Target Revocation_CAPK doesn't exist");
                                 }
                                 else
                                 {
@@ -2240,7 +2291,8 @@ namespace MastercardHost
                             }
                             else
                             {
-                                System.Windows.MessageBox.Show("No Revocation_CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                UpdateLogText("No Revocation_CAPK Dir to load,Please Check");
+                                MyLogManager.Log("No Revocation_CAPK Dir to load,Please Check");
                             }
                         }
                         else if (signalProtocol.Type == "ACT_ACK" || signalProtocol.Type == "CONFIG_ACK" || signalProtocol.Type == "TEST_INFO_ACK")
@@ -2265,7 +2317,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"OnDataReceived Exception: {ex.Message}");
+                MyLogManager.Log($"OnDataReceived Exception: {ex}");
             }
         }
 
@@ -2301,7 +2353,8 @@ namespace MastercardHost
 
                                 if (!File.Exists(configDir + fileName))
                                 {
-                                    System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    UpdateLogText("Target Config doesn't exist");
+                                    MyLogManager.Log("Target Config doesn't exist");
                                     MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
                                 }
                                 else
@@ -2333,7 +2386,8 @@ namespace MastercardHost
                             }
                             else
                             {
-                                System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                UpdateLogText("No Config Dir to load,Please Check");
+                                MyLogManager.Log("No Config Dir to load,Please Check");
                             }
                         }
                         break;
@@ -2400,7 +2454,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"ProcessFromTestTool Exception: {ex.Message}");
+                MyLogManager.Log($"ProcessFromTestTool Exception: {ex}");
             }
         }
 
@@ -2470,7 +2524,7 @@ namespace MastercardHost
                     catch (Exception ex)
                     {
                         // 记录异常但继续处理其他连接
-                        MyLogManager.Log($"Error disconnecting {connectionId}: {ex.Message}");
+                        MyLogManager.Log($"Error disconnecting {connectionId}: {ex}");
                     }
                 }
                 // 待断开列表必须清空：否则同一连接会被反复断开，且列表随消息数无限增长
@@ -2478,7 +2532,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"TransformSignalToTestTool Exception: {ex.Message}");
+                MyLogManager.Log($"TransformSignalToTestTool Exception: {ex}");
             }
         }
 
@@ -3129,7 +3183,7 @@ namespace MastercardHost
                 }
                 catch (Exception ex)
                 {
-                    MyLogManager.Log($"ParseOutSignal 解析数据项 {data.Id} 异常: {ex.Message}");
+                    MyLogManager.Log($"ParseOutSignal 解析数据项 {data.Id} 异常: {ex}");
                 }
             }
         }
@@ -3172,7 +3226,7 @@ namespace MastercardHost
         //    }
         //    catch (Exception ex)
         //    {
-        //        MyLogManager.Log($"ProcessFromPOS Exception: {ex.Message}");
+        //        MyLogManager.Log($"ProcessFromPOS Exception: {ex}");
         //        // 清空缓冲区，避免错误数据堆积
         //        _serialBuffer.Clear();
         //    }
@@ -3367,7 +3421,7 @@ namespace MastercardHost
                     }
                     catch (InvalidProtocolBufferException ex1)
                     {
-                        MyLogManager.Log($"ParseDelimitedFrom 失败: {ex1.Message}");
+                        MyLogManager.Log($"ParseDelimitedFrom 失败: {ex1}");
 
                         // 方法2：如果失败，回退到 ParseFrom（不带长度前缀）
                         try
@@ -3377,13 +3431,13 @@ namespace MastercardHost
                         }
                         catch (Exception ex2)
                         {
-                            MyLogManager.Log($"所有解析方法都失败: {ex2.Message}");
+                            MyLogManager.Log($"所有解析方法都失败: {ex2}");
                             return;
                         }
                     }
                     catch (Exception ex)
                     {
-                        MyLogManager.Log($"解析异常: {ex.Message}");
+                        MyLogManager.Log($"解析异常: {ex}");
                         return;
                     }
                 }
@@ -3435,7 +3489,8 @@ namespace MastercardHost
                                     {
                                         if (!File.Exists(configDir + fileName))
                                         {
-                                            System.Windows.MessageBox.Show("Target Config doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                            UpdateLogText("Target Config doesn't exist");
+                                            MyLogManager.Log("Target Config doesn't exist");
                                             MyLogManager.Log($"Target Config{configDir + fileName} doesn't exist");
                                         }
                                         else
@@ -3445,12 +3500,14 @@ namespace MastercardHost
                                     }
                                     else
                                     {
-                                        System.Windows.MessageBox.Show("No Config Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                        UpdateLogText("No Config Dir to load,Please Check");
+                                        MyLogManager.Log("No Config Dir to load,Please Check");
                                     }
                                 }
                                 else
                                 {
-                                    System.Windows.MessageBox.Show("No Config Selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    UpdateLogText("No Config Selected");
+                                    MyLogManager.Log("No Config Selected");
                                 }
                             }
                         }
@@ -3467,7 +3524,8 @@ namespace MastercardHost
                             MyLogManager.Log($"Target CAPK:{configDir + fileName}");
                             if (!File.Exists(configDir + fileName))
                             {
-                                System.Windows.MessageBox.Show("Target CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                UpdateLogText("Target CAPK doesn't exist");
+                                MyLogManager.Log("Target CAPK doesn't exist");
                             }
                             else
                             {
@@ -3476,7 +3534,8 @@ namespace MastercardHost
                         }
                         else
                         {
-                            System.Windows.MessageBox.Show("No CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            UpdateLogText("No CAPK Dir to load,Please Check");
+                            MyLogManager.Log("No CAPK Dir to load,Please Check");
                         }
                     }
                     else if (signalProtocol.Type == "REVOCATION_PK")
@@ -3491,7 +3550,8 @@ namespace MastercardHost
                             MyLogManager.Log($"Target Revocation_CAPK:{configDir + fileName}");
                             if (!File.Exists(configDir + fileName))
                             {
-                                System.Windows.MessageBox.Show("Target Revocation_CAPK doesn't exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                UpdateLogText("Target Revocation_CAPK doesn't exist");
+                                MyLogManager.Log("Target Revocation_CAPK doesn't exist");
                             }
                             else
                             {
@@ -3500,7 +3560,8 @@ namespace MastercardHost
                         }
                         else
                         {
-                            System.Windows.MessageBox.Show("No Revocation_CAPK Dir to load,Please Check", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            UpdateLogText("No Revocation_CAPK Dir to load,Please Check");
+                            MyLogManager.Log("No Revocation_CAPK Dir to load,Please Check");
                         }
                     }
                     else if (signalProtocol.Type == "ACT_ACK")
@@ -3575,7 +3636,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"ProcessFromPOS Exception: {ex.Message}");
+                MyLogManager.Log($"ProcessFromPOS Exception: {ex}");
             }
         }
 
@@ -3754,7 +3815,7 @@ namespace MastercardHost
         //    }
         //    catch (Exception ex) 
         //    {
-        //        MyLogManager.Log($"ProcessFromPOS Exception: {ex.Message}");
+        //        MyLogManager.Log($"ProcessFromPOS Exception: {ex}");
         //    }
         //}
 
@@ -3777,7 +3838,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"Error formatting protobuf: {ex.Message}");
+                MyLogManager.Log($"Error formatting protobuf: {ex}");
             }
         }
 
@@ -3855,7 +3916,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"清空队列失败: {ex.Message}");
+                MyLogManager.Log($"清空队列失败: {ex}");
             }
         }
 
@@ -3900,7 +3961,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"启动解析线程失败: {ex.Message}");
+                MyLogManager.Log($"启动解析线程失败: {ex}");
                 UpdateLogText($"启动解析线程失败: {ex.Message}");
             }
         }
@@ -3936,7 +3997,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"停止解析线程失败: {ex.Message}");
+                MyLogManager.Log($"停止解析线程失败: {ex}");
             }
         }
 
@@ -3967,13 +4028,13 @@ namespace MastercardHost
                     }
                     catch (Exception ex)
                     {
-                        MyLogManager.Log($"解析线程处理异常: {ex.Message}");
+                        MyLogManager.Log($"解析线程处理异常: {ex}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"解析线程异常: {ex.Message}");
+                MyLogManager.Log($"解析线程异常: {ex}");
             }
             finally
             {
@@ -4012,7 +4073,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"启动工作线程失败: {ex.Message}");
+                MyLogManager.Log($"启动工作线程失败: {ex}");
                 UpdateLogText($"启动后台线程失败: {ex.Message}");
             }
         }
@@ -4050,7 +4111,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"停止工作线程失败: {ex.Message}");
+                MyLogManager.Log($"停止工作线程失败: {ex}");
                 UpdateLogText($"停止后台线程失败: {ex.Message}");
             }
         }
@@ -4078,13 +4139,13 @@ namespace MastercardHost
             _disposed = true;
 
             try { StopParseThread(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 停止解析线程失败: {ex.Message}"); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 停止解析线程失败: {ex}"); }
 
             try { StopWorkerThread(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 停止工作线程失败: {ex.Message}"); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 停止工作线程失败: {ex}"); }
 
             try { ClearQueue(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 清空队列失败: {ex.Message}"); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 清空队列失败: {ex}"); }
 
             SerialPort port;
             lock (_serialGate)
@@ -4106,26 +4167,26 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"Dispose 关闭串口失败: {ex.Message}");
+                MyLogManager.Log($"Dispose 关闭串口失败: {ex}");
             }
 
             try { _tcpServer?.StopListening(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 停止TCP监听失败: {ex.Message}"); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 停止TCP监听失败: {ex}"); }
 
             try { _tcpClient?.Disconnect(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 断开TCP客户端失败: {ex.Message}"); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 断开TCP客户端失败: {ex}"); }
 
             try { _threadStartedEvent?.Dispose(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 释放线程启动事件失败: {ex.Message}"); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 释放线程启动事件失败: {ex}"); }
 
             try { _parseSignal?.Dispose(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 释放解析信号量失败: {ex.Message}"); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 释放解析信号量失败: {ex}"); }
 
             try { _timer?.Dispose(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 释放定时器失败: {ex.Message}"); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 释放定时器失败: {ex}"); }
 
             try { _configTimer?.Dispose(); }
-            catch (Exception ex) { MyLogManager.Log($"Dispose 释放定时器失败: {ex.Message}"); }
+            catch (Exception ex) { MyLogManager.Log($"Dispose 释放定时器失败: {ex}"); }
 
             MyLogManager.Log("MainViewModel 已释放");
         }

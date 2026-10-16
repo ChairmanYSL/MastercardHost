@@ -114,14 +114,14 @@ namespace MastercardHost
                     }
                     catch (Exception ex)
                     {
-                        MyLogManager.Log($"处理队列异常: {ex.Message}");
+                        MyLogManager.Log($"处理队列异常: {ex}");
                         await Task.Delay(1000);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"工作线程异常退出: {ex.Message}");
+                MyLogManager.Log($"工作线程异常退出: {ex}");
             }
 
             MyLogManager.Log("串口队列工作线程结束");
@@ -183,7 +183,7 @@ namespace MastercardHost
                     }
                     catch (Exception ex)
                     {
-                        MyLogManager.Log($"发送失败 [ID:{request.Id}]: {ex.Message}");
+                        MyLogManager.Log($"发送失败 [ID:{request.Id}]: {ex}");
                         request.RetryCount++;
 
                         if (request.RetryCount < MAX_RETRY_COUNT)
@@ -289,7 +289,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"接收串口数据异常: {ex.Message}");
+                MyLogManager.Log($"接收串口数据异常: {ex}");
             }
         }
 
@@ -315,7 +315,7 @@ namespace MastercardHost
                     }
                     catch (InvalidProtocolBufferException ex1)
                     {
-                        MyLogManager.Log($"直接解析失败: {ex1.Message}");
+                        MyLogManager.Log($"直接解析失败: {ex1}");
 
                         // 方式2：跳过第一个字节（可能是varint长度前缀）
                         if (bufferData.Length > 1)
@@ -327,7 +327,7 @@ namespace MastercardHost
                             }
                             catch (InvalidProtocolBufferException ex2)
                             {
-                                MyLogManager.Log($"跳过字节解析失败: {ex2.Message}");
+                                MyLogManager.Log($"跳过字节解析失败: {ex2}");
 
                                 // 方式3：尝试在数据中查找有效消息
                                 envelope = FindMessageInBuffer(bufferData);
@@ -379,7 +379,7 @@ namespace MastercardHost
                 }
                 catch (Exception ex)
                 {
-                    MyLogManager.Log($"处理缓冲区异常: {ex.Message}");
+                    MyLogManager.Log($"处理缓冲区异常: {ex}");
                     _receiveBuffer.SetLength(0);
                 }
             }
@@ -467,7 +467,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"处理消息异常: {ex.Message}");
+                MyLogManager.Log($"处理消息异常: {ex}");
             }
         }
 
@@ -523,7 +523,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"清空队列时异常: {ex.Message}");
+                MyLogManager.Log($"清空队列时异常: {ex}");
             }
         }
 
@@ -547,7 +547,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"完成请求时异常: {ex.Message}");
+                MyLogManager.Log($"完成请求时异常: {ex}");
             }
         }
 

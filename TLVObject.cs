@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MastercardHost
 {
+    /// <summary>
+    /// BER-TLV 解析器。只负责解析，不负责构造。
+    /// </summary>
     public class TLVObject
     {
         private Dictionary<string, string> tlvDic = new Dictionary<string, string>();
@@ -21,8 +24,17 @@ namespace MastercardHost
             private set => tlvDic = value;
         }
 
+        /// <summary>
+        /// 解析十六进制字符串形式的 BER-TLV 数据。
+        /// </summary>
         public bool Parse(string tlv)
         {
+            if (string.IsNullOrEmpty(tlv))
+            {
+                MyLogManager.Log("TLV string is null or empty");
+                return false;
+            }
+
             // check whether tlv string length is even
             if (tlv.Length % 2 != 0)
             {
@@ -41,6 +53,13 @@ namespace MastercardHost
                     // Determine tag length
                     if ((firstByte & 0x1F) == 0x1F)
                     {
+                        // 先做边界检查，再访问后续字节（原实现先 Substring 后判断，靠异常兜底）
+                        if (i + 4 > tlv.Length)
+                        {
+                            MyLogManager.Log("TLV string ends after tag");
+                            return false; // Bounds check for 2 bytes tag
+                        }
+
                         if ((Convert.ToByte(tlv.Substring(i + 2, 2), 16) & 0x80) == 0x80)
                         {
                             // Tag is 3 bytes
@@ -55,11 +74,6 @@ namespace MastercardHost
                         else
                         {
                             // Tag is 2 bytes
-                            if (i + 4 > tlv.Length)
-                            {
-                                MyLogManager.Log("TLV string ends after tag");
-                                return false; // Bounds check for 2 bytes tag
-                            }
                             tag = tlv.Substring(i, 4);
                             i += 4; // Move past the 2-byte tag
                         }
@@ -118,16 +132,25 @@ namespace MastercardHost
                 }
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 // If there's any error in the process
-                MyLogManager.Log("Error parsing TLV string");
+                MyLogManager.Log($"Error parsing TLV string: {ex}");
                 return false;
             }
         }
 
+        /// <summary>
+        /// 解析字节数组形式的 BER-TLV 数据。
+        /// </summary>
         public bool Parse(byte[] tlv, int tlv_len)
         {
+            if (tlv == null || tlv_len <= 0 || tlv_len > tlv.Length)
+            {
+                MyLogManager.Log($"TLV data is null or invalid length (tlv_len={tlv_len})");
+                return false;
+            }
+
             int i = 0;
             try
             {
@@ -139,6 +162,13 @@ namespace MastercardHost
                     // Determine tag length
                     if ((firstByte & 0x1F) == 0x1F)
                     {
+                        // 先做边界检查，再访问后续字节（原实现先访问 tlv[i+1] 后判断，靠异常兜底）
+                        if (i + 1 >= tlv_len)
+                        {
+                            MyLogManager.Log("TLV data ends after tag");
+                            return false; // Bounds check for 2 bytes tag
+                        }
+
                         if ((tlv[i + 1] & 0x80) == 0x80)
                         {
                             // Tag is 3 bytes
@@ -149,7 +179,6 @@ namespace MastercardHost
                         else
                         {
                             // Tag is 2 bytes
-                            if (i + 1 >= tlv_len) return false; // Bounds check for 2 bytes tag
                             tag = firstByte.ToString("X2") + tlv[i + 1].ToString("X2");
                             i += 2; // Move past the 2-byte tag
                         }
@@ -198,71 +227,12 @@ namespace MastercardHost
                 }
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                // If there's any error in the process
+                // 越界或格式错误都会走到这里，记录后返回失败
+                MyLogManager.Log($"Error parsing TLV data (len={tlv_len}): {ex}");
                 return false;
             }
         }
-
-        public bool IsTagExist(string tag)
-        {
-            return tlvDic.ContainsKey(tag);
-        }
-
-        public void AddTagData(string tag, string value)
-        {
-            tlvDic.Add(tag, value);
-        }
-
-        public void RemoveTagData(string tag)
-        {
-            tlvDic.Remove(tag);
-        }
-
-        public string GetTagData(string tag)
-        {
-            return tlvDic[tag];
-        }
-
-        public string Pack(bool IsZeroLengthValid, bool IsNullValueValid)
-        {
-            string output = "";
-
-            foreach (string tag in tlvDic.Keys)
-            {
-                output += tag;
-                if (IsNullValueValid)
-                {
-                    if (tlvDic[tag] == null)
-                    {
-                        continue;
-                    }
-                }
-                if (IsZeroLengthValid) 
-                {
-                    if(0 == tlvDic[tag].Length)
-                    {
-                        output += "00";
-                        continue;
-                    }
-                }
-                output += tlvDic[tag].Length;
-                output += tlvDic[tag];
-            }
-
-            return output;
-        }
-
-        public void Clear()
-        {
-            tlvDic.Clear();
-        }
-
-        public bool IsTLVDicEmpty()
-        {
-            return tlvDic.Count == 0;
-        }
-
     }
 }

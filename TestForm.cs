@@ -44,7 +44,7 @@ namespace MastercardHost
             }
             catch (Exception ex) 
             {
-                MyLogManager.Log($"_tcpClient in TestForm Exception:{ex.Message}");
+                MyLogManager.Log($"_tcpClient in TestForm Exception:{ex}");
             }
         }
 
@@ -603,7 +603,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"Close TestForm Exception: {ex.Message}"); ;
+                MyLogManager.Log($"Close TestForm Exception: {ex}"); ;
             }
         }
 
@@ -799,7 +799,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"Exception: {ex.Message}");
+                MyLogManager.Log($"Exception: {ex}");
             }
         }
 
@@ -819,7 +819,7 @@ namespace MastercardHost
             }
             catch (Exception ex) 
             {
-                MyLogManager.Log($"Exception: {ex.Message}");
+                MyLogManager.Log($"Exception: {ex}");
             }
         }
 
@@ -838,7 +838,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"Exception: {ex.Message}");
+                MyLogManager.Log($"Exception: {ex}");
             }
         }
 
@@ -864,7 +864,7 @@ namespace MastercardHost
             }
             catch (Exception ex) 
             {
-                MyLogManager.Log($"Exception: {ex.Message}");
+                MyLogManager.Log($"Exception: {ex}");
             }
         }
 
@@ -887,7 +887,7 @@ namespace MastercardHost
             }
             catch(Exception ex)
             {
-                MyLogManager.Log($"Exception: {ex.Message}");
+                MyLogManager.Log($"Exception: {ex}");
             }
         }
 
@@ -906,7 +906,7 @@ namespace MastercardHost
             }
             catch (Exception ex) 
             {
-                MyLogManager.Log($"Exception: {ex.Message}");
+                MyLogManager.Log($"Exception: {ex}");
             }
         }
 
@@ -1242,7 +1242,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"Exception: {ex.Message}");
+                MyLogManager.Log($"Exception: {ex}");
             }
         }
 
@@ -1314,7 +1314,7 @@ namespace MastercardHost
             }
             catch (Exception ex) 
             {
-                MyLogManager.Log($"TestForm_SizeChanged exception:{ex.Message}");
+                MyLogManager.Log($"TestForm_SizeChanged exception:{ex}");
             }
 
         }

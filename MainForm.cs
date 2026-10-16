@@ -137,7 +137,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"BindViewModel Exception: {ex.Message}");
+                MyLogManager.Log($"BindViewModel Exception: {ex}");
             }
         }
 
@@ -254,7 +254,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"Exception: {ex.Message}");
+                MyLogManager.Log($"Exception: {ex}");
             }
         }
 
@@ -287,7 +287,7 @@ namespace MastercardHost
             }
             catch (Exception ex) 
             {
-                MyLogManager.Log($"选择串口异常:{ex.Message}");
+                MyLogManager.Log($"选择串口异常:{ex}");
             }
         }
 
@@ -388,7 +388,7 @@ namespace MastercardHost
             }
             catch (Exception ex)
             {
-                MyLogManager.Log($"释放 ViewModel 失败: {ex.Message}");
+                MyLogManager.Log($"释放 ViewModel 失败: {ex}");
             }
 
             base.OnFormClosed(e);
