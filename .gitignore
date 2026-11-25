@@ -4,6 +4,7 @@ obj/
 .deepseek/
 Compare/
 InnoSetup/*.exe
+InnoSetup/payload/
 CLAUDE.md
 REASONIX.md
 .reasonix/
